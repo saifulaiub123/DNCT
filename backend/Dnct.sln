@@ -15,33 +15,33 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{DF0CD4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{542840FF-B0CC-4F8A-9F6E-1898BE0573D7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArc.SharedKernel", "src\Shared\CleanArc.SharedKernel\CleanArc.SharedKernel.csproj", "{56C4DDD2-4F8C-4D35-85D4-CC9064C52398}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnct.SharedKernel", "src\Shared\Dnct.SharedKernel\Dnct.SharedKernel.csproj", "{56C4DDD2-4F8C-4D35-85D4-CC9064C52398}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArc.Infrastructure.CrossCutting", "src\Infrastructure\CleanArc.Infrastructure.CrossCutting\CleanArc.Infrastructure.CrossCutting.csproj", "{09E81356-0531-42A0-9F7F-00C495F1226E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnct.Infrastructure.CrossCutting", "src\Infrastructure\Dnct.Infrastructure.CrossCutting\Dnct.Infrastructure.CrossCutting.csproj", "{09E81356-0531-42A0-9F7F-00C495F1226E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArc.Infrastructure.Identity", "src\Infrastructure\CleanArc.Infrastructure.Identity\CleanArc.Infrastructure.Identity.csproj", "{3AFD5AAD-8DCD-44D6-86B9-078FBE8F2A1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnct.Infrastructure.Identity", "src\Infrastructure\Dnct.Infrastructure.Identity\Dnct.Infrastructure.Identity.csproj", "{3AFD5AAD-8DCD-44D6-86B9-078FBE8F2A1F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArc.Infrastructure.Persistence", "src\Infrastructure\CleanArc.Infrastructure.Persistence\CleanArc.Infrastructure.Persistence.csproj", "{9F3B3E49-3E3C-4244-AE88-D209B18B28B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnct.Infrastructure.Persistence", "src\Infrastructure\Dnct.Infrastructure.Persistence\Dnct.Infrastructure.Persistence.csproj", "{9F3B3E49-3E3C-4244-AE88-D209B18B28B8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArc.Application", "src\Core\CleanArc.Application\CleanArc.Application.csproj", "{9C0BCB6F-614C-4FA9-83A2-E95834E3C153}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnct.Application", "src\Core\Dnct.Application\Dnct.Application.csproj", "{9C0BCB6F-614C-4FA9-83A2-E95834E3C153}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArc.Domain", "src\Core\CleanArc.Domain\CleanArc.Domain.csproj", "{DC49CD3F-840E-4634-B9DA-595F160E9499}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnct.Domain", "src\Core\Dnct.Domain\Dnct.Domain.csproj", "{DC49CD3F-840E-4634-B9DA-595F160E9499}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArc.Web.Plugins.Grpc", "src\API\Plugins\CleanArc.Web.Plugins.Grpc\CleanArc.Web.Plugins.Grpc.csproj", "{8F7135E8-68C9-4DA8-AA06-04518EBB403B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnct.Web.Plugins.Grpc", "src\API\Plugins\Dnct.Web.Plugins.Grpc\Dnct.Web.Plugins.Grpc.csproj", "{8F7135E8-68C9-4DA8-AA06-04518EBB403B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArc.Web.Api", "src\API\CleanArc.Web.Api\CleanArc.Web.Api.csproj", "{BE13FF32-B8D5-4AE7-B173-6CA96040B788}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnct.Web.Api", "src\API\Dnct.Web.Api\Dnct.Web.Api.csproj", "{BE13FF32-B8D5-4AE7-B173-6CA96040B788}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArc.WebFramework", "src\API\CleanArc.WebFramework\CleanArc.WebFramework.csproj", "{44DD0A96-BA65-476E-BC59-C8D2CFA703B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnct.WebFramework", "src\API\Dnct.WebFramework\Dnct.WebFramework.csproj", "{44DD0A96-BA65-476E-BC59-C8D2CFA703B9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{77986571-8153-4120-AD08-36729310A56B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BaseSetup", "BaseSetup", "{34B1F72E-A991-4705-ACC5-08E65E46D26E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArc.Tests.Setup", "src\Tests\CleanArc.Tests.Setup\CleanArc.Tests.Setup.csproj", "{33AF382A-9E22-42F0-82E5-4F78BCFD40C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnct.Tests.Setup", "src\Tests\Dnct.Tests.Setup\Dnct.Tests.Setup.csproj", "{33AF382A-9E22-42F0-82E5-4F78BCFD40C1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{45FA88C0-9986-40E5-A2E2-7742302518D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArc.Test.Infrastructure.Identity", "src\Tests\CleanArc.Test.Infrastructure.Identity\CleanArc.Test.Infrastructure.Identity\CleanArc.Test.Infrastructure.Identity.csproj", "{54203B4F-3CE8-4EBA-B5E2-F7C985FACE60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnct.Test.Infrastructure.Identity", "src\Tests\Dnct.Test.Infrastructure.Identity\Dnct.Test.Infrastructure.Identity\Dnct.Test.Infrastructure.Identity.csproj", "{54203B4F-3CE8-4EBA-B5E2-F7C985FACE60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
