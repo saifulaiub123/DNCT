@@ -9,6 +9,11 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        redirectTo: '/authentication/register',
+        pathMatch: 'full',
+      },
+      {
+        path: '',
         redirectTo: '/dashboards/dashboard1',
         pathMatch: 'full',
       },
@@ -78,6 +83,15 @@ export const routes: Routes = [
     children: [
       {
         path: 'authentication',
+        loadChildren: () =>
+          import('./features/authentication/authentication.routes').then(
+            (m) => m.AuthenticationRoutes
+          ),
+      },
+
+
+      {
+        path: 'authentication1',
         loadChildren: () =>
           import('./pages/authentication/authentication.routes').then(
             (m) => m.AuthenticationRoutes

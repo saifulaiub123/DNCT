@@ -4,13 +4,15 @@ public interface IEntity
 {
 }
 
-public interface ITimeModification
+public interface IAuditable
 {
     DateTime CreatedTime { get; set; }
     DateTime? ModifiedDate { get; set; }
+    int CreatedBy { get; set; }
+    int ModifiedBy { get; set; }
 }
 
-public abstract class BaseEntity<TKey> : IEntity, ITimeModification
+public abstract class BaseEntity<TKey> : IEntity, IAuditable
 {
     public TKey Id { get; protected set; }
 
@@ -51,6 +53,8 @@ public abstract class BaseEntity<TKey> : IEntity, ITimeModification
 
     public DateTime CreatedTime { get; set; }
     public DateTime? ModifiedDate { get; set; }
+    public int CreatedBy { get; set; }
+    public int ModifiedBy { get; set; }
 }
 
 public abstract class BaseEntity : BaseEntity<int>

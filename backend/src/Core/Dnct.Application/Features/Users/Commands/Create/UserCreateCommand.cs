@@ -11,10 +11,12 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Dnct.Application.Features.Users.Commands.Create;
 
 public record UserCreateCommand
-    (string UserName, string Name, string FamilyName, string PhoneNumber) 
-    : IRequest<OperationResult<UserCreateCommandResult>>
-        ,IValidatableModel<UserCreateCommand>
-,ICreateMapper<User>
+    (
+        string UserName, 
+        string Name, 
+        string FamilyName, 
+        string PhoneNumber
+    ) : IRequest<OperationResult<UserCreateCommandResult>>,IValidatableModel<UserCreateCommand>,ICreateMapper<User>
 {
 
     public IValidator<UserCreateCommand> ValidateApplicationModel(ApplicationBaseValidationModelProvider<UserCreateCommand> validator)

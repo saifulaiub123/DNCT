@@ -66,10 +66,10 @@ public class ApplicationDbContext: IdentityDbContext<User, Role, int, UserClaim,
     private void ConfigureEntityDates()
     {
         var updatedEntities = ChangeTracker.Entries().Where(x =>
-            x.Entity is ITimeModification && x.State == EntityState.Modified).Select(x => x.Entity as ITimeModification);
+            x.Entity is IAuditable && x.State == EntityState.Modified).Select(x => x.Entity as IAuditable);
 
         var addedEntities = ChangeTracker.Entries().Where(x =>
-            x.Entity is ITimeModification && x.State == EntityState.Added).Select(x => x.Entity as ITimeModification);
+            x.Entity is IAuditable && x.State == EntityState.Added).Select(x => x.Entity as IAuditable);
 
         foreach (var entity in updatedEntities)
         {
