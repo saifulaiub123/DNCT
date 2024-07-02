@@ -1,6 +1,6 @@
 
 import { Component } from '@angular/core';
-import { CoreService } from 'src/app/services/core.service';
+import { CoreService } from 'src/app/core/services/core.service';
 
 @Component({
   selector: 'app-branding',

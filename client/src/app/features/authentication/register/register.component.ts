@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { CoreService } from 'src/app/services/core.service';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MaterialModule } from '../../../material.module';
+import { CoreService } from 'src/app/core/services/core.service';
 
 @Component({
   selector: 'app-register',

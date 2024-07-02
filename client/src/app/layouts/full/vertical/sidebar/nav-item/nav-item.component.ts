@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { NavItem } from './nav-item';
 import { Router } from '@angular/router';
-import { NavService } from '../../../../../services/nav.service';
 import {
   animate,
   state,
@@ -21,6 +20,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
 import { CommonModule } from '@angular/common';
+import { NavService } from 'src/app/core/services/nav.service';
 
 @Component({
   selector: 'app-nav-item',
@@ -70,7 +70,7 @@ export class AppNavItemComponent implements OnChanges {
   onItemSelected(item: NavItem) {
     if (!item.children || !item.children.length) {
       this.router.navigate([item.route]);
-      
+
     }
     if (item.children && item.children.length) {
       this.expanded = !this.expanded;

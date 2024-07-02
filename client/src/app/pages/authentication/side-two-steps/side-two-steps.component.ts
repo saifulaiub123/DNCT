@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CoreService } from 'src/app/services/core.service';
 import { MaterialModule } from '../../../material.module';
+import { CoreService } from 'src/app/core/services/core.service';
 
 @Component({
   selector: 'app-side-two-steps',
@@ -11,6 +11,6 @@ import { MaterialModule } from '../../../material.module';
 })
 export class AppSideTwoStepsComponent {
   options = this.settings.getOptions();
-  
+
   constructor(private settings: CoreService) {}
 }

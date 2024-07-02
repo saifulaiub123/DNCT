@@ -1,9 +1,9 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
-import { CoreService } from 'src/app/services/core.service';
 import { ViewportScroller } from '@angular/common';
 import { MaterialModule } from 'src/app/material.module';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { RouterLink } from '@angular/router';
+import { CoreService } from 'src/app/core/services/core.service';
 
 interface apps {
   id: number;

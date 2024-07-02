@@ -7,10 +7,10 @@ import {
 } from '@angular/core';
 import { navItems } from './sidebar-data';
 import { Router } from '@angular/router';
-import { NavService } from '../../../../services/nav.service';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { AppHorizontalNavItemComponent } from './nav-item/nav-item.component';
 import { CommonModule } from '@angular/common';
+import { NavService } from 'src/app/core/services/nav.service';
 
 @Component({
   selector: 'app-horizontal-sidebar',
