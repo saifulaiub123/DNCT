@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } 
 import { Router, RouterModule } from '@angular/router';
 import { MaterialModule } from '../../../material.module';
 import { CoreService } from 'src/app/core/services/core.service';
+import { AuthService } from 'src/app/core/services/api-services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -13,11 +14,15 @@ import { CoreService } from 'src/app/core/services/core.service';
 export class RegisterComponent {
   options = this.settings.getOptions();
 
-  constructor(private settings: CoreService, private router: Router) { }
+  constructor(
+    private settings: CoreService,
+    private router: Router,
+    private _authService: AuthService
+  ) { }
 
   form = new FormGroup({
-    uname: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    email: new FormControl('', [Validators.required]),
+    uname: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required]),
   });
 
@@ -27,6 +32,23 @@ export class RegisterComponent {
 
   submit() {
     // console.log(this.form.value);
-    this.router.navigate(['/dashboards/dashboard1']);
+    this._authService.register(this.form.value).subscribe(
+      (response) => {
+        if (response.isSuccess) {
+          //this.goVerify(response.Data.VerificationToken);
+        }
+      },
+      (ex) => {
+        // this.showErrors = true;
+        // console.log(ex);
+        // if (ex.includes('already exist!')) {
+        //   this.userAlreadyExists = true;
+        // } else {
+        //   this.hasbackendErrors = true;
+        //   this.backendErrors = ex;
+        // }
+      }
+    );
+    //this.router.navigate(['/dashboards/dashboard1']);
   }
 }

@@ -74,7 +74,7 @@ builder.Services.ConfigureGrpcPluginServices();
 
 builder.Services.AddAutoMapper(expression =>
 {
-    expression.AddMaps(typeof(User), typeof(JwtService), typeof(UserController));
+    expression.AddMaps(typeof(User), typeof(JwtService), typeof(IdentityController));
 });
 
 var app = builder.Build();
