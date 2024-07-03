@@ -1,4 +1,4 @@
-﻿namespace Dnct.Application.Features.Users.Commands.Create;
+﻿namespace Dnct.Application.Features.Identity.Commands.Create;
 
 public class UserCreateCommandResult
 {

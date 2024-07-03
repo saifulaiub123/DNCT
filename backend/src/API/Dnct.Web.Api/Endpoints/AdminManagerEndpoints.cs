@@ -18,7 +18,7 @@ public class AdminManagerEndpoints : ICarterModule
             builder => builder.MapPost($"{_routePrefix}Login"
                 , async (AdminGetTokenQuery model, ISender sender) => (await sender.Send(model)).ToEndpointResult())
                 , _version
-                ,"AdminLogin"
+                ,"UserLogin"
                 ,_tag);
 
 

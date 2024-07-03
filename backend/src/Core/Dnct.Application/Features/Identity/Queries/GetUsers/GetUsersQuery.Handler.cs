@@ -4,7 +4,7 @@ using Dnct.Application.Models.Common;
 using Dnct.Domain.Entities.User;
 using Mediator;
 
-namespace Dnct.Application.Features.Users.Queries.GetUsers;
+namespace Dnct.Application.Features.Identity.Queries.GetUsers;
 
 internal class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, OperationResult<List<GetUsersQueryResponse>>>
 {

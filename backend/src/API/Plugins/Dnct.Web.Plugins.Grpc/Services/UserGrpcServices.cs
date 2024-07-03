@@ -1,5 +1,5 @@
-﻿using Dnct.Application.Features.Users.Queries.GenerateUserToken;
-using Dnct.Application.Features.Users.Queries.TokenRequest;
+﻿using Dnct.Application.Features.Identity.Queries.GenerateUserToken;
+using Dnct.Application.Features.Identity.Queries.TokenRequest;
 using Dnct.Web.Plugins.Grpc.ProtoModels;
 using Grpc.Core;
 using Mediator;

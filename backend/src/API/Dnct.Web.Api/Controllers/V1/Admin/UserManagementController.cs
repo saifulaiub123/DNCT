@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using Asp.Versioning;
-using Dnct.Application.Features.Users.Queries.GetUsers;
+using Dnct.Application.Features.Identity.Queries.GetUsers;
 using Dnct.WebFramework.BaseController;
 using Dnct.WebFramework.WebExtensions;
 using Mediator;

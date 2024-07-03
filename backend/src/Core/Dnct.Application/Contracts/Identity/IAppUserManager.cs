@@ -6,7 +6,8 @@ namespace Dnct.Application.Contracts.Identity;
 public interface IAppUserManager
 {
     Task<IdentityResult> CreateUser(User user);
-    Task<bool> IsExistUser(string phoneNumber);
+    Task<IdentityResult> CreateUser(User user, string password);
+    Task<bool> IsExistUser(string email);
     Task<bool> IsExistUserName(string userName);
     Task<string> GeneratePhoneNumberConfirmationToken(User user, string phoneNumber);
     Task<User> GetUserByCode(string code);
@@ -14,7 +15,7 @@ public interface IAppUserManager
     Task<IdentityResult> VerifyUserCode(User user,string code);
     Task<string> GenerateOtpCode(User user);
     Task<User> GetUserByPhoneNumber(string phoneNumber);
-    Task<SignInResult> AdminLogin(User user,string password);
+    Task<SignInResult> UserLogin(User user,string password);
     Task<User> GetByUserName(string userName);
     Task<User> GetUserByIdAsync(int userId);
     Task<List<User>> GetAllUsersAsync();

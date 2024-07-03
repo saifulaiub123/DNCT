@@ -29,18 +29,25 @@ public class SeedDataBase : ISeedDataBase
                 Name = "admin",
             };
             await _roleManager.CreateAsync(role);
+            role = new Role
+            {
+                Name = "user",
+            };
+            await _roleManager.CreateAsync(role);
+
         }
 
         if (!_userManager.Users.AsNoTracking().Any(u => u.UserName.Equals("admin")))
         {
             var user = new User
             {
-                UserName = "admin",
+                UserName = "admin@site.com",
                 Email = "admin@site.com",
-                PhoneNumberConfirmed = true
+                PhoneNumberConfirmed = true,
+                EmailConfirmed = true
             };
 
-            await  _userManager.CreateAsync(user, "qw123321");
+            await  _userManager.CreateAsync(user, "Pass@123");
             await _userManager.AddToRoleAsync(user,"admin");
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace Dnct.Application.Features.Users.Queries.TokenRequest;
+﻿namespace Dnct.Application.Features.Identity.Queries.TokenRequest;
 
 public class UserTokenRequestQueryResponse
 {

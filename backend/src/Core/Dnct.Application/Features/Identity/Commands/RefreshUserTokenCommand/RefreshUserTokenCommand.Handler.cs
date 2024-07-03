@@ -3,7 +3,7 @@ using Dnct.Application.Models.Common;
 using Dnct.Application.Models.Jwt;
 using Mediator;
 
-namespace Dnct.Application.Features.Users.Commands.RefreshUserTokenCommand
+namespace Dnct.Application.Features.Identity.Commands.RefreshUserTokenCommand
 {
     internal class RefreshUserTokenCommandHandler : IRequestHandler<RefreshUserTokenCommand,OperationResult<AccessToken>>
     {

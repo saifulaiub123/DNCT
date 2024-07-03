@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dnct.Application.Contracts.Identity;
+﻿using Dnct.Application.Contracts.Identity;
 using Dnct.Application.Models.Common;
 using Mediator;
 
-namespace Dnct.Application.Features.Users.Commands.RequestLogout
+namespace Dnct.Application.Features.Identity.Commands.RequestLogout
 {
     internal class RequestLogoutCommandHandler:IRequestHandler<RequestLogoutCommand,OperationResult<bool>>
     {

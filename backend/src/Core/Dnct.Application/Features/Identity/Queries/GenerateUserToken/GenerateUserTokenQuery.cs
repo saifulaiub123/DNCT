@@ -5,7 +5,7 @@ using Dnct.SharedKernel.ValidationBase.Contracts;
 using FluentValidation;
 using Mediator;
 
-namespace Dnct.Application.Features.Users.Queries.GenerateUserToken;
+namespace Dnct.Application.Features.Identity.Queries.GenerateUserToken;
 
 public record GenerateUserTokenQuery(string UserKey, string Code) : IRequest<OperationResult<AccessToken>>,
     IValidatableModel<GenerateUserTokenQuery>

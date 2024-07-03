@@ -3,7 +3,7 @@ using Dnct.Application.Models.Common;
 using Mediator;
 using Microsoft.Extensions.Logging;
 
-namespace Dnct.Application.Features.Users.Queries.TokenRequest;
+namespace Dnct.Application.Features.Identity.Queries.TokenRequest;
 
 public class UserTokenRequestQueryHandler:IRequestHandler<UserTokenRequestQuery,OperationResult<UserTokenRequestQueryResponse>>
 {

@@ -11,7 +11,6 @@ public class User:IdentityUser<int>,IEntity
     }
 
     public string Name { get; set; }
-    public string FamilyName { get; set; }
     public string GeneratedCode { get; set; }
        
     public ICollection<UserRole> UserRoles { get; set; }

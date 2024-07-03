@@ -1,11 +1,11 @@
-﻿using Dnct.Application.Models.Common;
+﻿using System.Text.RegularExpressions;
+using Dnct.Application.Models.Common;
 using Dnct.SharedKernel.ValidationBase;
 using Dnct.SharedKernel.ValidationBase.Contracts;
 using FluentValidation;
 using Mediator;
-using System.Text.RegularExpressions;
 
-namespace Dnct.Application.Features.Users.Queries.TokenRequest;
+namespace Dnct.Application.Features.Identity.Queries.TokenRequest;
 
 public record UserTokenRequestQuery(string UserPhoneNumber) : IRequest<OperationResult<UserTokenRequestQueryResponse>>,
     IValidatableModel<UserTokenRequestQuery>

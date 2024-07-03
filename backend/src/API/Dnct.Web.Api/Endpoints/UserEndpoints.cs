@@ -1,10 +1,10 @@
 ﻿using System.Security.Claims;
 using Carter;
-using Dnct.Application.Features.Users.Commands.Create;
-using Dnct.Application.Features.Users.Commands.RefreshUserTokenCommand;
-using Dnct.Application.Features.Users.Commands.RequestLogout;
-using Dnct.Application.Features.Users.Queries.GenerateUserToken;
-using Dnct.Application.Features.Users.Queries.TokenRequest;
+using Dnct.Application.Features.Identity.Commands.Create;
+using Dnct.Application.Features.Identity.Commands.RefreshUserTokenCommand;
+using Dnct.Application.Features.Identity.Commands.RequestLogout;
+using Dnct.Application.Features.Identity.Queries.GenerateUserToken;
+using Dnct.Application.Features.Identity.Queries.TokenRequest;
 using Dnct.SharedKernel.Extensions;
 using Dnct.WebFramework.WebExtensions;
 using Mediator;

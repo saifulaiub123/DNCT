@@ -5,7 +5,7 @@ using Dnct.SharedKernel.ValidationBase.Contracts;
 using FluentValidation;
 using Mediator;
 
-namespace Dnct.Application.Features.Users.Commands.RefreshUserTokenCommand;
+namespace Dnct.Application.Features.Identity.Commands.RefreshUserTokenCommand;
 
 public record RefreshUserTokenCommand(Guid RefreshToken) : IRequest<OperationResult<AccessToken>>,
     IValidatableModel<RefreshUserTokenCommand>

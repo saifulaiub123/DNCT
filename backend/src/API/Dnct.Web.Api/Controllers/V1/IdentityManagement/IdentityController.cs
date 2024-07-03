@@ -1,28 +1,27 @@
 ﻿using Asp.Versioning;
-using Dnct.Application.Features.Users.Commands.Create;
-using Dnct.Application.Features.Users.Commands.RefreshUserTokenCommand;
-using Dnct.Application.Features.Users.Commands.RequestLogout;
-using Dnct.Application.Features.Users.Queries.GenerateUserToken;
-using Dnct.Application.Features.Users.Queries.TokenRequest;
+using Dnct.Application.Features.Identity.Commands.Create;
+using Dnct.Application.Features.Identity.Commands.RefreshUserTokenCommand;
+using Dnct.Application.Features.Identity.Commands.RequestLogout;
+using Dnct.Application.Features.Identity.Queries.GenerateUserToken;
+using Dnct.Application.Features.Identity.Queries.TokenRequest;
 using Dnct.WebFramework.BaseController;
 using Dnct.WebFramework.Swagger;
-using Dnct.WebFramework.WebExtensions;
 using Mediator;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dnct.Web.Api.Controllers.V1.UserManagement;
+namespace Dnct.Web.Api.Controllers.V1.IdentityManagement;
 
 [ApiVersion("1")]
 [ApiController]
 [Route("api/v{version:apiVersion}/User")]
-public class UserController : BaseController
+public class IdentityController : BaseController
 {
     private readonly IMediator _mediator;
 
-    public UserController(IMediator mediator)
+    public IdentityController(IMediator mediator)
     {
         _mediator = mediator;
     }
@@ -30,9 +29,8 @@ public class UserController : BaseController
     [HttpPost("Register")]
     public async Task<IActionResult> CreateUser(UserCreateCommand model)
     {
-        var command = await _mediator.Send(model);
-
-        return base.OperationResult(command);
+        var result = await _mediator.Send(model);
+        return OperationResult(result);
     }
 
 
@@ -40,8 +38,7 @@ public class UserController : BaseController
     public async Task<IActionResult> TokenRequest(UserTokenRequestQuery model)
     {
         var query = await _mediator.Send(model);
-
-        return base.OperationResult(query);
+        return OperationResult(query);
     }
 
     [HttpPost("LoginConfirmation")]
@@ -49,7 +46,7 @@ public class UserController : BaseController
     {
         var result = await _mediator.Send(model);
 
-        return base.OperationResult(result);
+        return OperationResult(result);
     }
 
     [HttpPost("RefreshSignIn")]
@@ -63,7 +60,7 @@ public class UserController : BaseController
 
         var newTokenResult = await _mediator.Send(model);
 
-        return base.OperationResult(newTokenResult);
+        return OperationResult(newTokenResult);
     }
 
     [HttpPost("Logout")]
@@ -72,6 +69,6 @@ public class UserController : BaseController
     {
         var commandResult = await _mediator.Send(new RequestLogoutCommand(base.UserId));
 
-        return base.OperationResult(commandResult);
+        return OperationResult(commandResult);
     }
 }

@@ -30,7 +30,7 @@ public class AdminGetTokenQueryHandler:IRequestHandler<AdminGetTokenQuery,Operat
                 return OperationResult<AccessToken>.FailureResult(
                     $"User is locked out. Try in {(user.LockoutEnd-DateTimeOffset.Now).Value.Minutes} Minutes");
 
-        var passwordValidator = await _userManager.AdminLogin(user, request.Password);
+        var passwordValidator = await _userManager.UserLogin(user, request.Password);
 
 
         if (!passwordValidator.Succeeded)

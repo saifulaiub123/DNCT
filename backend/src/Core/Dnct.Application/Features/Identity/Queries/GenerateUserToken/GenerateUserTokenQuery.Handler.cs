@@ -5,7 +5,7 @@ using Dnct.Application.Models.Jwt;
 using Dnct.SharedKernel.Extensions;
 using Mediator;
 
-namespace Dnct.Application.Features.Users.Queries.GenerateUserToken;
+namespace Dnct.Application.Features.Identity.Queries.GenerateUserToken;
 
 internal class GenerateUserTokenQueryHandler : IRequestHandler<GenerateUserTokenQuery, OperationResult<AccessToken>>
 {

@@ -1,7 +1,7 @@
 ﻿using Dnct.Application.Profiles;
 using Dnct.Domain.Entities.User;
 
-namespace Dnct.Application.Features.Users.Queries.GetUsers;
+namespace Dnct.Application.Features.Identity.Queries.GetUsers;
 
 public record GetUsersQueryResponse : ICreateMapper<User>
 {
