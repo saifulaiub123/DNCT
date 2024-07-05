@@ -31,6 +31,8 @@ import { MaterialModule } from './material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { provideToastr, ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -50,6 +52,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptorsFromDi()),
     provideClientHydration(),
     provideAnimationsAsync(),
+    provideToastr(),
 
     importProvidersFrom(
       FormsModule,
@@ -58,6 +61,7 @@ export const appConfig: ApplicationConfig = {
       NgxPermissionsModule.forRoot(),
       TablerIconsModule.pick(TablerIcons),
       NgScrollbarModule,
+      BrowserAnimationsModule,
       CalendarModule.forRoot({
         provide: DateAdapter,
         useFactory: adapterFactory,
@@ -68,7 +72,10 @@ export const appConfig: ApplicationConfig = {
           useFactory: HttpLoaderFactory,
           deps: [HttpClient],
         },
-      })
+      }),
+      // ToastrModule.forRoot({
+      //   closeButton: true,
+      // })
     ),
   ],
 };

@@ -20,7 +20,7 @@ public class UserEndpoints : ICarterModule
     private readonly double _version = 1.1;
     private readonly string _tag ="User";
     public void AddRoutes(IEndpointRouteBuilder app)
-    {
+    { 
         app.MapEndpoint(
             builder => builder.MapPost($"{_routePrefix}Register", async (UserCreateCommand model,ISender sender) =>
         {

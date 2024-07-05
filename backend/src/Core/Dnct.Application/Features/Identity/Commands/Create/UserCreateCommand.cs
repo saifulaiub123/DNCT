@@ -3,6 +3,7 @@ using Dnct.Application.Contracts.Identity;
 using Dnct.Application.Models.Common;
 using Dnct.Application.Profiles;
 using Dnct.Domain.Entities.User;
+using Dnct.SharedKernel.Extensions;
 using Dnct.SharedKernel.ValidationBase;
 using Dnct.SharedKernel.ValidationBase.Contracts;
 using FluentValidation;
@@ -16,7 +17,7 @@ public record UserCreateCommand
         string Name, 
         string Email,
         string Password
-    ) : IRequest<OperationResult<UserCreateCommandResult>>,IValidatableModel<UserCreateCommand>,ICreateMapper<User>
+    ) : IRequest<OperationResult<bool>>,IValidatableModel<UserCreateCommand>,ICreateMapper<User>
 {
 
     public IValidator<UserCreateCommand> ValidateApplicationModel(ApplicationBaseValidationModelProvider<UserCreateCommand> validator)
@@ -50,47 +51,54 @@ public record UserCreateCommand
     }
 
 
-    internal class UserCreateCommandHandler : IRequestHandler<UserCreateCommand, OperationResult<UserCreateCommandResult>>
+    internal class UserCreateCommandHandler : IRequestHandler<UserCreateCommand, OperationResult<bool>>
     {
 
         private readonly IAppUserManager _userManager;
         private readonly ILogger<UserCreateCommandHandler> _logger;
         private readonly IMapper _mapper;
-        public UserCreateCommandHandler(IAppUserManager userRepository, ILogger<UserCreateCommandHandler> logger, IMapper mapper)
+        private readonly IRoleManagerService _roleManagerService;
+
+        public UserCreateCommandHandler(
+            IAppUserManager userRepository, 
+            ILogger<UserCreateCommandHandler> logger, 
+            IMapper mapper, 
+            IRoleManagerService roleManagerService
+            )
         {
             _userManager = userRepository;
             _logger = logger;
             _mapper = mapper;
+            _roleManagerService = roleManagerService;
         }
 
-        public async ValueTask<OperationResult<UserCreateCommandResult>> Handle(UserCreateCommand request, CancellationToken cancellationToken)
+        public async ValueTask<OperationResult<bool>> Handle(UserCreateCommand request, CancellationToken cancellationToken)
         {
+            var role = await _roleManagerService.GetRoleByNameAsync("Admin");
+
+            if (role is null)
+                return OperationResult<bool>.NotFoundResult("Role admin not found");
+
             var userExist = await _userManager.IsExistUserName(request.Email);
 
             if (userExist)
-                return OperationResult<UserCreateCommandResult>.FailureResult("Email already exists");
+                return OperationResult<bool>.FailureResult("Email already exists");
 
-            var user = _mapper.Map<User>(request);
+            var newAdmin = new User { UserName = request.Email, Email = request.Email, Name= request.Name };
 
-            user.UserName = request.Email;
-            user.PhoneNumberConfirmed = true;
-            user.EmailConfirmed = true;
+            var adminCreateResult =
+                await _userManager.CreateUserWithPasswordAsync(
+                    newAdmin, request.Password);
 
-            var createResult = await _userManager.CreateUser(user,request.Password);
+            if (!adminCreateResult.Succeeded)
+                return OperationResult<bool>.FailureResult(adminCreateResult.Errors.StringifyIdentityResultErrors());
 
-            if (!createResult.Succeeded)
-            {
-                return OperationResult<UserCreateCommandResult>.FailureResult(string.Join(",", createResult.Errors.Select(c => c.Description)));
-            }
+            var addAdminToRoleResult = await _userManager.AddUserToRoleAsync(newAdmin, role);
 
-            var code = await _userManager.GeneratePhoneNumberConfirmationToken(user, user.PhoneNumber);
+            if (addAdminToRoleResult.Succeeded)
+                return OperationResult<bool>.SuccessResult(true);
 
-
-            _logger.LogWarning($"Generated Code for User ID {user.Id} is {code}");
-
-            //TODO Send Code Via Sms Provider
-
-            return OperationResult<UserCreateCommandResult>.SuccessResult(new UserCreateCommandResult { UserGeneratedKey = user.GeneratedCode });
+            return OperationResult<bool>.FailureResult(addAdminToRoleResult.Errors.StringifyIdentityResultErrors());
         }
     }
 }

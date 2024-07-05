@@ -3,6 +3,7 @@ using Dnct.Application.Features.Identity.Commands.Create;
 using Dnct.Application.Features.Identity.Commands.RefreshUserTokenCommand;
 using Dnct.Application.Features.Identity.Commands.RequestLogout;
 using Dnct.Application.Features.Identity.Queries.GenerateUserToken;
+using Dnct.Application.Features.Identity.Queries.Token;
 using Dnct.Application.Features.Identity.Queries.TokenRequest;
 using Dnct.WebFramework.BaseController;
 using Dnct.WebFramework.Swagger;
@@ -16,7 +17,7 @@ namespace Dnct.Web.Api.Controllers.V1.IdentityManagement;
 
 [ApiVersion("1")]
 [ApiController]
-[Route("api/v{version:apiVersion}/User")]
+[Route("api/v{version:apiVersion}/identity")]
 public class IdentityController : BaseController
 {
     private readonly IMediator _mediator;
@@ -26,7 +27,7 @@ public class IdentityController : BaseController
         _mediator = mediator;
     }
 
-    [HttpPost("Register")]
+    [HttpPost("register")]
     public async Task<IActionResult> CreateUser(UserCreateCommand model)
     {
         var result = await _mediator.Send(model);
@@ -34,14 +35,23 @@ public class IdentityController : BaseController
     }
 
 
-    [HttpPost("TokenRequest")]
+    [HttpPost("token")]
+    public async Task<IActionResult> Signin(TokenQuery model)
+    {
+        var query = await _mediator.Send(model);
+        return OperationResult(query);
+    }
+
+    [ApiExplorerSettings(IgnoreApi = true)]
+    [HttpPost("tokenRequest")]
     public async Task<IActionResult> TokenRequest(UserTokenRequestQuery model)
     {
         var query = await _mediator.Send(model);
         return OperationResult(query);
     }
 
-    [HttpPost("LoginConfirmation")]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    [HttpPost("login-confirmation")]
     public async Task<IActionResult> ValidateUser(GenerateUserTokenQuery model)
     {
         var result = await _mediator.Send(model);
@@ -49,7 +59,8 @@ public class IdentityController : BaseController
         return OperationResult(result);
     }
 
-    [HttpPost("RefreshSignIn")]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    [HttpPost("refresh-signin")]
     [RequireTokenWithoutAuthorization]
     public async Task<IActionResult> RefreshUserToken(RefreshUserTokenCommand model)
     {
@@ -63,7 +74,8 @@ public class IdentityController : BaseController
         return OperationResult(newTokenResult);
     }
 
-    [HttpPost("Logout")]
+
+    [HttpPost("logout")]
     [Authorize]
     public async Task<IActionResult> RequestLogout()
     {

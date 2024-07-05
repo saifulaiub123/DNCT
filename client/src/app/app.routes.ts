@@ -7,11 +7,11 @@ export const routes: Routes = [
     path: '',
     component: FullComponent,
     children: [
-      {
-        path: '',
-        redirectTo: '/authentication/register',
-        pathMatch: 'full',
-      },
+      // {
+      //   path: '',
+      //   redirectTo: '/authentication/register',
+      //   pathMatch: 'full',
+      // },
       {
         path: '',
         redirectTo: '/dashboards/dashboard1',

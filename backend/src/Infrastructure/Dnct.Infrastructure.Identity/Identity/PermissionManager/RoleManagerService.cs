@@ -211,4 +211,11 @@ internal class RoleManagerService : IRoleManagerService
     {
         return await _roleManger.FindByIdAsync(roleId.ToString());
     }
+
+    public async Task<Role> GetRoleByNameAsync(string role)
+    {
+        return await _roleManger.FindByNameAsync(role);
+    }
+
+
 }

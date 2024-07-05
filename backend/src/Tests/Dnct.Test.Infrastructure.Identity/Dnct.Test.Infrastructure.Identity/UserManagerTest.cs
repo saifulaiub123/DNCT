@@ -90,7 +90,7 @@ namespace Dnct.Test.Infrastructure.Identity
 
             var token=await base.JwtService.GenerateAsync(user);
 
-            Assert.NotNull(token.access_token);
+            Assert.NotNull(token.AccessToken);
         }
     }
 }

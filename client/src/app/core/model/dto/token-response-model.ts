@@ -1,9 +1,12 @@
 export class TokenResponseModel {
-  AccessToken !: string;
-  RefreshToken !: string;
-  Email!: string;
-  Roles !: string[];
-  Business !: any
-  Customer !: any
-  Id!: string;
+  userId: number;
+  email!: string;
+  name!: string;
+  token!: Token;
+}
+export class Token {
+  accessToken !: string;
+  refreshToken !: string;
+  tokenType !: string;
+  expiresIn !: number;
 }

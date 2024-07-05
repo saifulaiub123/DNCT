@@ -13,9 +13,17 @@ internal class UserRefreshTokenRepository : BaseAsyncRepository<UserRefreshToken
 
     public async Task<Guid> CreateToken(int userId)
     {
-        var token = new UserRefreshToken { IsValid = true, UserId = userId };
-        await base.AddAsync(token);
-        return token.Id;
+        try
+        {
+            var token = new UserRefreshToken { IsValid = true, UserId = userId };
+            await base.AddAsync(token);
+            return token.Id;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     public async Task<UserRefreshToken> GetTokenWithInvalidation(Guid id)

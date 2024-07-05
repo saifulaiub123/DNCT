@@ -1,8 +1,14 @@
 import { Component } from '@angular/core';
 import { CoreService } from 'src/app/core/services/core.service';
-import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MaterialModule } from '../../../material.module';
+import { AuthService } from 'src/app/core/services/api-services/auth.service';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { TokenStorageService } from 'src/app/core/services/token-storage.service';
+import { BehaviorSubject } from 'rxjs';
+import { TokenResponseModel } from 'src/app/core/model/dto/token-response-model';
+import { resetFakeAsyncZone } from '@angular/core/testing';
 
 @Component({
   selector: 'app-boxed-login',
@@ -11,21 +17,54 @@ import { MaterialModule } from '../../../material.module';
   templateUrl: './login.component.html',
 })
 export class AppBoxedLoginComponent {
+
+  $currentUser: BehaviorSubject<TokenResponseModel | null>;
+  redirectUrl: string = '';
+
   options = this.settings.getOptions();
 
-  constructor(private settings: CoreService, private router: Router) { }
+  constructor(
+    private settings: CoreService,
+    private router: Router,
+    private _authService: AuthService,
+    private _ngxService: NgxUiLoaderService,
+    private _tokenStorageService: TokenStorageService,
+  ) { }
 
-  form = new FormGroup({
-    uname: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    password: new FormControl('', [Validators.required]),
+  loginForm = new UntypedFormGroup({
+    email: new UntypedFormControl('', [Validators.required, Validators.email]),
+    password: new UntypedFormControl('', [Validators.required]),
   });
 
   get f() {
-    return this.form.controls;
+    return this.loginForm.controls;
+  }
+  public setRedirectURl(redirectUrl: string) {
+    this.redirectUrl = redirectUrl;
   }
 
-  submit() {
-    // console.log(this.form.value);
+  signin() {
+
+    if(!this.loginForm.valid)
+    {
+      return;
+    }
+    this._ngxService.start();
+    this._authService.signin(this.loginForm.value).subscribe((res: any)=> {
+      this._ngxService.stop();
+      if (res.isSuccess) {
+        this._tokenStorageService.saveUser(res.data);
+        this.$currentUser.next(res.data);
+
+          if (this.redirectUrl)
+              this.router.navigate([this.redirectUrl]);
+          else this.router.navigate(['/customer-user/businesses']);
+      }
+    },
+    (ex) => {
+      console.log(ex);
+      this._ngxService.stop();
+    })
     this.router.navigate(['/dashboards/dashboard1']);
   }
 }

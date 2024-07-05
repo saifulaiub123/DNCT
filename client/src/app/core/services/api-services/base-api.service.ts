@@ -1,3 +1,4 @@
+import { Token } from './../../model/dto/token-response-model';
 import {
   HttpClient,
   HttpHeaders,
@@ -18,7 +19,20 @@ import { TokenStorageService } from '../token-storage.service';
 })
 export class BaseApiService {
   private _baseUrl: string = environment.apiUrl;
+  private _apiVersion: string = environment.apiVersion;
   $currentUser: BehaviorSubject<TokenResponseModel | null>;
+
+
+  constructor(
+    private _httpClient: HttpClient,
+    private _loaderService: LoaderService,
+    private _notificationService: NotificationService,
+    private tokenStorageService: TokenStorageService
+  ) {
+    this.$currentUser = new BehaviorSubject<TokenResponseModel | null>(
+      this.tokenStorageService.getUser()
+    );
+  }
 
   getUser() {
     return this.$currentUser;
@@ -36,16 +50,7 @@ export class BaseApiService {
         });
   }
 
-  constructor(
-    private _httpClient: HttpClient,
-    private _loaderService: LoaderService,
-    private _notificationService: NotificationService,
-    private tokenStorageService: TokenStorageService
-  ) {
-    this.$currentUser = new BehaviorSubject<TokenResponseModel | null>(
-      this.tokenStorageService.getUser()
-    );
-  }
+
 
   protected get(
     action: string,
@@ -59,13 +64,10 @@ export class BaseApiService {
     }
     const currentUser: TokenResponseModel|null = this.tokenStorageService.getUser();
     var option = {
-      headers: this.getHeaders(currentUser?.AccessToken),//this.getHeaders(this.$currentUser.value?.AccessToken),
-    }; //this.httpOptions;
-    //if (noAuth) {
-    //  option = this.noAuthOptions;
-    //}
+      headers: this.getHeaders(currentUser?.token.accessToken),
+    };
     return this._httpClient
-      .get<ServerResponse>(`${this._baseUrl}/${action}/${paramter}`, option)
+      .get<ServerResponse>(`${this._baseUrl}/${this._apiVersion}/${action}/${paramter}`, option)
       .pipe(
         tap(
           (response) => {
@@ -104,10 +106,10 @@ export class BaseApiService {
     const currentUser: TokenResponseModel|null = this.tokenStorageService.getUser();
 
     var option = {
-      headers: this.getHeaders(currentUser?.AccessToken),
+      headers: this.getHeaders(currentUser?.token.accessToken),
     };
     return this._httpClient
-      .post<ServerResponse>(`${this._baseUrl}/${action}`, model, option)
+      .post<ServerResponse>(`${this._baseUrl}/${this._apiVersion}/${action}`, model, option)
       .pipe(
         tap(
           (response) => {
@@ -149,14 +151,14 @@ export class BaseApiService {
 
     var gAction = '';
     if (parameters == '') {
-      gAction = `${this._baseUrl}/${action}`;
+      gAction = `${this._baseUrl}/${this._apiVersion}/${action}`;
     } else {
-      gAction = `${this._baseUrl}/${action}/${parameters}`;
+      gAction = `${this._baseUrl}/${this._apiVersion}/${action}/${parameters}`;
     }
 
     const currentUser: TokenResponseModel|null = this.tokenStorageService.getUser();
     var option = {
-      headers: this.getHeaders(currentUser?.AccessToken),//this.getHeaders(this.$currentUser.value?.AccessToken),
+      headers: this.getHeaders(currentUser?.token.accessToken),//this.getHeaders(this.$currentUser.value?.AccessToken),
     };
     return this._httpClient.put<ServerResponse>(gAction, model, option).pipe(
       tap(
@@ -195,10 +197,10 @@ export class BaseApiService {
 
     const currentUser: TokenResponseModel|null = this.tokenStorageService.getUser();
     var option = {
-      headers: this.getHeaders(currentUser?.AccessToken),//this.getHeaders(this.$currentUser.value?.AccessToken),
+      headers: this.getHeaders(currentUser?.token.accessToken),//this.getHeaders(this.$currentUser.value?.AccessToken),
     };
     return this._httpClient
-      .delete<ServerResponse>(`${this._baseUrl}/${action}/${paramter}`, option)
+      .delete<ServerResponse>(`${this._baseUrl}/${this._apiVersion}/${action}/${paramter}`, option)
       .pipe(
         tap(
           (response) => {

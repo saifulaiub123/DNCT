@@ -75,8 +75,8 @@ public class UserGrpcServices : UserServices.UserServicesBase
             IsSuccess = true, Message = string.Empty,
             Token = new UserToken()
             {
-                AccessToken = tokenQuery.Result.access_token, ExpiresIn = tokenQuery.Result.expires_in,
-                RefreshToken = tokenQuery.Result.refresh_token, TokenType = tokenQuery.Result.token_type
+                AccessToken = tokenQuery.Result.AccessToken, ExpiresIn = tokenQuery.Result.ExpiresIn,
+                RefreshToken = tokenQuery.Result.RefreshToken, TokenType = tokenQuery.Result.TokenType
             }
         };
     }

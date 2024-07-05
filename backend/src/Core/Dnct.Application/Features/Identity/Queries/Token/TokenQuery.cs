@@ -60,23 +60,34 @@ namespace Dnct.Application.Features.Identity.Queries.Token
             var user = await _userManager.GetByUserName(request.Email);
 
             if (user is null)
-                return OperationResult<TokenQueryResponse>.NotFoundResult("User Not found");
+                return OperationResult<TokenQueryResponse>.FailureResult("User not found");
 
-            //var code = user.PhoneNumberConfirmed ? await _userManager.GenerateOtpCode(user) : await _userManager.GeneratePhoneNumberConfirmationToken(user, user.PhoneNumber);
+            var isUserLockedOut = await _userManager.IsUserLockedOutAsync(user);
 
-            //_logger.LogWarning($"Generated Code for user Id {user.Id} is {code}");
+            if (isUserLockedOut)
+                if (user.LockoutEnd != null)
+                    return OperationResult<TokenQueryResponse>.FailureResult(
+                        $"User is locked out. Try in {(user.LockoutEnd - DateTimeOffset.Now).Value.Minutes} Minutes");
 
-            var signInResult = await _userManager.UserLogin(user, request.Password);
-            if (signInResult.Succeeded)
+            var passwordValidator = await _userManager.UserLogin(user, request.Password);
+
+
+            if (!passwordValidator.Succeeded)
             {
-                var token = await _jwtService.GenerateAsync(user);
+                var lockoutIncrementResult = await _userManager.IncrementAccessFailedCountAsync(user);
 
-
-
-                
+                return OperationResult<TokenQueryResponse>.FailureResult("Username/Password is not correct");
             }
 
-            return OperationResult<TokenQueryResponse>.SuccessResult(new TokenQueryResponse { Email = "" });
+            var token = await _jwtService.GenerateAsync(user);
+
+            return OperationResult<TokenQueryResponse>.SuccessResult(new TokenQueryResponse
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                Name = user.Name,
+                Token = token
+            });
         }
     }
 }

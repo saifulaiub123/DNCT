@@ -13,4 +13,5 @@ public interface IRoleManagerService
     Task<RolePermissionDto> GetRolePermissionsAsync(int roleId);
     Task<bool> ChangeRolePermissionsAsync(EditRolePermissionsDto model);
     Task<Role> GetRoleByIdAsync(int roleId);
+    Task<Role> GetRoleByNameAsync(string role);
 }

@@ -7,7 +7,7 @@ using Mediator;
 
 namespace Dnct.Application.Features.Identity.Queries.GenerateUserToken;
 
-public record GenerateUserTokenQuery(string UserKey, string Code) : IRequest<OperationResult<AccessToken>>,
+public record GenerateUserTokenQuery(string UserKey, string Code) : IRequest<OperationResult<AuthToken>>,
     IValidatableModel<GenerateUserTokenQuery>
 {
     public IValidator<GenerateUserTokenQuery> ValidateApplicationModel(ApplicationBaseValidationModelProvider<GenerateUserTokenQuery> validator)

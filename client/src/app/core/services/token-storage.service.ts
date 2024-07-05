@@ -19,7 +19,7 @@ export class TokenStorageService {
     if (user == null) {
       return;
     }
-    user.AccessToken = accessToken;
+    user.token.accessToken = accessToken;
     this.saveUser(user);
   }
 
@@ -28,7 +28,7 @@ export class TokenStorageService {
     if (user == null) {
       return null;
     }
-    return user.AccessToken;
+    return user.token.accessToken;
   }
 
   public saveRefreshToken(refreshToken: string): void {
@@ -36,7 +36,7 @@ export class TokenStorageService {
     if (user == null) {
       return;
     }
-    user.RefreshToken = refreshToken;
+    user.token.refreshToken = refreshToken;
     this.saveUser(user);
   }
 
@@ -45,7 +45,7 @@ export class TokenStorageService {
     if (user == null) {
       return null;
     }
-    return user.RefreshToken;
+    return user.token.refreshToken;
   }
 
   public saveUser(tokenResponse: TokenResponseModel): void {

@@ -66,7 +66,16 @@ builder.Services.AddAutoMapper(expression =>
 {
     expression.AddMaps(typeof(User), typeof(JwtService), typeof(IdentityController));
 });
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "DefaultPolicy",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5200")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
 var app = builder.Build();
 
 
@@ -78,12 +87,16 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-app.UseExceptionHandler(_=>{});
+app.UseExceptionHandler(new ExceptionHandlerOptions()
+{
+    AllowStatusCode404Response = true,
+    ExceptionHandlingPath = "/error"
+});
 app.UseSwaggerAndUI();
 
 app.MapCarter();
 app.UseRouting();
-
+app.UseCors("DefaultPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

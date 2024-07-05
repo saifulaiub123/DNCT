@@ -7,7 +7,7 @@ using Mediator;
 
 namespace Dnct.Application.Features.Admin.Queries.GetToken;
 
-public record AdminGetTokenQuery(string UserName, string Password) : IRequest<OperationResult<AccessToken>>,
+public record AdminGetTokenQuery(string UserName, string Password) : IRequest<OperationResult<AuthToken>>,
     IValidatableModel<AdminGetTokenQuery>
 {
     public IValidator<AdminGetTokenQuery> ValidateApplicationModel(ApplicationBaseValidationModelProvider<AdminGetTokenQuery> validator)

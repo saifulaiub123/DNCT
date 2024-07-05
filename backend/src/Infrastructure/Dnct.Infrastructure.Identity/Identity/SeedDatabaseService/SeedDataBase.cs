@@ -26,12 +26,12 @@ public class SeedDataBase : ISeedDataBase
         {
             var role=new Role
             {
-                Name = "admin",
+                Name = "Admin",
             };
             await _roleManager.CreateAsync(role);
             role = new Role
             {
-                Name = "user",
+                Name = "User",
             };
             await _roleManager.CreateAsync(role);
 
@@ -48,7 +48,7 @@ public class SeedDataBase : ISeedDataBase
             };
 
             await  _userManager.CreateAsync(user, "Pass@123");
-            await _userManager.AddToRoleAsync(user,"admin");
+            await _userManager.AddToRoleAsync(user,"Admin");
         }
     }
 }
