@@ -8,7 +8,6 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { TokenStorageService } from 'src/app/core/services/token-storage.service';
 import { BehaviorSubject } from 'rxjs';
 import { TokenResponseModel } from 'src/app/core/model/dto/token-response-model';
-import { resetFakeAsyncZone } from '@angular/core/testing';
 
 @Component({
   selector: 'app-boxed-login',
@@ -16,7 +15,7 @@ import { resetFakeAsyncZone } from '@angular/core/testing';
   imports: [RouterModule, MaterialModule, FormsModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
 })
-export class AppBoxedLoginComponent {
+export class LoginComponent {
 
   $currentUser: BehaviorSubject<TokenResponseModel | null>;
   redirectUrl: string = '';

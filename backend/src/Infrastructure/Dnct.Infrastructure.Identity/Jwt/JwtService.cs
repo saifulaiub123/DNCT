@@ -30,7 +30,7 @@ public class JwtService : IJwtService
         _claimsPrincipal = claimsPrincipal;
         _unitOfWork = unitOfWork;
     }
-    public async Task<AccessToken> GenerateAsync(User user)
+    public async Task<AuthToken> GenerateAsync(User user)
     {
         var secretKey = Encoding.UTF8.GetBytes(_siteSetting.SecretKey); // longer that 16 character
         var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha256Signature);
@@ -61,7 +61,7 @@ public class JwtService : IJwtService
         var refreshToken = await _unitOfWork.UserRefreshTokenRepository.CreateToken(user.Id);
         await _unitOfWork.CommitAsync();
 
-        return new AccessToken(securityToken,refreshToken.ToString());
+        return new AuthToken(securityToken,refreshToken.ToString());
     }
 
     public Task<ClaimsPrincipal> GetPrincipalFromExpiredToken(string token)
@@ -86,14 +86,14 @@ public class JwtService : IJwtService
         return Task.FromResult(principal);
     }
 
-    public async Task<AccessToken> GenerateByPhoneNumberAsync(string phoneNumber)
+    public async Task<AuthToken> GenerateByPhoneNumberAsync(string phoneNumber)
     {
         var user = await _userManager.Users.AsNoTracking().FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
         var result = await this.GenerateAsync(user);
         return result;
     }
 
-    public async Task<AccessToken> RefreshToken(Guid refreshTokenId)
+    public async Task<AuthToken> RefreshToken(Guid refreshTokenId)
     {
         var refreshToken = await _unitOfWork.UserRefreshTokenRepository.GetTokenWithInvalidation(refreshTokenId);
             
