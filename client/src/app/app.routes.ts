@@ -1,8 +1,49 @@
+import { User } from './pages/forms/form-elements/autocomplete/autocomplete.component';
 import { Routes } from '@angular/router';
 import { BlankComponent } from './layouts/blank/blank.component';
 import { FullComponent } from './layouts/full/full.component';
 
 export const routes: Routes = [
+  {
+    path: '',
+    component: BlankComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: '/authentication/login',
+        pathMatch: 'full',
+      },
+      {
+        path: 'authentication',
+        loadChildren: () =>
+          import('./features/authentication/authentication.routes').then(
+            (m) => m.AuthenticationRoutes
+          ),
+      },
+      {
+        path: 'user',
+        loadChildren: () =>
+          import('./features/user/user.routes').then(
+            (m) => m.UserRoutes
+          ),
+      },
+
+      {
+        path: 'authentication1',
+        loadChildren: () =>
+          import('./pages/authentication/authentication.routes').then(
+            (m) => m.AuthenticationRoutes
+          ),
+      },
+      {
+        path: 'landingpage',
+        loadChildren: () =>
+          import('./pages/theme-pages/landingpage/landingpage.routes').then(
+            (m) => m.LandingPageRoutes
+          ),
+      },
+    ],
+  },
   {
     path: '',
     component: FullComponent,
@@ -73,35 +114,6 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./pages/theme-pages/theme-pages.routes').then(
             (m) => m.ThemePagesRoutes
-          ),
-      },
-    ],
-  },
-  {
-    path: '',
-    component: BlankComponent,
-    children: [
-      {
-        path: 'authentication',
-        loadChildren: () =>
-          import('./features/authentication/authentication.routes').then(
-            (m) => m.AuthenticationRoutes
-          ),
-      },
-
-
-      {
-        path: 'authentication1',
-        loadChildren: () =>
-          import('./pages/authentication/authentication.routes').then(
-            (m) => m.AuthenticationRoutes
-          ),
-      },
-      {
-        path: 'landingpage',
-        loadChildren: () =>
-          import('./pages/theme-pages/landingpage/landingpage.routes').then(
-            (m) => m.LandingPageRoutes
           ),
       },
     ],

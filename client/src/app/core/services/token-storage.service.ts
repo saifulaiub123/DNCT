@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { TokenResponseModel } from '../model/dto/token-response-model';
+import { TokenResponseModel } from '../model/contract/token-response-model';
+import { AuthStateService } from 'src/app/features/authentication/auth-state.service';
 
 const USER_KEY = 'auth-user';
 
@@ -7,7 +8,9 @@ const USER_KEY = 'auth-user';
   providedIn: 'root',
 })
 export class TokenStorageService {
-  constructor() { }
+  constructor(
+    private _authStateService: AuthStateService
+  ) { }
 
   signOut(): void {
     localStorage.removeItem(USER_KEY);
@@ -51,6 +54,7 @@ export class TokenStorageService {
   public saveUser(tokenResponse: TokenResponseModel): void {
     localStorage.removeItem(USER_KEY);
     localStorage.setItem(USER_KEY, JSON.stringify(tokenResponse));
+    this._authStateService.setCurrentUser(tokenResponse);
   }
 
   public getUser(): TokenResponseModel | null {

@@ -7,7 +7,8 @@ import { AuthService } from 'src/app/core/services/api-services/auth.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { TokenStorageService } from 'src/app/core/services/token-storage.service';
 import { BehaviorSubject } from 'rxjs';
-import { TokenResponseModel } from 'src/app/core/model/dto/token-response-model';
+import { TokenResponseModel } from 'src/app/core/model/contract/token-response-model';
+import { AuthStateService } from '../auth-state.service';
 
 @Component({
   selector: 'app-boxed-login',
@@ -20,12 +21,13 @@ export class LoginComponent {
   $currentUser: BehaviorSubject<TokenResponseModel | null>;
   redirectUrl: string = '';
 
-  options = this.settings.getOptions();
+  options = this._settings.getOptions();
 
   constructor(
-    private settings: CoreService,
-    private router: Router,
+    private _settings: CoreService,
+    private _router: Router,
     private _authService: AuthService,
+    private _authStateService: AuthStateService,
     private _ngxService: NgxUiLoaderService,
     private _tokenStorageService: TokenStorageService,
   ) { }
@@ -50,20 +52,20 @@ export class LoginComponent {
     }
     this._ngxService.start();
     this._authService.signin(this.loginForm.value).subscribe((res: any)=> {
-      this._ngxService.stop();
+
       if (res.isSuccess) {
         this._tokenStorageService.saveUser(res.data);
-        this.$currentUser.next(res.data);
 
-          if (this.redirectUrl)
-              this.router.navigate([this.redirectUrl]);
-          else this.router.navigate(['/customer-user/businesses']);
+        if (this.redirectUrl)
+            this._router.navigate([this.redirectUrl]);
+        else this._router.navigate(['/user/dashboard']);
       }
+      this._ngxService.stop();
     },
     (ex) => {
       console.log(ex);
       this._ngxService.stop();
     })
-    this.router.navigate(['/dashboards/dashboard1']);
+
   }
 }

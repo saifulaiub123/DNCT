@@ -1,4 +1,4 @@
-import { Token } from './../../model/dto/token-response-model';
+import { Token } from '../../model/contract/token-response-model';
 import {
   HttpClient,
   HttpHeaders,
@@ -11,7 +11,7 @@ import { environment } from 'src/app/environments/environment';
 import { LoaderService } from '../loader.service';
 import { NotificationService } from '../notification.service';
 import { ServerResponse } from '../../model/contract/server-response';
-import { TokenResponseModel } from '../../model/dto/token-response-model';
+import { TokenResponseModel } from '../../model/contract/token-response-model';
 import { TokenStorageService } from '../token-storage.service';
 
 @Injectable({

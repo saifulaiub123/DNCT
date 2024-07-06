@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { AppErrorComponent } from '../authentication/error/error.component';
-import { AppBoxedLoginComponent } from '../authentication/login/login.component';
 import { AppMaintenanceComponent } from '../authentication/maintenance/maintenance.component';
 import { RegisterComponent } from '../authentication/register/register.component';
+import { AppDashboard1Component } from 'src/app/pages/dashboards/dashboard1/dashboard1.component';
 
 
 export const UserRoutes: Routes = [
@@ -11,19 +11,7 @@ export const UserRoutes: Routes = [
     children: [
       {
         path: 'dashboard',
-        component: AppBoxedLoginComponent,
-      },
-      {
-        path: 'register',
-        component: RegisterComponent,
-      },
-      {
-        path: 'error',
-        component: AppErrorComponent,
-      },
-      {
-        path: 'maintenance',
-        component: AppMaintenanceComponent,
+        component: AppDashboard1Component,
       },
     ],
   },
