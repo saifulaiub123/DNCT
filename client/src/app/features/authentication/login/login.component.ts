@@ -27,7 +27,6 @@ export class LoginComponent {
     private _settings: CoreService,
     private _router: Router,
     private _authService: AuthService,
-    private _authStateService: AuthStateService,
     private _ngxService: NgxUiLoaderService,
     private _tokenStorageService: TokenStorageService,
   ) { }

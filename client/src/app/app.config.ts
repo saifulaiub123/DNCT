@@ -73,9 +73,6 @@ export const appConfig: ApplicationConfig = {
           deps: [HttpClient],
         },
       }),
-      // ToastrModule.forRoot({
-      //   closeButton: true,
-      // })
     ),
   ],
 };

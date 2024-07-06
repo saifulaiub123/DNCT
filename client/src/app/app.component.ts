@@ -18,5 +18,5 @@ import { SharedModule } from './core/shared/shared.module';
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-  title = 'Modernize Angular Admin Tempplate';
+  title = 'DNCT Server Management';
 }
