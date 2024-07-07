@@ -21,6 +21,8 @@ import { AppBreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component
 import { CustomizerComponent } from './shared/customizer/customizer.component';
 import { NavService } from 'src/app/core/services/nav.service';
 import { AppTreeviewComponent } from "./vertical/sidebar/treeview/treeview.component";
+import { AngularSplitModule } from 'angular-split';
+import { DynamicTreeViewComponent } from "./vertical/sidebar/dynamic-tree-view/dynamic-tree-view.component";
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
@@ -61,7 +63,9 @@ interface quicklinks {
         AppHorizontalSidebarComponent,
         AppBreadcrumbComponent,
         CustomizerComponent,
-        AppTreeviewComponent
+        AppTreeviewComponent,
+        AngularSplitModule,
+        DynamicTreeViewComponent
     ]
 })
 export class BaseLayoutComponent implements OnInit {

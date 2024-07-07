@@ -1,0 +1,156 @@
+export interface TreeNode {
+  id: number;
+  name: string;
+  children?: TreeNode[];
+}
+
+
+
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
+import { TreeNode } from './tree-node';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TreeService {
+
+  private dataChange = new BehaviorSubject<TreeNode[]>([]);
+
+  constructor() {
+    this.initialize();
+  }
+
+  initialize() {
+    // Simulate fetching data from a database or API
+    const initialData: TreeNode[] = [
+      { id: 1, name: 'Node 1' },
+      { id: 2, name: 'Node 2' }
+    ];
+
+    this.dataChange.next(initialData);
+  }
+
+  getTreeData(): Observable<TreeNode[]> {
+    return this.dataChange.asObservable();
+  }
+
+  loadChildren(nodeId: number): Observable<TreeNode[]> {
+    // Simulate loading children for a specific node from a database or API
+    const children: TreeNode[] = [
+      { id: 11, name: 'Child 1 of Node ' + nodeId },
+      { id: 12, name: 'Child 2 of Node ' + nodeId }
+    ];
+
+    // Replace with actual HTTP call to fetch data from API
+    return of(children).pipe(delay(500)); // Simulate async delay
+  }
+}
+
+
+
+
+
+
+
+----------------------------------
+
+
+import { Component, OnInit } from '@angular/core';
+import { TreeService } from '../tree.service';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { BehaviorSubject } from 'rxjs';
+import { TreeNode } from '../tree-node';
+
+interface FlatNode {
+  expandable: boolean;
+  name: string;
+  level: number;
+}
+
+@Component({
+  selector: 'app-tree-view',
+  templateUrl: './tree-view.component.html',
+  styleUrls: ['./tree-view.component.css']
+})
+export class TreeViewComponent implements OnInit {
+
+  treeControl: FlatTreeControl<FlatNode>;
+  treeFlattener: MatTreeFlattener<TreeNode, FlatNode>;
+  dataSource: MatTreeFlatDataSource<TreeNode, FlatNode>;
+
+  constructor(private treeService: TreeService) {
+    this.treeFlattener = new MatTreeFlattener(
+      this.transformer.bind(this),
+      node => node.level,
+      node => node.children != null
+    );
+    this.treeControl = new FlatTreeControl<FlatNode>(
+      node => node.level,
+      node => node.expandable
+    );
+    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+    this.treeService.getTreeData().subscribe(data => {
+      this.dataSource.data = data;
+    });
+  }
+
+  ngOnInit() {
+  }
+
+  transformer(node: TreeNode, level: number): FlatNode {
+    return {
+      expandable: !!node.children && node.children.length > 0,
+      name: node.name,
+      level: level
+    };
+  }
+
+  hasChild(_: number, node: FlatNode): boolean {
+    return node.expandable;
+  }
+
+  onNodeClick(node: TreeNode) {
+    if (!node.children) {
+      this.treeService.loadChildren(node.id).subscribe(children => {
+        node.children = children;
+        this.dataSource.data = [...this.dataSource.data]; // Refresh the tree
+      });
+    }
+  }
+
+}
+
+
+
+-----------------------------------------------------
+
+
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle (click)="onNodeClick(node)">
+    <li class="mat-tree-node">
+      <button mat-icon-button matTreeNodeToggle></button>
+      {{ node.name }}
+    </li>
+  </mat-tree-node>
+
+  <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+    <li>
+      <div class="mat-tree-node">
+        <button mat-icon-button matTreeNodeToggle
+                [attr.aria-label]="'Toggle ' + node.name">
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+          </mat-icon>
+        </button>
+        {{ node.name }}
+      </div>
+      <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+        <ng-container matTreeNodeOutlet></ng-container>
+      </ul>
+    </li>
+  </mat-nested-tree-node>
+</mat-tree>
