@@ -16,7 +16,7 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             options
-                .UseSqlServer(configuration.GetConnectionString("SqlServer"));
+                .UseNpgsql(configuration.GetConnectionString("DnctDB"));
         });
 
         return services;
