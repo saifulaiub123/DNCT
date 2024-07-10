@@ -22,7 +22,97 @@ namespace Dnct.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Dnct.Domain.Entities.DatbsSrcs", b =>
+            modelBuilder.Entity("ConnectionsMaster", b =>
+                {
+                    b.Property<int>("ContnId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("contn_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ContnId"));
+
+                    b.Property<string>("AccntStr")
+                        .HasColumnType("text")
+                        .HasColumnName("accnt_str");
+
+                    b.Property<string>("Attr1")
+                        .HasColumnType("text")
+                        .HasColumnName("attr1");
+
+                    b.Property<string>("Attr2")
+                        .HasColumnType("text")
+                        .HasColumnName("attr2");
+
+                    b.Property<string>("Attr3")
+                        .HasColumnType("text")
+                        .HasColumnName("attr3");
+
+                    b.Property<string>("ContnName")
+                        .HasColumnType("text")
+                        .HasColumnName("contn_name");
+
+                    b.Property<string>("ContnPort")
+                        .HasColumnType("text")
+                        .HasColumnName("contn_port");
+
+                    b.Property<string>("CreatedUserName")
+                        .HasColumnType("text")
+                        .HasColumnName("created_user_name");
+
+                    b.Property<string>("DefaultDb")
+                        .HasColumnType("text")
+                        .HasColumnName("default_db");
+
+                    b.Property<int?>("EnabledInd")
+                        .HasColumnType("integer")
+                        .HasColumnName("enabled_ind");
+
+                    b.Property<string>("EncrKey")
+                        .HasColumnType("text")
+                        .HasColumnName("encr_key");
+
+                    b.Property<string>("HostIp")
+                        .HasColumnType("text")
+                        .HasColumnName("host_ip");
+
+                    b.Property<string>("Logmech")
+                        .HasColumnType("text")
+                        .HasColumnName("logmech");
+
+                    b.Property<string>("OrclTnsAlias")
+                        .HasColumnType("text")
+                        .HasColumnName("orcl_tns_alias");
+
+                    b.Property<string>("Paswd")
+                        .HasColumnType("text")
+                        .HasColumnName("paswd");
+
+                    b.Property<string>("PlatformType")
+                        .HasColumnType("text")
+                        .HasColumnName("platform_type");
+
+                    b.Property<string>("PrivateKey")
+                        .HasColumnType("text")
+                        .HasColumnName("private_key");
+
+                    b.Property<string>("PublicKey")
+                        .HasColumnType("text")
+                        .HasColumnName("public_key");
+
+                    b.Property<string>("TdParameter")
+                        .HasColumnType("text")
+                        .HasColumnName("td_parameter");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("text")
+                        .HasColumnName("user_name");
+
+                    b.HasKey("ContnId");
+
+                    b.ToTable("contns_mstrs", "public");
+                });
+
+            modelBuilder.Entity("Dnct.Domain.Entities.DatabaseSources", b =>
                 {
                     b.Property<int>("DatbsSrcId")
                         .HasColumnType("integer")
@@ -437,6 +527,117 @@ namespace Dnct.Infrastructure.Persistence.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserTokens", "usr");
+                });
+
+            modelBuilder.Entity("TableConfiguration", b =>
+                {
+                    b.Property<int?>("TblConfgrtnId")
+                        .HasColumnType("integer")
+                        .HasColumnName("tbl_confgrtn_id");
+
+                    b.Property<DateTime?>("ConfgrtnEffStartTs")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("confgrtn_eff_start_ts");
+
+                    b.Property<string>("AdtnlWherCondtns")
+                        .HasColumnType("text")
+                        .HasColumnName("adtnl_wher_condtns");
+
+                    b.Property<DateTime?>("ConfgrtnEffEndTs")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("confgrtn_eff_end_ts");
+
+                    b.Property<int?>("DatbsSrcId")
+                        .HasColumnType("integer")
+                        .HasColumnName("datbs_src_id");
+
+                    b.Property<string>("DedupByColmns")
+                        .HasColumnType("text")
+                        .HasColumnName("dedup_by_colmns");
+
+                    b.Property<string>("DedupLogic")
+                        .HasColumnType("text")
+                        .HasColumnName("dedup_logic");
+
+                    b.Property<string>("DeltRowIdntfctn")
+                        .HasColumnType("text")
+                        .HasColumnName("delt_row_idntfctn");
+
+                    b.Property<string>("DmlActionType")
+                        .HasColumnType("text")
+                        .HasColumnName("dml_action_type");
+
+                    b.Property<int?>("EstmtdTblSiz")
+                        .HasColumnType("integer")
+                        .HasColumnName("estmtd_tbl_siz");
+
+                    b.Property<string>("InstncName")
+                        .HasColumnType("text")
+                        .HasColumnName("instnc_name");
+
+                    b.Property<string>("InstncUseType")
+                        .HasColumnType("text")
+                        .HasColumnName("instnc_use_type");
+
+                    b.Property<string>("ObjctAls")
+                        .HasColumnType("text")
+                        .HasColumnName("objct_als");
+
+                    b.Property<string>("ObjctNatr")
+                        .HasColumnType("text")
+                        .HasColumnName("objct_natr");
+
+                    b.Property<string>("PartitionClause")
+                        .HasColumnType("text")
+                        .HasColumnName("partition_clause");
+
+                    b.Property<string>("PartitionColmns")
+                        .HasColumnType("text")
+                        .HasColumnName("partition_colmns");
+
+                    b.Property<string>("PkColmns")
+                        .HasColumnType("text")
+                        .HasColumnName("pk_colmns");
+
+                    b.Property<string>("Queryband")
+                        .HasColumnType("text")
+                        .HasColumnName("queryband");
+
+                    b.Property<string>("SetlSetupName")
+                        .HasColumnType("text")
+                        .HasColumnName("setl_setup_name");
+
+                    b.Property<string>("SqlToUseForSel")
+                        .HasColumnType("text")
+                        .HasColumnName("sql_to_use_for_sel");
+
+                    b.Property<int?>("SrcPatrnId")
+                        .HasColumnType("integer")
+                        .HasColumnName("src_patrn_id");
+
+                    b.Property<string>("TargetObjcConName")
+                        .HasColumnType("text")
+                        .HasColumnName("target_objc_con_name");
+
+                    b.Property<char?>("TrunctTblAftrLoad")
+                        .HasColumnType("character(1)")
+                        .HasColumnName("trunct_tbl_aftr_load");
+
+                    b.Property<char?>("TrunctTblBefrLoad")
+                        .HasColumnType("character(1)")
+                        .HasColumnName("trunct_tbl_befr_load");
+
+                    b.Property<string>("Type2Colmns")
+                        .HasColumnType("text")
+                        .HasColumnName("type2_colmns");
+
+                    b.Property<int?>("YearsOfHistory")
+                        .HasColumnType("integer")
+                        .HasColumnName("years_of_history");
+
+                    b.HasKey("TblConfgrtnId", "ConfgrtnEffStartTs");
+
+                    b.ToTable("tbl_confgrtns", "public");
                 });
 
             modelBuilder.Entity("Dnct.Domain.Entities.Order.Order", b =>
