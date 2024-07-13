@@ -1,4 +1,5 @@
-﻿using Dnct.Application.Contracts.Identity;
+﻿using AutoMapper;
+using Dnct.Application.Contracts.Identity;
 using Dnct.Application.Contracts;
 using Dnct.Application.Contracts.Persistence;
 using Dnct.Application.Models.Common;
@@ -9,31 +10,36 @@ using Microsoft.Extensions.Configuration;
 
 namespace Dnct.Application.Features.Server.Query.GetServerInfo
 {
-    public class GetAllServersQuery : IRequest<OperationResult<GetAllServersResponse>>
+    public class GetAllServersQuery : IRequest<OperationResult<List<GetAllServerResponse>>>
     {
         
     };
 
 
 
-    public class GetAllServersQueryHandler : IRequestHandler<GetAllServersQuery, OperationResult<GetAllServersResponse>>
+    public class GetAllServersQueryHandler : IRequestHandler<GetAllServersQuery, OperationResult<List<GetAllServerResponse>>>
     {
         private readonly ILogger<GetAllServersQueryHandler> _logger;
-        private readonly IDatabaseSourcesRepository _databaseSourcesRepository;
+        private readonly IConnectionMasterRepository _connectionMasterRepository;
+        private readonly IMapper _mapper;
 
         public GetAllServersQueryHandler(
             ILogger<GetAllServersQueryHandler> logger,
-            IDatabaseSourcesRepository databaseSourcesRepository)
+            IConnectionMasterRepository connectionMasterRepository, 
+            IMapper mapper)
         {
             _logger = logger;
-            _databaseSourcesRepository = databaseSourcesRepository;
+            _connectionMasterRepository = connectionMasterRepository;
+            _mapper = mapper;
         }
 
 
-        public async ValueTask<OperationResult<GetAllServersResponse>> Handle(GetAllServersQuery request, CancellationToken cancellationGetServerInfo)
+        public async ValueTask<OperationResult<List<GetAllServerResponse>>> Handle(GetAllServersQuery request, CancellationToken cancellationGetServerInfo)
         {
-            var servers = await _databaseSourcesRepository.GetAllServer();
-            return OperationResult<GetAllServersResponse>.SuccessResult(new GetAllServersResponse());
+            var servers = await _connectionMasterRepository.GetAllServer();
+            var mappedResult = _mapper.Map<List<GetAllServerResponse>>(servers);
+
+            return OperationResult<List<GetAllServerResponse>>.SuccessResult(mappedResult);
         }
     }
 }

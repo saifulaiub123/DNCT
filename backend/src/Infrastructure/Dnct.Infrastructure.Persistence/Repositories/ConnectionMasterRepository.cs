@@ -1,41 +1,40 @@
-﻿
-using Dapper;
+﻿using Dapper;
 using Dnct.Application.Contracts.Persistence;
 using Dnct.Domain.Constant;
 using Dnct.Domain.Entities;
-using Dnct.Domain.Entities.Order;
-using Dnct.Domain.Model;
-using Dnct.Infrastructure.Persistence.Repositories.Common;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Dnct.Infrastructure.Persistence.Repositories
 {
-
-    public class DatabaseSourcesRepository : IDatabaseSourcesRepository
+    public class ConnectionMasterRepository : IConnectionMasterRepository
     {
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
 
-        public DatabaseSourcesRepository(IConfiguration configuration)
+        public ConnectionMasterRepository(IConfiguration configuration)
         {
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString(DbConst.DbConnectionName);
         }
 
-        public async Task<List<DatabaseSources>> GetAllServer()
+        public async Task<List<ConnectionsMaster>> GetAllServer()
         {
+            var servers = new List<ConnectionsMaster>();
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
                 await connection.OpenAsync();
-                var customers = (await connection.QueryAsync<DatabaseSources>($"SELECT * FROM {DbConst.SchemaDbo}.datbs_srcs")).ToList();
-                //return customers;
+                servers = (await connection.QueryAsync<ConnectionsMaster>($"SELECT * FROM {DbConst.SchemaDbo}.contns_mstr")).ToList();
             }
-            return null;
+            return servers;
         }
     }
-    
+
 
 }
