@@ -1,7 +1,6 @@
 export class ServerResponse {
-  result: any;
+  data: any;
   isSuccess: boolean;
-  errorMessage : string;
-  isException : boolean;
-  isNotFound: boolean;
+  statusCode : number;
+  message : string;
 }

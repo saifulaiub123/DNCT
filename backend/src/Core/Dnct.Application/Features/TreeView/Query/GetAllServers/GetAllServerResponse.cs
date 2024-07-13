@@ -7,5 +7,6 @@ namespace Dnct.Application.Features.Server.Query.GetServerInfo
     {
         public int Id { get; set; }
         public string Title { get; set; }
+        public string NodeType { get; set; } = "Server";
     }
 }
