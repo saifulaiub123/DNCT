@@ -3,6 +3,7 @@ using Azure.Core;
 using Dnct.Application.Features.Order.Queries.GetUserOrders;
 using Dnct.Application.Features.Server.Query.GetServerInfo;
 using Dnct.Application.Features.TreeView.Query.GetDatabasesByServerId;
+using Dnct.Application.Features.TreeView.Query.GetTableInstanceByDatabaseSourceId;
 using Dnct.Application.Features.TreeView.Query.GetTablesByDatabaseSourceIdId;
 using Dnct.WebFramework.BaseController;
 using Mediator;
@@ -33,6 +34,14 @@ public class TreeViewController(ISender sender) : BaseController
     }
     [HttpGet("GetTablesByDatabaseSourceId")]
     public async Task<IActionResult> GetTablesByDatabaseSourceId([FromQuery] GetTablesByDatabaseSourceIdQuery request)
+    {
+        var query = await sender.Send(request);
+
+        return base.OperationResult(query);
+    }
+
+    [HttpGet("GetTableInstanceByDatabaseSourceId")]
+    public async Task<IActionResult> GetTableInstanceByDatabaseSourceId([FromQuery] GetTableInstanceByDatabaseSourceIdQuery request)
     {
         var query = await sender.Send(request);
 
