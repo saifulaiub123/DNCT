@@ -10,7 +10,7 @@ namespace Dnct.Infrastructure.Persistence.Configuration
     {
         public void Configure(EntityTypeBuilder<ConnectionsMaster> builder)
         {
-            builder.ToTable("contns_mstr", "public");
+            builder.ToTable("contns_mstr", "codebotmstr");
             builder.HasKey(x => x.ContnId);
         }
     }

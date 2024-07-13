@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("contns_mstr")]
 public class ConnectionsMaster
 {
     [Key]

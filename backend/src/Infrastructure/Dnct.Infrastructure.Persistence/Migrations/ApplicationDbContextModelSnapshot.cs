@@ -109,7 +109,7 @@ namespace Dnct.Infrastructure.Persistence.Migrations
 
                     b.HasKey("ContnId");
 
-                    b.ToTable("contns_mstrs", "public");
+                    b.ToTable("contns_mstr", "codebotmstr");
                 });
 
             modelBuilder.Entity("Dnct.Domain.Entities.DatabaseSources", b =>
@@ -232,7 +232,7 @@ namespace Dnct.Infrastructure.Persistence.Migrations
 
                     b.HasKey("DatbsSrcId", "ConfigurationEffectiveEndTime");
 
-                    b.ToTable("datbs_srcs", "public");
+                    b.ToTable("datbs_srcs", "codebotmstr");
                 });
 
             modelBuilder.Entity("Dnct.Domain.Entities.Order.Order", b =>
@@ -268,7 +268,7 @@ namespace Dnct.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("Dnct.Domain.Entities.User.Role", b =>
@@ -637,7 +637,7 @@ namespace Dnct.Infrastructure.Persistence.Migrations
 
                     b.HasKey("TblConfgrtnId", "ConfgrtnEffStartTs");
 
-                    b.ToTable("tbl_confgrtns", "public");
+                    b.ToTable("tbl_confgrtn", "codebotmstr");
                 });
 
             modelBuilder.Entity("Dnct.Domain.Entities.Order.Order", b =>

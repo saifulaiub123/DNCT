@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("tbl_confgrtn")]
 public class TableConfiguration
 {
     [Column("tbl_confgrtn_id")]

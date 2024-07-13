@@ -8,7 +8,7 @@ namespace Dnct.Infrastructure.Persistence.Configuration
     {
         public void Configure(EntityTypeBuilder<TableConfiguration> builder)
         {
-            builder.ToTable("tbl_confgrtn", "public");
+            builder.ToTable("tbl_confgrtn", "codebotmstr");
             builder.HasKey(x => new { x.TblConfgrtnId, x.ConfgrtnEffStartTs });
         }
     }

@@ -59,7 +59,7 @@ public class ApplicationDbContext: IdentityDbContext<User, Role, int, UserClaim,
         modelBuilder.RegisterAllEntities<IEntity>(entitiesAssembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         modelBuilder.AddRestrictDeleteBehaviorConvention();
-        modelBuilder.AddPluralizingTableNameConvention();
+        //modelBuilder.AddPluralizingTableNameConvention();
 
 
     }
