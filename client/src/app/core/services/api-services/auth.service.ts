@@ -11,12 +11,12 @@ const controller = 'identity';
 })
 export class AuthService extends BaseApiService {
 
-  public register(model: any): Observable<ServerResponse> {
+  public register(model: any): Observable<ServerResponse<any>> {
     var action: string = `${controller}/register`;
 
     return this.post(action, model);
   }
-  public signin(model: SigninModel): Observable<ServerResponse> {
+  public signin(model: SigninModel): Observable<ServerResponse<any>> {
     var action: string = `${controller}/token`;
 
     return this.post(action, model);
