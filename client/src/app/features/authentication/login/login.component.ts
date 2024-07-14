@@ -9,6 +9,7 @@ import { TokenStorageService } from 'src/app/core/services/token-storage.service
 import { BehaviorSubject } from 'rxjs';
 import { TokenResponseModel } from 'src/app/core/model/contract/token-response-model';
 import { AuthStateService } from '../auth-state.service';
+import { ServerResponse } from 'src/app/core/model/contract/server-response';
 
 @Component({
   selector: 'app-boxed-login',
@@ -29,6 +30,7 @@ export class LoginComponent {
     private _authService: AuthService,
     private _ngxService: NgxUiLoaderService,
     private _tokenStorageService: TokenStorageService,
+    private _authStateService: AuthStateService
   ) { }
 
   loginForm = new UntypedFormGroup({
@@ -50,11 +52,11 @@ export class LoginComponent {
       return;
     }
     this._ngxService.start();
-    this._authService.signin(this.loginForm.value).subscribe((res: any)=> {
+    this._authService.signin(this.loginForm.value).subscribe((res: ServerResponse<TokenResponseModel>)=> {
 
       if (res.isSuccess) {
         this._tokenStorageService.saveUser(res.data);
-
+        this._authStateService._currentUser$.next(res.data);
         if (this.redirectUrl)
             this._router.navigate([this.redirectUrl]);
         else this._router.navigate(['/user/dashboard']);

@@ -4,6 +4,7 @@ import { FullComponent } from './layouts/full/full.component';
 import { BaseLayoutComponent } from './layouts/base/base-layout.component';
 import { AppErrorComponent } from './features/error/error.component';
 import { AppMaintenanceComponent } from './features/maintenance/maintenance.component';
+import { AuthGuard } from './auth-guard';
 
 export const routes: Routes = [
   {
@@ -22,6 +23,7 @@ export const routes: Routes = [
   {
     path: 'user',
     component: BaseLayoutComponent,
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./features/user/user.routes').then(
         (m) => m.UserRoutes

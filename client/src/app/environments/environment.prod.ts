@@ -1,6 +1,12 @@
 export const environment = {
-  production: true,
-  baseUrI: '/api',
-  webUrl: 'https://sbc-solution-dev.azurewebsites.net/', //// please add prod URL here.
-  signalrHubUrl: 'https://sbc-solution-dev.azurewebsites.net/notifyneworders'
+  production: false,
+  webUrl: 'https://localhost:5200/',
+  apiUrl: 'https://localhost:5201/api',
+  apiVersion: 'v1',
+  mslConfig: {
+    clientId: "<clientId>",
+    authority: "https://login.microsoftonline.com/<Tenant_Id>",
+    redirectUri: 'http://localhost:4200/' // change redirect url based on where u want to redirect after the authentication
+  }
 };
+

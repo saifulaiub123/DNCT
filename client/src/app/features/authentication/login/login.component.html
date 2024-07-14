@@ -7,7 +7,7 @@
         <mat-card-content class="p-32">
           <div class="text-center">
             @if(options.theme === 'light') {
-            <a [routerLink]="['/dashboards/dashboard1']">
+            <a href="#">
               <img
                 src="./assets/images/logos/dark-logo.svg"
                 class="align-middle m-2"
@@ -15,7 +15,7 @@
               />
             </a>
             } @if(options.theme === 'dark') {
-            <a [routerLink]="['/dashboards/dashboard1']">
+            <a href="#">
               <img
                 src="./assets/images/logos/light-logo.svg"
                 class="align-middle m-2"
@@ -26,20 +26,20 @@
           </div>
 
           <div class="row m-t-24 custom-row">
-            <div class="col-12 col-sm-6">
+            <div class="col-12 col-sm-12">
               <button mat-stroked-button class="w-100">
                 <div class="d-flex align-items-center">
                   <img
-                    src="/assets/images/svgs/google-icon.svg"
+                    src="/assets/images/svgs/microsoft-icon.svg"
                     alt="google"
                     width="16"
                     class="m-r-8"
                   />
-                  Sign in with Google
+                  Sign in with Microsoft
                 </div>
               </button>
             </div>
-            <div class="col-12 col-sm-6">
+            <!-- <div class="col-12 col-sm-6">
               <button
                 mat-stroked-button
                 class="w-100 d-flex align-items-center"
@@ -54,7 +54,7 @@
                   Sign in with FB
                 </div>
               </button>
-            </div>
+            </div> -->
           </div>
           <div class="or-border m-t-30">or sign in with</div>
 
