@@ -55,6 +55,7 @@ export class BaseApiService {
   protected get(
     action: string,
     paramter: string = '',
+    query: string = '',
     showLoading: boolean = false,
     showWarning: boolean = false,
     noAuth: boolean = false
@@ -66,8 +67,17 @@ export class BaseApiService {
     var option = {
       headers: this.getHeaders(currentUser?.token.accessToken),
     };
+    let url = `${this._baseUrl}/${this._apiVersion}/${action}`;
+    if(paramter != '')
+    {
+      url = `${url}/${paramter}`;
+    }
+    if(query != '')
+    {
+      url = `${url}?${query}`;
+    }
     return this._httpClient
-      .get<ServerResponse>(`${this._baseUrl}/${this._apiVersion}/${action}/${paramter}`, option)
+      .get<ServerResponse>(url, option)
       .pipe(
         tap(
           (response) => {

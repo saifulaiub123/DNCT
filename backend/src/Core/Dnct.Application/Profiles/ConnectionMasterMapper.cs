@@ -9,7 +9,7 @@ namespace Dnct.Application.Profiles
         {
             CreateMap<ConnectionsMaster, GetAllServerResponse>()
                 .ForMember(src => src.Id, dest => dest.MapFrom(x => x.ContnId))
-                .ForMember(src => src.Title, dest => dest.MapFrom(x => $"{x.ContnName}({x.HostIp})"));
+                .ForMember(src => src.Name, dest => dest.MapFrom(x => $"{x.ContnName}({x.HostIp})"));
         }
     }
 }

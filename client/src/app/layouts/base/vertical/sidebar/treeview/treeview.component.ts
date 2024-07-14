@@ -1,171 +1,284 @@
-import {CollectionViewer, SelectionChange, DataSource} from '@angular/cdk/collections';
-import {FlatTreeControl} from '@angular/cdk/tree';
-import {Component, Injectable} from '@angular/core';
-import {BehaviorSubject, merge, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
-import {MatTreeModule} from '@angular/material/tree';
+import { SelectionModel } from '@angular/cdk/collections';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { Component, Injectable } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import {
+  MatTreeFlatDataSource,
+  MatTreeFlattener,
+  MatTreeModule,
+} from '@angular/material/tree';
+import { BehaviorSubject } from 'rxjs';
 
-/** Flat node with expandable and level information */
-export class DynamicFlatNode {
-  constructor(
-    public item: string,
-    public level = 1,
-    public expandable = false,
-    public isLoading = false,
-  ) {}
+export class TreeNode {
+  id: number;
+  name: string;
+  nodeType: string;
+  children: TreeNode[];
 }
 
-/**
- * Database for dynamic data. When expanding a node in the tree, the data source will need to fetch
- * the descendants data from the database.
- */
-@Injectable({providedIn: 'root'})
-export class DynamicDatabase {
-  dataMap = new Map<string, string[]>([
-    ['Fruits', ['Apple', 'Orange', 'Banana']],
-    ['Vegetables', ['Tomato', 'Potato', 'Onion']],
-    ['Apple', ['Fuji', 'Macintosh']],
-    ['Onion', ['Yellow', 'White', 'Purple']],
-  ]);
-
-  rootLevelNodes: string[] = ['Fruits', 'Vegetables'];
-
-  /** Initial data from database */
-  initialData(): DynamicFlatNode[] {
-    return this.rootLevelNodes.map(name => new DynamicFlatNode(name, 0, true));
-  }
-
-  getChildren(node: string): string[] | undefined {
-    return this.dataMap.get(node);
-  }
-
-  isExpandable(node: string): boolean {
-    return this.dataMap.has(node);
-  }
+/** Flat to-do item node with expandable and level information */
+export class FlatNode {
+  id: number;
+  name: string;
+  nodeType: string;
+  level: number;
+  expandable: boolean;
 }
-/**
- * File database, it can build a tree structured Json object from string.
- * Each node in Json object represents a file or a directory. For a file, it has filename and type.
- * For a directory, it has filename and children (a list of files or directories).
- * The input will be a json object string, and the output is a list of `FileNode` with nested
- * structure.
- */
 
+const TREE_DATA = {
+  Groceries: {
+    'Almond Meal flour': null,
+    'Organic eggs': null,
+    'Protein Powder': null,
+    Fruits: {
+      Apple: null,
+      Berries: ['Blueberry', 'Raspberry'],
+      Orange: null,
+    },
+  },
+  Reminders: [
+    'Cook dinner',
+    'Read the Material Design spec',
+    'Upgrade Application to Angular',
+  ],
+};
 
+@Injectable()
+export class ChecklistDatabase {
+  dataChange = new BehaviorSubject<TreeNode[]>([]);
 
-export class DynamicDataSource implements DataSource<DynamicFlatNode> {
-  dataChange = new BehaviorSubject<DynamicFlatNode[]>([]);
-
-  get data(): DynamicFlatNode[] {
+  get data(): TreeNode[] {
     return this.dataChange.value;
   }
-  set data(value: DynamicFlatNode[]) {
-    this._treeControl.dataNodes = value;
-    this.dataChange.next(value);
+
+  constructor() {
+    this.initialize();
   }
 
-  constructor(
-    private _treeControl: FlatTreeControl<DynamicFlatNode>,
-    private _database: DynamicDatabase,
-  ) {}
+  initialize() {
+    // Build the tree nodes from Json object. The result is a list of `TreeNode` with nested
+    //     file node as children.
+    const data = this.buildFileTree(TREE_DATA, 0);
 
-  connect(collectionViewer: CollectionViewer): Observable<DynamicFlatNode[]> {
-    this._treeControl.expansionModel.changed.subscribe(change => {
-      if (
-        (change as SelectionChange<DynamicFlatNode>).added ||
-        (change as SelectionChange<DynamicFlatNode>).removed
-      ) {
-        this.handleTreeControl(change as SelectionChange<DynamicFlatNode>);
-      }
-    });
-
-    return merge(collectionViewer.viewChange, this.dataChange).pipe(map(() => this.data));
-  }
-
-  disconnect(collectionViewer: CollectionViewer): void {}
-
-  /** Handle expand/collapse behaviors */
-  handleTreeControl(change: SelectionChange<DynamicFlatNode>) {
-    if (change.added) {
-      change.added.forEach(node => this.toggleNode(node, true));
-    }
-    if (change.removed) {
-      change.removed
-        .slice()
-        .reverse()
-        .forEach(node => this.toggleNode(node, false));
-    }
+    // Notify the change.
+    this.dataChange.next(data);
   }
 
   /**
-   * Toggle the node, remove from display list
+   * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
+   * The return value is the list of `TreeNode`.
    */
-  toggleNode(node: DynamicFlatNode, expand: boolean) {
-    const children = this._database.getChildren(node.item);
-    const index = this.data.indexOf(node);
-    if (!children || index < 0) {
-      // If no children, or cannot find the node, no op
-      return;
-    }
+  buildFileTree(obj: { [key: string]: any }, level: number): TreeNode[] {
+    return Object.keys(obj).reduce<TreeNode[]>((accumulator, key) => {
+      const value = obj[key];
+      const node = new TreeNode();
+      node.name = key;
 
-    node.isLoading = true;
-
-    setTimeout(() => {
-      if (expand) {
-        const nodes = children.map(
-          name => new DynamicFlatNode(name, node.level + 1, this._database.isExpandable(name)),
-        );
-        this.data.splice(index + 1, 0, ...nodes);
-      } else {
-        let count = 0;
-        for (
-          let i = index + 1;
-          i < this.data.length && this.data[i].level > node.level;
-          i++, count++
-        ) {}
-        this.data.splice(index + 1, count);
+      if (value != null) {
+        if (typeof value === 'object') {
+          node.children = this.buildFileTree(value, level + 1);
+        } else {
+          node.name = value;
+        }
       }
 
-      // notify the change
+      return accumulator.concat(node);
+    }, []);
+  }
+
+  /** Add an item to to-do list */
+  insertItem(parent: TreeNode, name: string) {
+    if (parent.children) {
+      parent.children.push({ name: name } as TreeNode);
       this.dataChange.next(this.data);
-      node.isLoading = false;
-    }, 1000);
+    }
+  }
+
+  updateItem(node: TreeNode, name: string) {
+    node.name = name;
+    this.dataChange.next(this.data);
   }
 }
 
-/**
- * @title Tree with dynamic data
- */
 @Component({
-  selector: 'app-treeview',
+  selector: 'app-sidebar-treeview',
   standalone: true,
-  imports:[[MatTreeModule, MatButtonModule, MatIconModule, MatProgressBarModule]],
+  imports:[MatIconModule, MatCheckboxModule, MatFormFieldModule, MatTreeModule, MatCardModule, MatButtonModule, MatFormFieldModule, MatInputModule],
   templateUrl: './treeview.component.html',
-  // providers: [ChecklistDatabase],
+  providers: [ChecklistDatabase],
 })
-export class AppTreeviewComponent {
+export class SidebarTreeviewComponent {
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
-  constructor(database: DynamicDatabase) {
-    this.treeControl = new FlatTreeControl<DynamicFlatNode>(this.getLevel, this.isExpandable);
-    this.dataSource = new DynamicDataSource(this.treeControl, database);
+  flatNodeMap = new Map<FlatNode, TreeNode>();
 
-    this.dataSource.data = database.initialData();
+  /** Map from nested node to flattened node. This helps us to keep the same object for selection */
+  nestedNodeMap = new Map<TreeNode, FlatNode>();
+
+  /** A selected parent node to be inserted */
+  selectedParent: FlatNode | null = null;
+
+  /** The new item's name */
+  newItemName = '';
+
+  treeControl: FlatTreeControl<FlatNode>;
+
+  treeFlattener: MatTreeFlattener<TreeNode, FlatNode>;
+
+  dataSource: MatTreeFlatDataSource<TreeNode, FlatNode>;
+
+  /** The selection for checklist */
+  checklistSelection = new SelectionModel<FlatNode>(
+    true /* multiple */
+  );
+
+  constructor(private _database: ChecklistDatabase) {
+    this.treeFlattener = new MatTreeFlattener(
+      this.transformer,
+      this.getLevel,
+      this.isExpandable,
+      this.getChildren
+    );
+    this.treeControl = new FlatTreeControl<FlatNode>(
+      this.getLevel,
+      this.isExpandable
+    );
+    this.dataSource = new MatTreeFlatDataSource(
+      this.treeControl,
+      this.treeFlattener
+    );
+
+    _database.dataChange.subscribe((data) => {
+      this.dataSource.data = data;
+    });
   }
 
-  treeControl: FlatTreeControl<DynamicFlatNode>;
+  getLevel = (node: FlatNode) => node.level;
 
-  dataSource: DynamicDataSource;
+  isExpandable = (node: FlatNode) => node.expandable;
 
-  getLevel = (node: DynamicFlatNode) => node.level;
+  getChildren = (node: TreeNode): TreeNode[] => node.children;
 
-  isExpandable = (node: DynamicFlatNode) => node.expandable;
+  hasChild = (_: number, _nodeData: FlatNode) => _nodeData.expandable;
 
-  hasChild = (_: number, _nodeData: DynamicFlatNode) => _nodeData.expandable;
-  addNewItem(node:any)
-  {
-    
+  hasNoContent = (_: number, _nodeData: FlatNode) =>
+    _nodeData.name === '';
+
+  /**
+   * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
+   */
+  transformer = (node: TreeNode, level: number) => {
+    const existingNode = this.nestedNodeMap.get(node);
+    const flatNode =
+      existingNode && existingNode.name === node.name
+        ? existingNode
+        : new FlatNode();
+    flatNode.name = node.name;
+    flatNode.level = level;
+    flatNode.expandable = !!node.children?.length;
+    this.flatNodeMap.set(flatNode, node);
+    this.nestedNodeMap.set(node, flatNode);
+    return flatNode;
+  };
+
+  /** Whether all the descendants of the node are selected. */
+  descendantsAllSelected(node: FlatNode): boolean {
+    const descendants = this.treeControl.getDescendants(node);
+    const descAllSelected =
+      descendants.length > 0 &&
+      descendants.every((child) => {
+        return this.checklistSelection.isSelected(child);
+      });
+    return descAllSelected;
+  }
+
+  /** Whether part of the descendants are selected */
+  descendantsPartiallySelected(node: FlatNode): boolean {
+    const descendants = this.treeControl.getDescendants(node);
+    const result = descendants.some((child) =>
+      this.checklistSelection.isSelected(child)
+    );
+    return result && !this.descendantsAllSelected(node);
+  }
+
+  /** Toggle the to-do item selection. Select/deselect all the descendants node */
+  todoItemSelectionToggle(node: FlatNode): void {
+    this.checklistSelection.toggle(node);
+    const descendants = this.treeControl.getDescendants(node);
+    this.checklistSelection.isSelected(node)
+      ? this.checklistSelection.select(...descendants)
+      : this.checklistSelection.deselect(...descendants);
+
+    // Force update for the parent
+    descendants.forEach((child) => this.checklistSelection.isSelected(child));
+    this.checkAllParentsSelection(node);
+  }
+
+  /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
+  todoLeafItemSelectionToggle(node: FlatNode): void {
+    this.checklistSelection.toggle(node);
+    this.checkAllParentsSelection(node);
+  }
+
+  /* Checks all the parents when a leaf node is selected/unselected */
+  checkAllParentsSelection(node: FlatNode): void {
+    let parent: FlatNode | null = this.getParentNode(node);
+    while (parent) {
+      this.checkRootNodeSelection(parent);
+      parent = this.getParentNode(parent);
+    }
+  }
+
+  /** Check root node checked state and change it accordingly */
+  checkRootNodeSelection(node: FlatNode): void {
+    const nodeSelected = this.checklistSelection.isSelected(node);
+    const descendants = this.treeControl.getDescendants(node);
+    const descAllSelected =
+      descendants.length > 0 &&
+      descendants.every((child) => {
+        return this.checklistSelection.isSelected(child);
+      });
+    if (nodeSelected && !descAllSelected) {
+      this.checklistSelection.deselect(node);
+    } else if (!nodeSelected && descAllSelected) {
+      this.checklistSelection.select(node);
+    }
+  }
+
+  /* Get the parent node of a node */
+  getParentNode(node: FlatNode): FlatNode | null {
+    const currentLevel = this.getLevel(node);
+
+    if (currentLevel < 1) {
+      return null;
+    }
+
+    const startIndex = this.treeControl.dataNodes.indexOf(node) - 1;
+
+    for (let i = startIndex; i >= 0; i--) {
+      const currentNode = this.treeControl.dataNodes[i];
+
+      if (this.getLevel(currentNode) < currentLevel) {
+        return currentNode;
+      }
+    }
+    return null;
+  }
+
+  /** Select the category so we can insert the new item. */
+  addNewItem(node: FlatNode) {
+    const parentNode = this.flatNodeMap.get(node);
+    this._database.insertItem(parentNode!, '');
+    this.treeControl.expand(node);
+  }
+
+  /** Save the node to database */
+  saveNode(node: FlatNode, itemValue: string) {
+    const nestedNode = this.flatNodeMap.get(node);
+    this._database.updateItem(nestedNode!, itemValue);
   }
 }

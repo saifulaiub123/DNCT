@@ -16,9 +16,9 @@ export class TreeViewService extends BaseApiService {
 
     return this.get(action);
   }
-  public signin(model: SigninModel): Observable<ServerResponse> {
-    var action: string = `${controller}/token`;
+  public getDatabaseByServerId(serverId: number): Observable<ServerResponse> {
+    var action: string = `${controller}/GetDatabasesByServerId`;
 
-    return this.post(action, model);
+    return this.get(action,'',`id=${serverId.toString()}`);
   }
 }

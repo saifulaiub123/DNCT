@@ -1,31 +1,10 @@
-<!-- <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-
-  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-
-    <button mat-icon-button disabled></button>
-    {{node.name}}
-  </mat-tree-node>
-
-  <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
-    <button
-      mat-icon-button matTreeNodeToggle
-      [attr.aria-label]="'Toggle ' + node.name"
-      (click)="selectNode(node)"
-      >
-      <mat-icon class="mat-icon-rtl-mirror">
-        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-      </mat-icon>
-    </button>
-    {{node.name}}
-  </mat-tree-node>
-</mat-tree> -->
-
+<!--
 
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
       <button mat-icon-button disabled></button>
       {{node.title}}
-      <!-- <button mat-icon-button>
+      <button mat-icon-button>
           <mat-icon>edit</mat-icon>
       </button>
       <button mat-icon-button >
@@ -33,7 +12,7 @@
       </button>
       <button mat-icon-button>
           <mat-icon>add</mat-icon>
-      </button> -->
+      </button>
   </mat-tree-node>
   <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
       <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.message">
@@ -42,7 +21,7 @@
           </mat-icon>
       </button>
       {{node.title}}
-      <!-- <button mat-icon-button >
+      <button mat-icon-button >
           <mat-icon>edit</mat-icon>
       </button>
       <button mat-icon-button >
@@ -50,6 +29,39 @@
       </button>
       <button mat-icon-button>
           <mat-icon>add</mat-icon>
-      </button> -->
+      </button>
   </mat-tree-node>
-</mat-tree>
+  <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+    <div class="mat-tree-node">
+      <button mat-icon-button matTreeNodeToggle (click)="onToggle(node)">
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+        </mat-icon>
+      </button>
+      {{ node.title }}
+    </div>
+    <div [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+      <ng-container matTreeNodeOutlet></ng-container>
+    </div>
+  </mat-nested-tree-node>
+</mat-tree> --
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+    <button mat-icon-button disabled></button>
+    {{ node.title }}
+  </mat-tree-node>
+
+  <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+    <div class="mat-tree-node">
+      <button mat-icon-button matTreeNodeToggle (click)="onToggle(node)">
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+        </mat-icon>
+      </button>
+      {{ node.title }}
+    </div>
+    <div [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+      <ng-container matTreeNodeOutlet></ng-container>
+    </div>
+  </mat-nested-tree-node>
+</mat-tree> -->

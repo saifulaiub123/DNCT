@@ -11,11 +11,11 @@ namespace Dnct.Application.Profiles
         {
             CreateMap<DatabaseSourceModel, GetDatabasesByServerIdResponse>()
                 .ForMember(src => src.Id, dest => dest.MapFrom(x => x.DatabaseSourceId))
-                .ForMember(src => src.Title, dest => dest.MapFrom(x => x.DataBaseName));
+                .ForMember(src => src.Name, dest => dest.MapFrom(x => x.DataBaseName));
 
             CreateMap<DatabaseSourceModel, GetTablesByDatabaseSourceIdResponse>()
                 .ForMember(src => src.Id, dest => dest.MapFrom(x => x.DatabaseSourceId))
-                .ForMember(src => src.Title, dest => dest.MapFrom(x => x.TableName));
+                .ForMember(src => src.Name, dest => dest.MapFrom(x => x.TableName));
         }
     }
 }

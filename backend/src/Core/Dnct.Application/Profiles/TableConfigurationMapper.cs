@@ -11,7 +11,7 @@ namespace Dnct.Application.Profiles
         {
             CreateMap<TableConfigurationModel, GetTableInstanceByDatabaseSourceIdResponse>()
                 .ForMember(src => src.Id, dest => dest.MapFrom(x => x.DatabaseSourceId))
-                .ForMember(src => src.Title, dest => dest.MapFrom(x => x.InstanceName));
+                .ForMember(src => src.Name, dest => dest.MapFrom(x => x.InstanceName));
         }
     }
 }

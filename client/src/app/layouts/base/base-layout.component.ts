@@ -20,9 +20,8 @@ import { AppHorizontalSidebarComponent } from './horizontal/sidebar/sidebar.comp
 import { AppBreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
 import { CustomizerComponent } from './shared/customizer/customizer.component';
 import { NavService } from 'src/app/core/services/nav.service';
-import { AppTreeviewComponent } from "./vertical/sidebar/treeview/treeview.component";
 import { AngularSplitModule } from 'angular-split';
-import { DynamicTreeViewComponent } from "./vertical/sidebar/dynamic-tree-view/dynamic-tree-view.component";
+import { SidebarTreeviewComponent } from './vertical/sidebar/treeview/treeview.component';
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
@@ -51,22 +50,21 @@ interface quicklinks {
     styleUrls: [],
     encapsulation: ViewEncapsulation.None,
     imports: [
-        RouterModule,
-        AppNavItemComponent,
-        MaterialModule,
-        CommonModule,
-        SidebarComponent,
-        NgScrollbarModule,
-        TablerIconsModule,
-        HeaderComponent,
-        AppHorizontalHeaderComponent,
-        AppHorizontalSidebarComponent,
-        AppBreadcrumbComponent,
-        CustomizerComponent,
-        AppTreeviewComponent,
-        AngularSplitModule,
-        DynamicTreeViewComponent
-    ]
+    RouterModule,
+    AppNavItemComponent,
+    MaterialModule,
+    CommonModule,
+    SidebarComponent,
+    NgScrollbarModule,
+    TablerIconsModule,
+    HeaderComponent,
+    AppHorizontalHeaderComponent,
+    AppHorizontalSidebarComponent,
+    AppBreadcrumbComponent,
+    CustomizerComponent,
+    AngularSplitModule,
+    SidebarTreeviewComponent
+]
 })
 export class BaseLayoutComponent implements OnInit {
   navItems = navItems;
