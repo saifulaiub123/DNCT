@@ -15,7 +15,7 @@ export const defaults: AppSettings = {
   dir: 'ltr',
   theme: 'light',
   sidenavOpened: false,
-  sidenavCollapsed: true,
+  sidenavCollapsed: false,
   boxed: true,
   horizontal: false,
   cardBorder: false,

@@ -12,7 +12,7 @@ export class TokenStorageService {
     private _authStateService: AuthStateService
   ) { }
 
-  signOut(): void {
+  logout(): void {
     localStorage.removeItem(USER_KEY);
     localStorage.clear();
   }

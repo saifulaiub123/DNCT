@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MaterialModule } from '../../../material.module';
 import { CoreService } from 'src/app/core/services/core.service';
@@ -10,11 +10,12 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrService } from 'ngx-toastr';
+import { MsalLoginComponent } from '../component/msal-login/msal-login.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [RouterModule, MaterialModule, ReactiveFormsModule, SharedModule],
+  imports: [RouterModule, MaterialModule, ReactiveFormsModule, SharedModule, MsalLoginComponent],
   templateUrl: './register.component.html',
 })
 export class RegisterComponent implements OnInit {
@@ -31,41 +32,63 @@ export class RegisterComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this._toastr.error("Error","Error");
+
   }
 
   form = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    name: new FormControl('', [Validators.required, Validators.minLength(2)]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required]),
-  });
+    password: new FormControl('', [Validators.required, Validators.minLength(4)]),
+    confirmPassword: new FormControl('', [Validators.required, Validators.minLength(4)]),
+  }, {
+    validators: PasswordMatchValidator('password', 'confirmPassword')
+  })
 
   get f() {
     return this.form.controls;
   }
 
   submit() {
+    if(!this.form.valid)
+    {
+      return;
+    }
     this._ngxService.start();
-    // console.log(this.form.value);
     this._authService.register(this.form.value).subscribe(
       (response) => {
         if (response.isSuccess) {
-          //this.goVerify(response.Data.VerificationToken);
+          this._toastr.success("Successfully registered","Success");
+          this._ngxService.stop();
+          this.router.navigate(['/authentication/login']);
         }
       },
       (ex) => {
         this._ngxService.stop();
-        // this._notificationService.showError("Error","Error");
-        // this.showErrors = true;
-        // console.log(ex);
-        // if (ex.includes('already exist!')) {
-        //   this.userAlreadyExists = true;
-        // } else {
-        //   this.hasbackendErrors = true;
-        //   this.backendErrors = ex;
-        // }
       }
     );
-    //this.router.navigate(['/dashboards/dashboard1']);
   }
+}
+
+export function PasswordMatchValidator(controlName: string, matchingControlName: string): ValidatorFn {
+  return (formGroup: AbstractControl): ValidationErrors | null => {
+    const control = formGroup.get(controlName);
+    const matchingControl = formGroup.get(matchingControlName);
+
+    if (!control || !matchingControl) {
+      return null;
+    }
+
+    if (matchingControl.errors && !matchingControl.errors['passwordMismatch']) {
+      // Return if another validator has already found an error on the matchingControl
+      return null;
+    }
+
+    if (control.value !== matchingControl.value) {
+      matchingControl.setErrors({ passwordMismatch: true });
+      return { passwordMismatch: true };
+    } else {
+      matchingControl.setErrors(null);
+      return null;
+    }
+  };
 }

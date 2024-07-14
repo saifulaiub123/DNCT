@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Dnct.Domain.Constant;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -40,15 +41,15 @@ public static class LoggingConfiguration
         {
             configuration.WriteTo
                 .MSSqlServer(
-                    connectionString: context.Configuration.GetConnectionString("SqlServer"),
-                    sinkOptions: new MSSqlServerSinkOptions { TableName = "LogEvents", AutoCreateSqlTable = true, SchemaName = "log" })
-                .MinimumLevel.Warning();
+                    connectionString: context.Configuration.GetConnectionString(DbConst.DbConnectionName),
+                    sinkOptions: new MSSqlServerSinkOptions { TableName = "Log", AutoCreateSqlTable = true, SchemaName = "log" })
+                .MinimumLevel.Error();
 
         }
 
         else{
             configuration.WriteTo.Console().MinimumLevel.Information();
-            configuration.WriteTo.File(new JsonFormatter(), "logs/log.json").MinimumLevel.Information();
+            //configuration.WriteTo.File(new JsonFormatter(), "logs/log.json").MinimumLevel.Information();
         }
 
         #region ElasticSearch Configuration. UnComment if Needed 

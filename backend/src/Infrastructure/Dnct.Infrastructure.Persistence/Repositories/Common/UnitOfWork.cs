@@ -8,6 +8,7 @@ public class UnitOfWork : IUnitOfWork
        
     public IUserRefreshTokenRepository UserRefreshTokenRepository { get; }
     public IOrderRepository OrderRepository { get; }
+    public IDatabaseSourcesRepository DatabaseSourcesRepository { get; }
 
     public UnitOfWork(ApplicationDbContext db)
     {

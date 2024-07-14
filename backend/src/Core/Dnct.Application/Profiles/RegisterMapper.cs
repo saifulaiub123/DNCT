@@ -3,6 +3,16 @@ using AutoMapper;
 
 namespace Dnct.Application.Profiles;
 
+public interface ICreateMapper<TSource>
+{
+    void Map(Profile profile)
+    {
+        profile.CreateMap(typeof(TSource), GetType()).ReverseMap();
+        //profile.CreateMap<DatabaseSources, GetAllServersResponse>()
+        //    .ForMember(src=> src.)
+    }
+}
+
 public class RegisterMapper:Profile
 {
     public RegisterMapper()

@@ -12,6 +12,7 @@ public class ApplicationDbContext: IdentityDbContext<User, Role, int, UserClaim,
     public ApplicationDbContext(DbContextOptions options)
         : base(options)
     {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         base.SavingChanges += OnSavingChanges;
     }
 
@@ -58,7 +59,7 @@ public class ApplicationDbContext: IdentityDbContext<User, Role, int, UserClaim,
         modelBuilder.RegisterAllEntities<IEntity>(entitiesAssembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         modelBuilder.AddRestrictDeleteBehaviorConvention();
-        modelBuilder.AddPluralizingTableNameConvention();
+        //modelBuilder.AddPluralizingTableNameConvention();
 
 
     }
@@ -75,7 +76,7 @@ public class ApplicationDbContext: IdentityDbContext<User, Role, int, UserClaim,
         {
             if (entity != null)
             {
-                entity.ModifiedDate = DateTime.Now;
+                entity.ModifiedDate = DateTime.UtcNow;
             }
         }
 
@@ -83,8 +84,8 @@ public class ApplicationDbContext: IdentityDbContext<User, Role, int, UserClaim,
         {
             if (entity != null)
             {
-                entity.CreatedTime = DateTime.Now;
-                entity.ModifiedDate = DateTime.Now;
+                entity.CreatedTime = DateTime.UtcNow;
+                entity.ModifiedDate = DateTime.UtcNow;
             }
         }
     }

@@ -1,7 +1,6 @@
-export class ServerResponse {
-  result: any;
+export class ServerResponse<T> {
+  data: T |any;
   isSuccess: boolean;
-  errorMessage : string;
-  isException : boolean;
-  isNotFound: boolean;
+  statusCode : number;
+  message : string;
 }

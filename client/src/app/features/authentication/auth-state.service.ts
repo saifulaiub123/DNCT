@@ -11,7 +11,7 @@ export class AuthStateService {
   private tokenResponse: TokenResponseModel = new TokenResponseModel();
   _currentUser$ = new BehaviorSubject<TokenResponseModel>(this.tokenResponse);
 
-
+  _logOut$ = new BehaviorSubject<boolean>(false);
 
   constructor() {}
 

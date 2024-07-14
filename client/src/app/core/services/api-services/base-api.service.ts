@@ -55,10 +55,11 @@ export class BaseApiService {
   protected get(
     action: string,
     paramter: string = '',
+    query: string = '',
     showLoading: boolean = false,
     showWarning: boolean = false,
     noAuth: boolean = false
-  ): Observable<ServerResponse> {
+  ): Observable<ServerResponse<any>> {
     if (showLoading) {
       this._loaderService.addToLoading(action);
     }
@@ -66,8 +67,17 @@ export class BaseApiService {
     var option = {
       headers: this.getHeaders(currentUser?.token.accessToken),
     };
+    let url = `${this._baseUrl}/${this._apiVersion}/${action}`;
+    if(paramter != '')
+    {
+      url = `${url}/${paramter}`;
+    }
+    if(query != '')
+    {
+      url = `${url}?${query}`;
+    }
     return this._httpClient
-      .get<ServerResponse>(`${this._baseUrl}/${this._apiVersion}/${action}/${paramter}`, option)
+      .get<ServerResponse<any>>(url, option)
       .pipe(
         tap(
           (response) => {
@@ -98,7 +108,7 @@ export class BaseApiService {
     showLoading: boolean = true,
     showNotification: boolean = false,
     noAuth: boolean = false
-  ): Observable<ServerResponse> {
+  ): Observable<ServerResponse<any>> {
     if (showLoading) {
       this._loaderService.addToLoading(action);
     }
@@ -109,7 +119,7 @@ export class BaseApiService {
       headers: this.getHeaders(currentUser?.token.accessToken),
     };
     return this._httpClient
-      .post<ServerResponse>(`${this._baseUrl}/${this._apiVersion}/${action}`, model, option)
+      .post<ServerResponse<any>>(`${this._baseUrl}/${this._apiVersion}/${action}`, model, option)
       .pipe(
         tap(
           (response) => {
@@ -160,7 +170,7 @@ export class BaseApiService {
     var option = {
       headers: this.getHeaders(currentUser?.token.accessToken),//this.getHeaders(this.$currentUser.value?.AccessToken),
     };
-    return this._httpClient.put<ServerResponse>(gAction, model, option).pipe(
+    return this._httpClient.put<ServerResponse<any>>(gAction, model, option).pipe(
       tap(
         (response) => {
           this._loaderService.removeFromLoading(action);
@@ -200,7 +210,7 @@ export class BaseApiService {
       headers: this.getHeaders(currentUser?.token.accessToken),//this.getHeaders(this.$currentUser.value?.AccessToken),
     };
     return this._httpClient
-      .delete<ServerResponse>(`${this._baseUrl}/${this._apiVersion}/${action}/${paramter}`, option)
+      .delete<ServerResponse<any>>(`${this._baseUrl}/${this._apiVersion}/${action}/${paramter}`, option)
       .pipe(
         tap(
           (response) => {
