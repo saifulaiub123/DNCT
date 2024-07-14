@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { RegistrationModel } from '../../model/request/registration-model';
 import { Observable } from 'rxjs';
 import { ServerResponse } from '../../model/contract/server-response';
 import { BaseApiService } from './base-api.service';
@@ -16,9 +15,14 @@ export class AuthService extends BaseApiService {
 
     return this.post(action, model);
   }
-  public signin(model: SigninModel): Observable<ServerResponse<any>> {
+  public login(model: SigninModel): Observable<ServerResponse<any>> {
     var action: string = `${controller}/token`;
 
     return this.post(action, model);
+  }
+  public logout(): Observable<ServerResponse<any>> {
+    var action: string = `${controller}/logout`;
+
+    return this.post(action,{});
   }
 }

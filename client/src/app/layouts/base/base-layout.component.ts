@@ -22,6 +22,8 @@ import { CustomizerComponent } from './shared/customizer/customizer.component';
 import { NavService } from 'src/app/core/services/nav.service';
 import { AngularSplitModule } from 'angular-split';
 import { SidebarTreeviewComponent } from './vertical/sidebar/treeview/treeview.component';
+import { TokenResponseModel } from 'src/app/core/model/contract/token-response-model';
+import { AuthStateService } from 'src/app/features/authentication/auth-state.service';
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
@@ -89,6 +91,9 @@ export class BaseLayoutComponent implements OnInit {
     return this.resView;
   }
 
+  get currentUser(): TokenResponseModel {
+    return this._authStateService.getCurrentUser();
+  }
   // for mobile app sidebar
   apps: apps[] = [
     {
@@ -197,7 +202,8 @@ export class BaseLayoutComponent implements OnInit {
     private mediaMatcher: MediaMatcher,
     private router: Router,
     private breakpointObserver: BreakpointObserver,
-    private navService: NavService
+    private navService: NavService,
+    private _authStateService: AuthStateService
   ) {
     this.htmlElement = document.querySelector('html')!;
     this.layoutChangesSubscription = this.breakpointObserver
@@ -226,6 +232,10 @@ export class BaseLayoutComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  logout()
+  {
+    this._authStateService._logOut$.next(true);
+  }
   ngOnDestroy() {
     this.layoutChangesSubscription.unsubscribe();
   }

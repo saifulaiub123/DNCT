@@ -15,6 +15,8 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { AuthStateService } from 'src/app/features/authentication/auth-state.service';
+import { TokenResponseModel } from 'src/app/core/model/contract/token-response-model';
 
 interface notifications {
   id: number;
@@ -101,11 +103,15 @@ export class HeaderComponent {
   constructor(
     private vsidenav: CoreService,
     public dialog: MatDialog,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private _authStateService: AuthStateService,
   ) {
     translate.setDefaultLang('en');
   }
 
+  get currentUser(): TokenResponseModel {
+    return this._authStateService.getCurrentUser();
+  }
   openDialog() {
     const dialogRef = this.dialog.open(AppSearchDialogComponent);
 
@@ -118,7 +124,10 @@ export class HeaderComponent {
     this.translate.use(lang.code);
     this.selectedLanguage = lang;
   }
-
+  logout()
+  {
+    this._authStateService._logOut$.next(true);
+  }
   notifications: notifications[] = [
     {
       id: 1,
@@ -290,8 +299,12 @@ export class AppSearchDialogComponent {
   navItems = navItems;
 
   navItemsData = navItems.filter((navitem) => navitem.displayName);
+constructor(
 
+
+){}
   // filtered = this.navItemsData.find((obj) => {
   //   return obj.displayName == this.searchinput;
   // });
+
 }
