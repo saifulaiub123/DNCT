@@ -3,8 +3,9 @@ import { BlankComponent } from './layouts/blank/blank.component';
 import { FullComponent } from './layouts/full/full.component';
 import { BaseLayoutComponent } from './layouts/base/base-layout.component';
 import { AppErrorComponent } from './features/error/error.component';
-import { AppMaintenanceComponent } from './features/maintenance/maintenance.component';
 import { AuthGuard } from './auth-guard';
+import { AppMaintenanceComponent } from './features/maintenance/maintenance.component';
+
 
 export const routes: Routes = [
   {
