@@ -12,6 +12,8 @@ namespace Dnct.Web.Api.Controllers.V1.Order;
 [ApiVersion("1")]
 [ApiController]
 [Route("api/v{version:apiVersion}/User")]
+[ApiExplorerSettings(IgnoreApi = true)]
+
 //[Authorize]
 public class OrderController(ISender sender) : BaseController
 {

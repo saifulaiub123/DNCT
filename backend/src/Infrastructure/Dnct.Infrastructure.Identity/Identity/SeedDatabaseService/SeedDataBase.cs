@@ -43,6 +43,7 @@ public class SeedDataBase : ISeedDataBase
             {
                 UserName = "admin@site.com",
                 Email = "admin@site.com",
+                Name = "MD Saiful Islam",
                 PhoneNumberConfirmed = true,
                 EmailConfirmed = true
             };
