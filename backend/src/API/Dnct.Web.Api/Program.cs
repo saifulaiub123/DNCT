@@ -9,7 +9,6 @@ using Dnct.Infrastructure.Identity.ServiceConfiguration;
 using Dnct.Infrastructure.Persistence.ServiceConfiguration;
 using Dnct.SharedKernel.Extensions;
 using Dnct.Web.Api.Controllers.V1.IdentityManagement;
-using Dnct.Web.Plugins.Grpc;
 using Dnct.WebFramework.Filters;
 using Dnct.WebFramework.Middlewares;
 using Dnct.WebFramework.ServiceConfiguration;
@@ -56,12 +55,6 @@ builder.Services.RegisterValidatorsAsServices();
 builder.Services.AddExceptionHandler<ExceptionHandler>();
 
 
-#region Plugin Services Configuration
-
-builder.Services.ConfigureGrpcPluginServices();
-
-#endregion
-
 builder.Services.AddAutoMapper(expression =>
 {
     expression.AddMaps(typeof(User), typeof(JwtService), typeof(IdentityController));
@@ -101,7 +94,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-app.ConfigureGrpcPipeline();
 
 await app.RunAsync();
 

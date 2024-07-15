@@ -25,7 +25,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dnct.WebFramework\Dnct.WebFramework.csproj" />
-    <ProjectReference Include="..\Plugins\Dnct.Web.Plugins.Grpc\Dnct.Web.Plugins.Grpc.csproj" />
   </ItemGroup>
 
   <ItemGroup>
