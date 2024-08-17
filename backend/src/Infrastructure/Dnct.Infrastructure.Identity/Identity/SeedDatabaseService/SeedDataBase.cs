@@ -48,7 +48,7 @@ public class SeedDataBase : ISeedDataBase
                 EmailConfirmed = true
             };
 
-            await  _userManager.CreateAsync(user, "Pass123");
+            await  _userManager.CreateAsync(user, "Pass@123");
             await _userManager.AddToRoleAsync(user,"Admin");
         }
     }

@@ -12,9 +12,9 @@ namespace Dnct.Web.Api.Controllers.V1.Order;
 [ApiVersion("1")]
 [ApiController]
 [Route("api/v{version:apiVersion}/User")]
-[ApiExplorerSettings(IgnoreApi = true)]
+//[ApiExplorerSettings(IgnoreApi = true)]
 
-//[Authorize]
+[Authorize]
 public class OrderController(ISender sender) : BaseController
 {
     [HttpPost("CreateNewOrder")]
@@ -29,6 +29,7 @@ public class OrderController(ISender sender) : BaseController
     [HttpGet("GetUserOrders")]
     public async Task<IActionResult> GetUserOrders()
     {
+        var p = User.Identity;
         var query = await sender.Send(new GetUserOrdersQueryModel(UserId));
 
         return base.OperationResult(query);
