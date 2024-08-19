@@ -1,6 +1,6 @@
 <mat-card class="cardWithShadow theme-card">
   <mat-card-header>
-    <mat-icon style="cursor: pointer;">add</mat-icon>
+    <mat-icon style="cursor: pointer;" (click)="addNewTable()">add</mat-icon>
   </mat-card-header>
   <mat-card-content class="b-t-1 p-y-24">
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">

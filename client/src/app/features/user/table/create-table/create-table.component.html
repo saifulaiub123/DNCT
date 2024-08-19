@@ -1,0 +1,43 @@
+<mat-card class="cardWithShadow theme-card">
+  <mat-card-header>
+    <mat-card-title class="m-b-0">New table addition</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="b-t-1">
+    <form>
+
+      <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block m-t-12"
+        >Connection</mat-label
+      >
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-select [(value)]="selectedServer">
+          <mat-option value="">Select</mat-option>
+          @for(option of servers; track option.id) {
+          <mat-option [value]="option.id">{{ option.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
+      >Paste DDL</mat-label
+    >
+
+    <mat-form-field appearance="outline" class="w-100" color="primary">
+      <textarea matInput rows="5" [(ngModel)]="ddlText"></textarea>
+    </mat-form-field>
+    <div class="m-t-12 m-b-12">
+      <button mat-flat-button color="primary" (click)="processDDL()">Process DDL</button>
+    </div>
+      <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
+        >Table name to be added</mat-label
+      >
+      <mat-form-field appearance="outline" class="w-100" color="primary">
+        <input matInput disabled="true"/>
+      </mat-form-field>
+
+      <div class="m-t-12">
+        <button mat-flat-button color="primary">Cancel</button>
+        <button mat-flat-button color="primary">Submit</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

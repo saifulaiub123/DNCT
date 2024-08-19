@@ -10,7 +10,7 @@ const controller = 'tree-view';
 @Injectable({
   providedIn: 'root'
 })
-export class TreeViewService extends BaseApiService {
+export class CommonService extends BaseApiService {
 
   public getServers(): Observable<ServerResponse<TreeViewResponse>> {
     var action: string = `${controller}/GetAllServers`;

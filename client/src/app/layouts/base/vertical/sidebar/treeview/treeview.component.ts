@@ -12,10 +12,11 @@ import {
   MatTreeFlattener,
   MatTreeModule,
 } from '@angular/material/tree';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { ServerResponse } from 'src/app/core/model/contract/server-response';
 import { TreeViewResponse } from 'src/app/core/model/contract/tree-view-response';
-import { TreeViewService } from 'src/app/core/services/api-services/tree-view.service';
+import { CommonService } from 'src/app/core/services/api-services/tree-view.service';
 
 export class TreeNode {
   id: number;
@@ -115,7 +116,10 @@ export class SidebarTreeviewComponent implements OnInit {
     true /* multiple */
   );
 
-  constructor(private _treeViewService: TreeViewService) {
+  constructor(
+    private _commonService: CommonService,
+    private _router: Router
+  ) {
 
     this.treeFlattener = new MatTreeFlattener(
       this.transformer,
@@ -142,7 +146,7 @@ export class SidebarTreeviewComponent implements OnInit {
   }
   initialize() {
 
-    this._treeViewService.getServers().subscribe(res=> {
+    this._commonService.getServers().subscribe(res=> {
       const data = this.buildFileTree(res.data, 0);
       this.dataChange.next(data);
     })
@@ -196,19 +200,19 @@ export class SidebarTreeviewComponent implements OnInit {
   {
     if(node.nodeType==='Server')
     {
-      this._treeViewService.getDatabaseByServerId(node.id).subscribe((res: ServerResponse<TreeViewResponse>)=>{
+      this._commonService.getDatabaseByServerId(node.id).subscribe((res: ServerResponse<TreeViewResponse>)=>{
         this.addChildrenToNodeTree(node, res);
       })
     }
     else if(node.nodeType==='Database')
       {
-        this._treeViewService.GetTablesByDatabaseSourceId(node.id).subscribe((res: ServerResponse<TreeViewResponse>)=>{
+        this._commonService.GetTablesByDatabaseSourceId(node.id).subscribe((res: ServerResponse<TreeViewResponse>)=>{
           this.addChildrenToNodeTree(node, res);
         })
       }
       else if(node.nodeType==='Table')
         {
-          this._treeViewService.GetTableInstanceByDatabaseSourceId(node.id).subscribe((res: ServerResponse<TreeViewResponse>)=>{
+          this._commonService.GetTableInstanceByDatabaseSourceId(node.id).subscribe((res: ServerResponse<TreeViewResponse>)=>{
             this.addChildrenToNodeTree(node, res);
           })
         }
@@ -377,5 +381,12 @@ export class SidebarTreeviewComponent implements OnInit {
   updateItem(node: TreeNode, name: string) {
     node.name = name;
     this.dataChange.next(this.data);
+  }
+
+
+  // DDL Operation
+  addNewTable()
+  {
+    this._router.navigate(['/user/create-table']);
   }
 }
