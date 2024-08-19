@@ -14,11 +14,11 @@ namespace Dnct.Application.Features.Table.Commands.DDLProcess
 {
     public class ProcessDDLCommand : IRequest<OperationResult<ProcessDDLResponse>>, IValidatableModel<ProcessDDLCommand>
     {
-        public string DdlText { get; set; }
+        public string Content { get; set; }
 
         public IValidator<ProcessDDLCommand> ValidateApplicationModel(ApplicationBaseValidationModelProvider<ProcessDDLCommand> validator)
         {
-            validator.RuleFor(c => c.DdlText)
+            validator.RuleFor(c => c.Content)
                 .NotEmpty()
                 .NotNull()
                 .WithMessage("DDL text must not be null or empty");
@@ -43,9 +43,9 @@ namespace Dnct.Application.Features.Table.Commands.DDLProcess
             Random _random = new Random();
             var model = new ProcessDDLResponse()
             {
-                Database = _random.Next(0, 10).ToString(),
-                Schema = _random.Next(0, 10).ToString(),
-                TableName = _random.Next(0, 10).ToString(),
+                Database = _random.Next(0, 1000).ToString(),
+                Schema = _random.Next(0, 1000).ToString(),
+                TableName = _random.Next(0, 1000).ToString(),
             };
 
             return OperationResult<ProcessDDLResponse>.SuccessResult(model);

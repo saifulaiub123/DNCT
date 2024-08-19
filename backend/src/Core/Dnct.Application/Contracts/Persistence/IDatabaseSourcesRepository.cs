@@ -10,5 +10,8 @@ namespace Dnct.Application.Contracts.Persistence
         Task<List<DatabaseSourceModel>> GetDatabasesByServerId(int id);
         Task<List<DatabaseSourceModel>> GetDatabasesByServerIds(List<int> ids);
         Task<List<DatabaseSourceModel>> GetTablesByDatabaseSourceId(int databaseSourceId);
+
+        Task<List<DatabaseSourceModel>> GetTableInstance(string connection, string databaseName, string tableName);
+        Task CrateTable(DatabaseSources table);
     }
 }

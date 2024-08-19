@@ -10,14 +10,14 @@ const controller = 'table';
 })
 export class TableService extends BaseApiService {
 
-  public createNewTable(model: any): Observable<ServerResponse<any>> {
+  public createTable(model: any): Observable<ServerResponse<any>> {
     var action: string = `${controller}/create`;
 
     return this.post(action, model);
   }
 
   public processDDL(model: any): Observable<ServerResponse<ProcessDDLResponse>> {
-    var action: string = `${controller}/processDDL`;
+    var action: string = `${controller}/process-ddl`;
 
     return this.post(action, model);
   }

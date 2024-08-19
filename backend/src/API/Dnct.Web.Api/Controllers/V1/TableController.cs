@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Dnct.Application.Features.Order.Commands;
 using Dnct.Application.Features.Order.Queries.GetUserOrders;
+using Dnct.Application.Features.Table.Commands.Create;
 using Dnct.Application.Features.Table.Commands.DDLProcess;
 using Dnct.Domain.Entities.User;
 using Dnct.WebFramework.BaseController;
@@ -17,10 +18,9 @@ namespace Dnct.Web.Api.Controllers.V1
     [Authorize]
     public class TableController(ISender sender) : BaseController
     {
-        [HttpPost("CreateNewTable")]
-        public async Task<IActionResult> CreateNewOrder(AddOrderCommand model)
+        [HttpPost("create")]
+        public async Task<IActionResult> Create(CreateTableCommand model)
         {
-            model.UserId = base.UserId;
             var command = await sender.Send(model);
 
             return base.OperationResult(command);

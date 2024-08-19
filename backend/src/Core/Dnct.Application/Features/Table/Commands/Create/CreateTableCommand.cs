@@ -7,6 +7,9 @@ using FluentValidation;
 using Mediator;
 using Dnct.Application.Contracts.Persistence;
 using Microsoft.AspNetCore.Identity;
+using Dnct.Application.Contracts.Identity;
+using Dnct.Domain.Entities;
+using System.Data;
 
 namespace Dnct.Application.Features.Table.Commands.Create
 {
@@ -15,7 +18,7 @@ namespace Dnct.Application.Features.Table.Commands.Create
     {
         public string TableName { get; set; }
         public string Connection { get; set; }
-        public string Databse { get; set; }
+        public string DatabaseSourceId{ get; set; }
 
         public IValidator<CreateTableCommand> ValidateApplicationModel(ApplicationBaseValidationModelProvider<CreateTableCommand> validator)
         {
@@ -27,7 +30,7 @@ namespace Dnct.Application.Features.Table.Commands.Create
                 .NotEmpty()
                 .NotNull()
                 .WithMessage("Connection is required");
-            validator.RuleFor(c => c.Databse)
+            validator.RuleFor(c => c.DatabaseSourceId)
                 .NotEmpty()
                 .NotNull()
                 .WithMessage("Database is required");
@@ -36,18 +39,40 @@ namespace Dnct.Application.Features.Table.Commands.Create
         }
     }
 
-    public async ValueTask<OperationResult<bool>> Handle(CreateTableCommand request, CancellationToken cancellationToken)
+    internal class CreateTableCommandHandler : IRequestHandler<CreateTableCommand, OperationResult<bool>>
     {
-        var user = await _userManager.GetUserByIdAsync(request.UserId);
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IAppUserManager _userManager;
+        private readonly IDatabaseSourcesRepository _databaseSourcesRepository;
 
-        if (user == null)
-            return OperationResult<bool>.FailureResult("User Not Found");
+        public CreateTableCommandHandler(
+            IUnitOfWork unitOfWork, 
+            IAppUserManager userManager,
+            IDatabaseSourcesRepository databaseSourcesRepository
+            )
+        {
+            _unitOfWork = unitOfWork;
+            _userManager = userManager;
+            _databaseSourcesRepository = databaseSourcesRepository;
+        }
 
-        await _unitOfWork.OrderRepository.AddOrderAsync(new Domain.Entities.Order.Order()
-        { UserId = user.Id, OrderName = request.OrderName });
+        public async ValueTask<OperationResult<bool>> Handle(CreateTableCommand request, CancellationToken cancellationToken)
+        {
+            var tableInstance = await _databaseSourcesRepository.GetTableInstance("PGRepo", "sbc_db", request.TableName);
+            if(tableInstance.Any())
+            {
+                return OperationResult<bool>.FailureResult("Table name already exist", false);
+            }
+            await _databaseSourcesRepository.CrateTable(new DatabaseSources()
+            {
+                 RepstryName = "PGRepo",
+                 ConctnName = "PGRepo",
+                 TblDbsName = "sbc_db",
+                 TblName = request.TableName,
+                 ConfgrtnEffEndTs = DateTime.Now.AddDays(365)
+            });
 
-        await _unitOfWork.CommitAsync();
-
-        return OperationResult<bool>.SuccessResult(true);
+            return OperationResult<bool>.SuccessResult(true);
+        }
     }
 }
