@@ -1,0 +1,220 @@
+<div class="bg-light-primary mat-body-1 p-16 rounded m-t-12">
+  <mat-card class="cardWithShadow theme-card">
+    <mat-card-header>
+      <mat-card-title class="m-b-0">Object Base Setup</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="b-t-1">
+      <div class="row m-t-20">
+        <div class="col-lg-6">
+          <!-- input -->
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
+            >Database Source ID</mat-label
+          >
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="text" />
+          </mat-form-field>
+
+          <!-- input -->
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Connection Name</mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-select value="male">
+              <mat-option value="male">Male</mat-option>
+              <mat-option value="female">Female</mat-option>
+              <mat-option value="other">Other</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- input -->
+        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Database Name</mat-label>
+        <mat-form-field appearance="outline" class="w-100" color="primary">
+          <input matInput type="text" />
+        </mat-form-field>
+
+        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Object Name</mat-label>
+        <mat-form-field appearance="outline" class="w-100" color="primary">
+          <input matInput type="text" />
+        </mat-form-field>
+
+
+        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Object Kind</mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-select value="male">
+              <mat-option value="male">Male</mat-option>
+              <mat-option value="female">Female</mat-option>
+              <mat-option value="other">Other</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+
+
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Sql to Use</mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <textarea matInput rows="5"></textarea>
+            <mat-hint class="m-b-16 error-msg">
+              <!-- @if(true) {
+                <div class="text-error">Required</div>
+                } -->
+            </mat-hint>
+          </mat-form-field>
+
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Delta Rows Identification Logic</mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <textarea matInput rows="5"></textarea>
+            <mat-hint class="m-b-16 error-msg">
+              <!-- @if(true) {
+                <div class="text-error">Required</div>
+                } -->
+            </mat-hint>
+          </mat-form-field>
+
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Type 2 and PK Columns</mat-label>
+          <mat-card class="cardWithShadow">
+            <!-- <mat-card-header class="d-flex">
+              <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Type 2 and PK Columns</mat-label>
+            </mat-card-header> -->
+            <mat-card-content>
+              <div class="table-responsive">
+                <table mat-table [dataSource]="dataSource1" class="w-100">
+                  <!-- Position Column -->
+                  <ng-container matColumnDef="columnName">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14 p-l-0">
+                      Column Name
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="mat-body-1">
+                      {{ element.columnName }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="type2">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                      Type 2
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="mat-body-1">
+                      <mat-checkbox color="primary" [checked]="element.type2"></mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <!-- Weight Column -->
+                  <ng-container matColumnDef="pkColumn">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                      PK Column
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="mat-body-1">
+                      <mat-checkbox color="primary" [checked]="element.pkColumn"></mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns1"></tr>
+                </table>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+        </div>
+        <div class="col-lg-6">
+          <!-- input -->
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Queryband</mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="text" />
+          </mat-form-field>
+
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Truncate Before Load</mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-select value="male">
+              <mat-option value="male">Male</mat-option>
+              <mat-option value="female">Female</mat-option>
+              <mat-option value="other">Other</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">ETL Framework</mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-select value="male">
+              <mat-option value="male">Male</mat-option>
+              <mat-option value="female">Female</mat-option>
+              <mat-option value="other">Other</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Dedup Logic</mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <textarea matInput rows="5"></textarea>
+            <mat-hint class="m-b-16 error-msg">
+              <!-- @if(true) {
+                <div class="text-error">Required</div>
+                } -->
+            </mat-hint>
+          </mat-form-field>
+
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Estimated Table Size (GB)</mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="text" />
+          </mat-form-field>
+
+
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Alias</mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="text" />
+          </mat-form-field>
+
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Additional Where Condition to Use</mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <textarea matInput rows="5"></textarea>
+            <mat-hint class="m-b-16 error-msg">
+              <!-- @if(true) {
+                <div class="text-error">Required</div>
+                } -->
+            </mat-hint>
+          </mat-form-field>
+
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Object Nature</mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-select value="male">
+              <mat-option value="male">Male</mat-option>
+              <mat-option value="female">Female</mat-option>
+              <mat-option value="other">Other</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Partitioning Clause</mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <textarea matInput rows="5"></textarea>
+            <mat-hint class="m-b-16 error-msg">
+              <!-- @if(true) {
+                <div class="text-error">Required</div>
+                } -->
+            </mat-hint>
+          </mat-form-field>
+
+
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Month of History</mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-select value="male">
+              <mat-option value="male">Male</mat-option>
+              <mat-option value="female">Female</mat-option>
+              <mat-option value="other">Other</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Target Database Connection</mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-select value="male">
+              <mat-option value="male">Male</mat-option>
+              <mat-option value="female">Female</mat-option>
+              <mat-option value="other">Other</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </div>
+      </div>
+
+    </mat-card-content>
+    <mat-card-actions class="b-t-1">
+      <button mat-flat-button color="warn">Cancel</button>
+      <button mat-flat-button color="primary" class="m-l-8">Save</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
