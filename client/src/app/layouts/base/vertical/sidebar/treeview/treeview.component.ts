@@ -1,3 +1,4 @@
+import { TreeViewStateService } from './../../../../../core/shared/state-service/tree-view-state.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, Injectable, OnInit } from '@angular/core';
@@ -16,7 +17,8 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { ServerResponse } from 'src/app/core/model/contract/server-response';
 import { TreeViewResponse } from 'src/app/core/model/contract/tree-view-response';
-import { CommonService } from 'src/app/core/services/api-services/tree-view.service';
+import { ClickTableInstanceStateModel } from 'src/app/core/model/state-service/click-table-instance.model';
+import { CommonService } from 'src/app/core/services/api-services/common.service';
 
 export class TreeNode {
   id: number;
@@ -110,7 +112,6 @@ export class SidebarTreeviewComponent implements OnInit {
   treeFlattener: MatTreeFlattener<TreeNode, FlatNode>;
 
   dataSource: MatTreeFlatDataSource<TreeNode, FlatNode>;
-
   /** The selection for checklist */
   checklistSelection = new SelectionModel<FlatNode>(
     true /* multiple */
@@ -118,7 +119,8 @@ export class SidebarTreeviewComponent implements OnInit {
 
   constructor(
     private _commonService: CommonService,
-    private _router: Router
+    private _router: Router,
+    private _treeViewStateService: TreeViewStateService
   ) {
 
     this.treeFlattener = new MatTreeFlattener(
@@ -190,6 +192,7 @@ export class SidebarTreeviewComponent implements OnInit {
   {
     if (this.treeControl.isExpanded(node)) {
       this.fetchChildren(node);
+
     } else {
       this.collapseNode(node);
     }
@@ -218,6 +221,8 @@ export class SidebarTreeviewComponent implements OnInit {
     }
     else if(node.nodeType==='TableInstance')
     {
+      let uniqueName = `${node.id}-${node.name.toLowerCase()}`;
+      this._treeViewStateService.clickTableInstance(node.id, uniqueName);
       this._router.navigate(['/user/object-setup/new-object-setup']);
     }
   }

@@ -2,14 +2,14 @@
   <mat-card class="b-1 shadow-none">
     <mat-card-content class="b-t-1">
       <mat-tab-group [selectedIndex]="selectedIndex" animationDuration="0ms">
-        <mat-tab *ngFor="let tab of tabs; let i = index">
+        <mat-tab *ngFor="let label of tabs; let i = index">
           <ng-template mat-tab-label>
-            {{ tab.label }}
+            {{ label }}
             <button (click)="removeTab(i)" mat-icon-button>
               <mat-icon>close</mat-icon>
             </button>
           </ng-template>
-          <app-object-setup-form></app-object-setup-form>
+          <app-object-setup-form [databaseSourceId] = "ids[i]"></app-object-setup-form>
         </mat-tab>
       </mat-tab-group>
     </mat-card-content>

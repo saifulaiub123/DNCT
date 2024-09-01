@@ -15,7 +15,7 @@ import { ServerResponse } from 'src/app/core/model/contract/server-response';
 import { TreeViewResponse } from 'src/app/core/model/contract/tree-view-response';
 import { ServerDto } from 'src/app/core/model/dto/server-dto';
 import { TableService } from 'src/app/core/services/api-services/table.service';
-import { CommonService } from 'src/app/core/services/api-services/tree-view.service';
+import { CommonService } from 'src/app/core/services/api-services/common.service';
 import { PasswordMatchValidator } from 'src/app/features/authentication/register/register.component';
 import { MaterialModule } from 'src/app/material.module';
 

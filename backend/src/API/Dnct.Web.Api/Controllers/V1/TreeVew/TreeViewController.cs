@@ -1,5 +1,6 @@
 ﻿using Asp.Versioning;
 using Azure.Core;
+using Dnct.Application.Features.DatabaseSource.Query.GetDatabaseSourcesById;
 using Dnct.Application.Features.Order.Queries.GetUserOrders;
 using Dnct.Application.Features.Server.Query.GetServerInfo;
 using Dnct.Application.Features.TreeView.Query.GetDatabasesByServerId;
@@ -22,6 +23,13 @@ public class TreeViewController(ISender sender) : BaseController
     public async Task<IActionResult> GetAllServers()
     {
         var query = await sender.Send(new GetAllServersQuery());
+
+        return base.OperationResult(query);
+    }
+    [HttpGet("GetDatabaseSourceById")]
+    public async Task<IActionResult> GetDatabaseSourceById([FromQuery] GetDatabaseSourcesByIdQuery request)
+    {
+        var query = await sender.Send(request);
 
         return base.OperationResult(query);
     }

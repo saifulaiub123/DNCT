@@ -37,6 +37,27 @@ namespace Dnct.Infrastructure.Persistence.Repositories
             }
 
         }
+        public async Task<List<DatabaseSources>> GetDatabaseSourceById(int id)
+        {
+            var databases = new List<DatabaseSources>();
+
+            var sql = @"
+                        SELECT *
+                        FROM 
+                            codebotmstr.datbs_srcs  
+                        WHERE 
+                            confgrtn_eff_end_ts > current_timestamp(0)
+                            AND datbs_src_id = @id
+                ";
+            var parameters = new { id = id };
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                DefaultTypeMap.MatchNamesWithUnderscores = true;
+                await connection.OpenAsync();
+                databases = (await connection.QueryAsync<DatabaseSources>(sql, parameters)).ToList();
+            }
+            return databases;
+        }
 
         public async Task<List<DatabaseSourceModel>> GetDatabasesByServerId(int id)
         {

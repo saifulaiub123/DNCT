@@ -13,7 +13,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
 import { ObjectSetupFormComponent } from '../Component/object-setup-form/object-setup-form.component';
-import { DynamicTabDirective } from 'src/app/core/shared/directives/dynamic-tab.directive';
+import { TreeViewStateService } from 'src/app/core/shared/state-service/tree-view-state.service';
 
 
 export interface productsData {
@@ -22,6 +22,7 @@ export interface productsData {
   type2: boolean;
   pkColumn: boolean;
 }
+
 const PRODUCT_DATA: productsData[] = [
   {
     id: 1,
@@ -59,23 +60,40 @@ const PRODUCT_DATA: productsData[] = [
 })
 export class NewObjectSetupComponent implements OnInit {
 
-  @ViewChild(DynamicTabDirective, { static: true }) dynamicTab!: DynamicTabDirective;
+  selectedIndex = 0;
 
-  selectedIndex = 1;
+  tabs: string[] = [];
+  ids: number[] = [];
 
-  tabs = [
-    { label: '01', component: ObjectSetupFormComponent},
-    { label: '02', component: ObjectSetupFormComponent},
-    { label: '03', component: ObjectSetupFormComponent},
-    { label: '04', component: ObjectSetupFormComponent},
-  ];
-
-  constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
+  constructor(
+    private _treeViewStateService: TreeViewStateService
+  ) {}
 
   ngOnInit() {
-
+    this.subscribeStateService();
   }
 
+  subscribeStateService()
+  {
+    this._treeViewStateService.$isTableInstanceClicked.subscribe((res: any)=> {
+      if(res !== null)
+      {
+        if(!this.tabs.includes(res.name))
+        {
+          this.tabs.push(res.name);
+          this.ids.push(res.id);
+          this.selectedIndex = this.tabs.length - 1
+        }
+        else
+        {
+          this.selectedIndex = this.tabs.indexOf(res.name);
+        }
+
+        this._treeViewStateService.clickTableInstanceReset();
+      }
+
+    })
+  }
   removeTab(index: number) {
     this.tabs.splice(index, 1);
     // Optionally reset the selected tab index if needed

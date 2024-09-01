@@ -7,6 +7,7 @@ namespace Dnct.Application.Contracts.Persistence
 {
     public interface IDatabaseSourcesRepository
     {
+        Task<List<DatabaseSources>> GetDatabaseSourceById(int id);
         Task<List<DatabaseSourceModel>> GetDatabasesByServerId(int id);
         Task<List<DatabaseSourceModel>> GetDatabasesByServerIds(List<int> ids);
         Task<List<DatabaseSourceModel>> GetTablesByDatabaseSourceId(int databaseSourceId);

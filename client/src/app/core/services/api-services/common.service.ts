@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ServerResponse } from '../../model/contract/server-response';
 import { SigninModel } from '../../model/request/singin-model';
 import { TreeViewResponse } from '../../model/contract/tree-view-response';
+import { DbNameObjectSetupResponse } from '../../model/contract/db-source-object-setup-response';
 
 
 const controller = 'tree-view';
@@ -16,6 +17,11 @@ export class CommonService extends BaseApiService {
     var action: string = `${controller}/GetAllServers`;
 
     return this.get(action);
+  }
+  public getDatabaseSourceById(id: number): Observable<ServerResponse<DbNameObjectSetupResponse>> {
+    var action: string = `${controller}/GetDatabaseSourceById`;
+
+    return this.get(action,'',`id=${id.toString()}`);
   }
   public getDatabaseByServerId(serverId: number): Observable<ServerResponse<TreeViewResponse>> {
     var action: string = `${controller}/GetDatabasesByServerId`;
