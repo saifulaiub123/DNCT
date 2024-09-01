@@ -4,6 +4,7 @@
       <mat-card-title class="m-b-0">Object Base Setup</mat-card-title>
     </mat-card-header>
     <mat-card-content class="b-t-1">
+      <form class="m-t-30" [formGroup]="form">
       <div class="row m-t-20">
         <div class="col-lg-6">
           <!-- input -->
@@ -11,37 +12,39 @@
             >Database Source ID</mat-label
           >
           <mat-form-field appearance="outline" class="w-100" color="primary">
-            <input matInput type="text" />
+            <input matInput type="text" formControlName="databaseSourceId"/>
           </mat-form-field>
 
           <!-- input -->
           <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Connection Name</mat-label>
           <mat-form-field appearance="outline" class="w-100">
-            <mat-select value="male">
-              <mat-option value="male">Male</mat-option>
-              <mat-option value="female">Female</mat-option>
-              <mat-option value="other">Other</mat-option>
+            <mat-select value="" formControlName="connectionName">
+              <mat-option value="">Select</mat-option>
+              <mat-option value="male">Connection 1</mat-option>
+              <mat-option value="female">Connection 2</mat-option>
+              <mat-option value="other">Connection 3</mat-option>
             </mat-select>
           </mat-form-field>
 
           <!-- input -->
         <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Database Name</mat-label>
         <mat-form-field appearance="outline" class="w-100" color="primary">
-          <input matInput type="text" />
+          <input matInput type="text" formControlName="databaseName"/>
         </mat-form-field>
 
         <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Object Name</mat-label>
         <mat-form-field appearance="outline" class="w-100" color="primary">
-          <input matInput type="text" />
+          <input matInput type="text" formControlName="objectName"/>
         </mat-form-field>
 
 
         <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Object Kind</mat-label>
           <mat-form-field appearance="outline" class="w-100">
-            <mat-select value="male">
-              <mat-option value="male">Male</mat-option>
-              <mat-option value="female">Female</mat-option>
-              <mat-option value="other">Other</mat-option>
+            <mat-select value="" formControlName="objectKind">
+              <mat-option value="">Select</mat-option>
+              <mat-option value="Table">Table</mat-option>
+              <mat-option value="View">View</mat-option>
+              <mat-option value="Materialized View">Materialized View</mat-option>
             </mat-select>
           </mat-form-field>
 
@@ -49,7 +52,7 @@
 
           <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Sql to Use</mat-label>
           <mat-form-field appearance="outline" class="w-100" color="primary">
-            <textarea matInput rows="5"></textarea>
+            <textarea matInput rows="5" formControlName="sqlToUse"></textarea>
             <mat-hint class="m-b-16 error-msg">
               <!-- @if(true) {
                 <div class="text-error">Required</div>
@@ -59,7 +62,7 @@
 
           <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Delta Rows Identification Logic</mat-label>
           <mat-form-field appearance="outline" class="w-100" color="primary">
-            <textarea matInput rows="5"></textarea>
+            <textarea matInput rows="5" formControlName="deltaRowsIdentificationLogic"></textarea>
             <mat-hint class="m-b-16 error-msg">
               <!-- @if(true) {
                 <div class="text-error">Required</div>
@@ -117,31 +120,29 @@
           <!-- input -->
           <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Queryband</mat-label>
           <mat-form-field appearance="outline" class="w-100" color="primary">
-            <input matInput type="text" />
+            <input matInput type="text" formControlName="queryBand" />
           </mat-form-field>
 
           <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Truncate Before Load</mat-label>
           <mat-form-field appearance="outline" class="w-100">
-            <mat-select value="male">
-              <mat-option value="male">Male</mat-option>
-              <mat-option value="female">Female</mat-option>
-              <mat-option value="other">Other</mat-option>
+            <mat-select value="" formControlName="truncateBeforeLoad">
+              <mat-option value="">Select</mat-option>
+              <mat-option value="Y">Yes</mat-option>
+              <mat-option value="N">No</mat-option>
             </mat-select>
           </mat-form-field>
 
 
           <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">ETL Framework</mat-label>
           <mat-form-field appearance="outline" class="w-100">
-            <mat-select value="male">
-              <mat-option value="male">Male</mat-option>
-              <mat-option value="female">Female</mat-option>
-              <mat-option value="other">Other</mat-option>
+            <mat-select value="" formControlName="etlFramework">
+              <mat-option value="">Select</mat-option>
             </mat-select>
           </mat-form-field>
 
           <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Dedup Logic</mat-label>
           <mat-form-field appearance="outline" class="w-100" color="primary">
-            <textarea matInput rows="5"></textarea>
+            <textarea matInput rows="5" formControlName="dedupLogic"></textarea>
             <mat-hint class="m-b-16 error-msg">
               <!-- @if(true) {
                 <div class="text-error">Required</div>
@@ -151,18 +152,18 @@
 
           <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Estimated Table Size (GB)</mat-label>
           <mat-form-field appearance="outline" class="w-100" color="primary">
-            <input matInput type="text" />
+            <input matInput type="text" formControlName="esitmatedTableSize"/>
           </mat-form-field>
 
 
           <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Alias</mat-label>
           <mat-form-field appearance="outline" class="w-100" color="primary">
-            <input matInput type="text" />
+            <input matInput type="text" formControlName="alias"/>
           </mat-form-field>
 
           <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Additional Where Condition to Use</mat-label>
           <mat-form-field appearance="outline" class="w-100" color="primary">
-            <textarea matInput rows="5"></textarea>
+            <textarea matInput rows="5" formControlName="additionalWhereConditionToUse"></textarea>
             <mat-hint class="m-b-16 error-msg">
               <!-- @if(true) {
                 <div class="text-error">Required</div>
@@ -172,16 +173,19 @@
 
           <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Object Nature</mat-label>
           <mat-form-field appearance="outline" class="w-100">
-            <mat-select value="male">
-              <mat-option value="male">Male</mat-option>
-              <mat-option value="female">Female</mat-option>
-              <mat-option value="other">Other</mat-option>
+            <mat-select value="" formControlName="objectNature">
+              <mat-option value="">Select</mat-option>
+              <mat-option value="Dimension Fact">Dimension Fact</mat-option>
+              <mat-option value="Surrogate Key Master">Surrogate Key Master</mat-option>
+              <mat-option value="Lookup">Lookup</mat-option>
+              <mat-option value="Stage">Stage</mat-option>
+              <mat-option value="Landing">Landing</mat-option>
             </mat-select>
           </mat-form-field>
 
           <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Partitioning Clause</mat-label>
           <mat-form-field appearance="outline" class="w-100" color="primary">
-            <textarea matInput rows="5"></textarea>
+            <textarea matInput rows="5" formControlName="partitioningClause"></textarea>
             <mat-hint class="m-b-16 error-msg">
               <!-- @if(true) {
                 <div class="text-error">Required</div>
@@ -190,27 +194,25 @@
           </mat-form-field>
 
 
-          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Month of History</mat-label>
+          <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Months of History</mat-label>
           <mat-form-field appearance="outline" class="w-100">
-            <mat-select value="male">
-              <mat-option value="male">Male</mat-option>
-              <mat-option value="female">Female</mat-option>
-              <mat-option value="other">Other</mat-option>
+            <mat-select value="" formControlName="monthsOfHistory">
+              <mat-option value="">Select</mat-option>
+              <mat-option value="6">6</mat-option>
+              <mat-option value="12">12</mat-option>
             </mat-select>
           </mat-form-field>
 
           <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Target Database Connection</mat-label>
           <mat-form-field appearance="outline" class="w-100">
-            <mat-select value="male">
-              <mat-option value="male">Male</mat-option>
-              <mat-option value="female">Female</mat-option>
-              <mat-option value="other">Other</mat-option>
+            <mat-select value="" formControlName="targetDatabaseConnection">
+              <mat-option value="">Select</mat-option>
             </mat-select>
           </mat-form-field>
 
         </div>
       </div>
-
+      </form>
     </mat-card-content>
     <mat-card-actions class="b-t-1">
       <button mat-flat-button color="warn">Cancel</button>
