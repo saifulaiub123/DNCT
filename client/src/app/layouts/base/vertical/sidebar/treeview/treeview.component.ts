@@ -205,18 +205,21 @@ export class SidebarTreeviewComponent implements OnInit {
       })
     }
     else if(node.nodeType==='Database')
-      {
-        this._commonService.GetTablesByDatabaseSourceId(node.id).subscribe((res: ServerResponse<TreeViewResponse>)=>{
-          this.addChildrenToNodeTree(node, res);
-        })
-      }
-      else if(node.nodeType==='Table')
-        {
-          this._commonService.GetTableInstanceByDatabaseSourceId(node.id).subscribe((res: ServerResponse<TreeViewResponse>)=>{
-            this.addChildrenToNodeTree(node, res);
-          })
-        }
-
+    {
+      this._commonService.GetTablesByDatabaseSourceId(node.id).subscribe((res: ServerResponse<TreeViewResponse>)=>{
+        this.addChildrenToNodeTree(node, res);
+      })
+    }
+    else if(node.nodeType==='Table')
+    {
+      this._commonService.GetTableInstanceByDatabaseSourceId(node.id).subscribe((res: ServerResponse<TreeViewResponse>)=>{
+        this.addChildrenToNodeTree(node, res);
+      })
+    }
+    else if(node.nodeType==='TableInstance')
+    {
+      this._router.navigate(['/user/object-setup/new-object-setup']);
+    }
   }
   addChildrenToNodeTree(node: FlatNode, res: ServerResponse<TreeViewResponse>)
   {

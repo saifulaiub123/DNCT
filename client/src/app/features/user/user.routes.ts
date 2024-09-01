@@ -14,6 +14,13 @@ export const UserRoutes: Routes = [
         path: 'create-table',
         component: CreateTableComponent,
       },
+      {
+        path: 'object-setup',
+        loadChildren: () =>
+          import('./object-base-setup/Object-base.routes').then(
+            (m) => m.ObjectBaseRoutes
+          ),
+      },
     ],
   },
 ];
