@@ -13,7 +13,7 @@ namespace Dnct.Application.Features.DatabaseSource.Commands.CreateNewObject
     public class CreateNewObjectCommand : IRequest<OperationResult<bool>>,
     IValidatableModel<CreateNewObjectCommand>
     {
-        public string DatabaseSourceId { get; set; }
+        public int DatabaseSourceId { get; set; }
         public string ConnectionName { get; set; }
         public string DatabaseName { get; set; }
         public string ObjectName { get; set; }
@@ -21,7 +21,7 @@ namespace Dnct.Application.Features.DatabaseSource.Commands.CreateNewObject
         public string SqlToUse { get; set; }
         public string DeltaRowsIdentificationLogic { get; set; }
         public string QueryBand { get; set; }
-        public string TruncateBeforeLoad { get; set; }
+        public char? TruncateBeforeLoad { get; set; }
         public string EtlFramework { get; set; }
         public string DedupLogic { get; set; }
         public int EstimatedTableSize { get; set; }
@@ -55,34 +55,53 @@ namespace Dnct.Application.Features.DatabaseSource.Commands.CreateNewObject
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAppUserManager _userManager;
+        private readonly ICurrentUserService _currentUser;
         private readonly IDatabaseSourcesRepository _databaseSourcesRepository;
 
         public CreateNewObjectCommandHandler(
             IUnitOfWork unitOfWork,
             IAppUserManager userManager,
             IDatabaseSourcesRepository databaseSourcesRepository
-            )
+,
+            ICurrentUserService currentUser)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _databaseSourcesRepository = databaseSourcesRepository;
+            _currentUser = currentUser;
         }
 
-        public async ValueTask<OperationResult<bool>> Handle(CreateNewObjectCommand request, CancellationToken cancellationToken)
+        public async ValueTask<OperationResult<bool>> Handle(CreateNewObjectCommand command, CancellationToken cancellationToken)
         {
-            //var tableInstance = await _databaseSourcesRepository.GetTableInstance("PGRepo", "sbc_db", request.TableName);
-            //if (tableInstance.Any())
-            //{
-            //    return OperationResult<bool>.FailureResult("Table name already exist", false);
-            //}
-            //await _databaseSourcesRepository.CrateTable(new DatabaseSources()
-            //{
-            //    RepstryName = "PGRepo",
-            //    ConctnName = "PGRepo",
-            //    TblDbsName = "sbc_db",
-            //    TblName = request.TableName,
-            //    ConfgrtnEffEndTs = DateTime.Now.AddDays(365)
-            //});
+            await _databaseSourcesRepository.Update(new DatabaseSources()
+            {
+                DatbsSrcId = command.DatabaseSourceId,
+                Usrname = _currentUser.Username,
+                RepstryName = command.ConnectionName,
+                ConctnName = command.ConnectionName,
+                TblDbsName = command.DatabaseName,
+                TblName = command.ObjectName,
+                TablKind = command.ObjectKind,
+                SqlToUse = command.SqlToUse,
+                Queryband = command.QueryBand,
+                AdtnlWherCondtns = command.AdditionalWhereCondition,
+                TrunctTblAftrLoad = command.TruncateBeforeLoad,
+                //SetlSetupName = command.SetlSetupName,
+                ObjctAls = command.Alias,
+                DedupByColmns = command.DedupLogic,
+                DeltRowIdntfctn = command.DeltaRowsIdentificationLogic,
+                EstmtdTblSiz = command.EstimatedTableSize,
+                Type2Colmns = string.Empty,
+                ObjctNatr = command.ObjectNature,
+                TargetObjcConName = command.TargetDatabaseConnection,
+                PartitionClause = command.PartitioningClause,
+                PartitionColmns = string.Empty,
+                DedupLogic = command.DedupLogic,
+                PkColmns = string.Empty,
+                YearsOfHistory = command.MonthsOfHistory,
+                ConfgrtnEffStartTs = DateTime.UtcNow,
+                ConfgrtnEffEndTs = DateTime.Now.AddDays(1000)
+            });
 
             return OperationResult<bool>.SuccessResult(true);
         }

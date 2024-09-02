@@ -15,6 +15,7 @@ import { DbNameObjectSetupResponse } from 'src/app/core/model/contract/db-source
 import { ServerResponse } from 'src/app/core/model/contract/server-response';
 import { ServerDto } from 'src/app/core/model/dto/server-dto';
 import { CommonService } from 'src/app/core/services/api-services/common.service';
+import { DatabaseSourceService } from 'src/app/core/services/api-services/database-source.service';
 import { MaterialModule } from 'src/app/material.module';
 
 
@@ -28,25 +29,25 @@ const PRODUCT_DATA: productsData[] = [
   {
     id: 1,
     columnName: 'Name',
-    type2: true,
+    type2: false,
     pkColumn: false,
   },
   {
     id: 1,
     columnName: 'Age',
     type2: false,
-    pkColumn: true,
+    pkColumn: false,
   },
   {
     id: 1,
     columnName: 'Department',
-    type2: true,
+    type2: false,
     pkColumn: false,
   },
   {
     id: 1,
     columnName: 'Salary',
-    type2: true,
+    type2: false,
     pkColumn: false,
   },
 ];
@@ -95,6 +96,7 @@ export class ObjectSetupFormComponent implements OnInit {
 
   constructor(
     private _commonService: CommonService,
+    private _databaseSourceService: DatabaseSourceService,
     private _router: Router,
     private _ngxService: NgxUiLoaderService,
     private _toastr: ToastrService,
@@ -123,10 +125,20 @@ export class ObjectSetupFormComponent implements OnInit {
   submit()
   {
     if(!this.form.valid)
-      {
-        return;
-      }
-      this._ngxService.start();
+    {
+      return;
+    }
+    this._ngxService.start();
+    this._databaseSourceService.createNewObject(this.form.value).subscribe((res: ServerResponse<any>) => {
+      this._ngxService.stop();
+      this.form.reset();
+      this._toastr.success("Object created successfully");
+    },
+    (ex) => {
+      console.log(ex);
+      this._toastr.error("Something went wrong","Error!");
+      this._ngxService.stopAll();
+    })
   }
 
 }

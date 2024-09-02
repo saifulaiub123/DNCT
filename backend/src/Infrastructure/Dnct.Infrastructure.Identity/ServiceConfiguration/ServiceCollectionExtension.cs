@@ -30,6 +30,7 @@ public static class ServiceCollectionExtension
     public static IServiceCollection RegisterIdentityServices(this IServiceCollection services,IdentitySettings identitySettings)
     {
         services.AddScoped<IJwtService, JwtService>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IAppUserManager, AppUserManagerImplementation>();
         services.AddScoped<ISeedDataBase, SeedDataBase>();
 

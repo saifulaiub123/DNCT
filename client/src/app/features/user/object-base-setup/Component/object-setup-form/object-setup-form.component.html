@@ -4,7 +4,7 @@
       <mat-card-title class="m-b-0">Object Base Setup</mat-card-title>
     </mat-card-header>
     <mat-card-content class="b-t-1">
-      <form class="m-t-30" [formGroup]="form" (ngSubmit)="submit()">
+      <form class="m-t-30" [formGroup]="form">
       <div class="row m-t-20">
         <div class="col-lg-6">
           <!-- input -->
@@ -159,7 +159,7 @@
 
           <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Estimated Table Size (GB)</mat-label>
           <mat-form-field appearance="outline" class="w-100" color="primary">
-            <input matInput type="number" formControlName="esitmatedTableSize"/>
+            <input matInput type="number" formControlName="estimatedTableSize"/>
           </mat-form-field>
 
 
@@ -224,7 +224,7 @@
     </mat-card-content>
     <mat-card-actions class="b-t-1">
       <button mat-flat-button color="warn">Cancel</button>
-      <button mat-flat-button color="primary" class="m-l-8">Save</button>
+      <button mat-flat-button color="primary" class="m-l-8" (click)="submit()">Save</button>
     </mat-card-actions>
   </mat-card>
 </div>

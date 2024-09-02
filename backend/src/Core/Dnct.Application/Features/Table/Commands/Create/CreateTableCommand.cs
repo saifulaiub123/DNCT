@@ -63,7 +63,7 @@ namespace Dnct.Application.Features.Table.Commands.Create
             {
                 return OperationResult<bool>.FailureResult("Table name already exist", false);
             }
-            await _databaseSourcesRepository.CrateTable(new DatabaseSources()
+            await _databaseSourcesRepository.CreateTable(new DatabaseSources()
             {
                  RepstryName = "PGRepo",
                  ConctnName = "PGRepo",

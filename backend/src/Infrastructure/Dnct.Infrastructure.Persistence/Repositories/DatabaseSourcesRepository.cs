@@ -21,7 +21,7 @@ namespace Dnct.Infrastructure.Persistence.Repositories
             _connectionString = _configuration.GetConnectionString(DbConst.DbConnectionName);
         }
 
-        public async Task CrateTable(DatabaseSources dbSrcModel)
+        public async Task CreateTable(DatabaseSources dbSrcModel)
         {
             var maxIdSql = "SELECT MAX(datbs_src_id) from codebotmstr.datbs_srcs;";
 
@@ -33,6 +33,19 @@ namespace Dnct.Infrastructure.Persistence.Repositories
                 dbSrcModel.DatbsSrcId = maxId[0] + 1;
 
                 var insertSql = "INSERT INTO codebotmstr.datbs_srcs (datbs_src_id, conctn_name, tbl_dbs_name, tbl_name, confgrtn_eff_end_ts) VALUES (@DatbsSrcId, @ConctnName, @TblDbsName, @TblName, @ConfgrtnEffEndTs)";
+                var rowsAffected = await connection.ExecuteAsync(insertSql, dbSrcModel);
+            }
+
+        }
+        public async Task Update(DatabaseSources dbSrcModel)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                var insertSql = "INSERT INTO codebotmstr.datbs_srcs" +
+                    "(datbs_src_id, confgrtn_eff_end_ts, usrname, repstry_name, conctn_name, tbl_dbs_name, tbl_name, tabl_kind, sql_to_use, queryband, adtnl_wher_condtns, trunct_tbl_befr_load, objct_als, dedup_by_colmns, delt_row_idntfctn, estmtd_tbl_siz, objct_natr, target_objc_con_name, partition_clause,partition_colmns, dedup_logic, pk_colmns, trunct_tbl_aftr_load, years_of_history, confgrtn_eff_start_ts)" +
+                    "VALUES (@DatbsSrcId, @ConfgrtnEffEndTs, @Usrname, @RepstryName, @ConctnName, @TblDbsName, @TblName, @TablKind, @SqlToUse, @Queryband, @AdtnlWherCondtns, @TrunctTblAftrLoad, @ObjctAls, @DedupByColmns, @DeltRowIdntfctn, @EstmtdTblSiz, @ObjctNatr, @TargetObjcConName, @TargetObjcConName, @PartitionClause, @PartitionColmns, @DedupLogic, @PkColmns, @YearsOfHistory, @ConfgrtnEffStartTs)";
                 var rowsAffected = await connection.ExecuteAsync(insertSql, dbSrcModel);
             }
 

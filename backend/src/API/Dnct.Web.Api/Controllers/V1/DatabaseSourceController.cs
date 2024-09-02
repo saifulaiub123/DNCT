@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Dnct.Application.Features.DatabaseSource.Commands.CreateNewObject;
 using Dnct.Application.Features.DatabaseSource.Query.GetDatabaseSourcesById;
 using Dnct.Application.Features.Server.Query.GetServerInfo;
 using Dnct.Application.Features.Table.Commands.Create;
@@ -7,6 +8,7 @@ using Dnct.Application.Features.TreeView.Query.GetTableInstanceByDatabaseSourceI
 using Dnct.Application.Features.TreeView.Query.GetTablesByDatabaseSourceIdId;
 using Dnct.WebFramework.BaseController;
 using Mediator;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dnct.Web.Api.Controllers.V1
@@ -18,11 +20,12 @@ namespace Dnct.Web.Api.Controllers.V1
     {
 
         [HttpPost("create-new-object")]
-        public async Task<IActionResult> Create(CreateTableCommand model)
+        [Authorize]
+        public async Task<IActionResult> Create([FromBody] CreateNewObjectCommand command)
         {
-            var command = await sender.Send(model);
+            var res = await sender.Send(command);
 
-            return base.OperationResult(command);
+            return base.OperationResult(res);
         }
         //[HttpGet("GetAllServers")]
         //public async Task<IActionResult> GetAllServers()
