@@ -148,7 +148,7 @@ export class SidebarTreeviewComponent implements OnInit {
   }
   initialize() {
 
-    this._commonService.getServers().subscribe(res=> {
+    this._commonService.getServers().subscribe((res:any)=> {
       const data = this.buildFileTree(res.data, 0);
       this.dataChange.next(data);
     })
