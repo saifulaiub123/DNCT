@@ -20,12 +20,12 @@ namespace Dnct.Infrastructure.Identity.UserManager
                 var currentContext = httpContextAccessor.HttpContext;
                 if (currentContext.User.Identity != null &&
                     (currentContext == null || !currentContext.User.Identity.IsAuthenticated)) return;
-                //UserId = int.Parse(httpContextAccessor.HttpContext.User?.Claims?.First(c =>
-                //    c.Type == ClaimTypes.Sid).Value);
-                //Username = httpContextAccessor.HttpContext.User?.Claims?.First(c =>
-                //    c.Type == ClaimTypes.NameIdentifier).Value;
-                //Email = httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(c =>
-                //    c.Type == ClaimTypes.Email)?.Value;
+                UserId = int.Parse(httpContextAccessor.HttpContext.User?.Claims?.First(c =>
+                    c.Type == ClaimTypes.NameIdentifier).Value);
+                Username = httpContextAccessor.HttpContext.User?.Claims?.First(c =>
+                    c.Type == ClaimTypes.Email).Value;
+                Email = httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(c =>
+                    c.Type == ClaimTypes.Email)?.Value;
             }
         }
 

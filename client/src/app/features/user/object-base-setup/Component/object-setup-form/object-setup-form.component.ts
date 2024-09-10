@@ -110,7 +110,8 @@ export class ObjectSetupFormComponent implements OnInit {
     this._commonService.getDatabaseSourceById(this.databaseSourceId).subscribe((res: ServerResponse<DbNameObjectSetupResponse>)=> {
       this.form.patchValue({
           databaseSourceId : this.databaseSourceId,
-          databaseName: res.data.length > 0 ? res.data[0].databaseName : ''
+          databaseName: res.data.length > 0 ? res.data[0].databaseName : '',
+          truncateBeforeLoad: 'Y'
         })
 
     })
@@ -132,6 +133,8 @@ export class ObjectSetupFormComponent implements OnInit {
     this._databaseSourceService.createNewObject(this.form.value).subscribe((res: ServerResponse<any>) => {
       this._ngxService.stop();
       this.form.reset();
+      this.connections = [];
+      this.initialize();
       this._toastr.success("Object created successfully");
     },
     (ex) => {
