@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dnct.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -172,6 +172,24 @@ namespace Dnct.Infrastructure.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "usr_queries",
+                schema: "codebotmstr",
+                columns: table => new
+                {
+                    usr_qry_id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    table_config_id = table.Column<int>(type: "integer", nullable: true),
+                    usr_qry = table.Column<string>(type: "text", nullable: true),
+                    base_query_ind = table.Column<int>(type: "integer", nullable: true),
+                    qry_order_ind = table.Column<int>(type: "integer", nullable: true),
+                    row_instr_ts = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_usr_queries", x => x.usr_qry_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -444,6 +462,10 @@ namespace Dnct.Infrastructure.Persistence.Migrations
             migrationBuilder.DropTable(
                 name: "UserTokens",
                 schema: "usr");
+
+            migrationBuilder.DropTable(
+                name: "usr_queries",
+                schema: "codebotmstr");
 
             migrationBuilder.DropTable(
                 name: "Roles",

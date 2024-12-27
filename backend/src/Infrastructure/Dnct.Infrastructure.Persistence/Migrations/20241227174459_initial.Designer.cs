@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dnct.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240712051655_init")]
-    partial class init
+    [Migration("20241227174459_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -121,23 +121,23 @@ namespace Dnct.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("datbs_src_id");
 
-                    b.Property<DateTime>("ConfigurationEffectiveEndTime")
+                    b.Property<DateTime>("ConfgrtnEffEndTs")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("confgrtn_eff_end_ts");
 
-                    b.Property<string>("AdditionalWhereConditions")
+                    b.Property<string>("AdtnlWherCondtns")
                         .HasColumnType("text")
                         .HasColumnName("adtnl_wher_condtns");
 
-                    b.Property<DateTime?>("ConfigurationEffectiveStartTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("confgrtn_eff_start_ts");
-
-                    b.Property<string>("ConnectionName")
+                    b.Property<string>("ConctnName")
                         .HasColumnType("text")
                         .HasColumnName("conctn_name");
 
-                    b.Property<string>("DedupByColumns")
+                    b.Property<DateTime?>("ConfgrtnEffStartTs")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("confgrtn_eff_start_ts");
+
+                    b.Property<string>("DedupByColmns")
                         .HasColumnType("text")
                         .HasColumnName("dedup_by_colmns");
 
@@ -145,23 +145,23 @@ namespace Dnct.Infrastructure.Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("dedup_logic");
 
-                    b.Property<string>("DeltaRowIdentification")
+                    b.Property<string>("DeltRowIdntfctn")
                         .HasColumnType("text")
                         .HasColumnName("delt_row_idntfctn");
 
-                    b.Property<int?>("EstimatedTableSize")
+                    b.Property<int?>("EstmtdTblSiz")
                         .HasColumnType("integer")
                         .HasColumnName("estmtd_tbl_siz");
 
-                    b.Property<string>("ObjectAlias")
+                    b.Property<string>("ObjctAls")
                         .HasColumnType("text")
                         .HasColumnName("objct_als");
 
-                    b.Property<string>("ObjectNature")
+                    b.Property<string>("ObjctNatr")
                         .HasColumnType("text")
                         .HasColumnName("objct_natr");
 
-                    b.Property<string>("OdbcType")
+                    b.Property<string>("OdbcTyp")
                         .HasColumnType("text")
                         .HasColumnName("odbc_typ");
 
@@ -169,27 +169,27 @@ namespace Dnct.Infrastructure.Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("partition_clause");
 
-                    b.Property<string>("PartitionColumns")
+                    b.Property<string>("PartitionColmns")
                         .HasColumnType("text")
                         .HasColumnName("partition_colmns");
 
-                    b.Property<string>("PrimaryKeyColumns")
+                    b.Property<string>("PkColmns")
                         .HasColumnType("text")
                         .HasColumnName("pk_colmns");
 
-                    b.Property<string>("QueryBand")
+                    b.Property<string>("Queryband")
                         .HasColumnType("text")
                         .HasColumnName("queryband");
 
-                    b.Property<string>("RepositoryName")
+                    b.Property<string>("RepstryName")
                         .HasColumnType("text")
                         .HasColumnName("repstry_name");
 
-                    b.Property<string>("SetupName")
+                    b.Property<string>("SetlSetupName")
                         .HasColumnType("text")
                         .HasColumnName("setl_setup_name");
 
-                    b.Property<int?>("SourceTargetFileId")
+                    b.Property<int?>("SorcTargtFileId")
                         .HasColumnType("integer")
                         .HasColumnName("sorc_targt_file_id");
 
@@ -197,35 +197,35 @@ namespace Dnct.Infrastructure.Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("sql_to_use");
 
-                    b.Property<string>("TableDbsName")
-                        .HasColumnType("text")
-                        .HasColumnName("tbl_dbs_name");
-
-                    b.Property<string>("TableKind")
+                    b.Property<string>("TablKind")
                         .HasColumnType("text")
                         .HasColumnName("tabl_kind");
 
-                    b.Property<string>("TableName")
-                        .HasColumnType("text")
-                        .HasColumnName("tbl_name");
-
-                    b.Property<string>("TargetObjectConnectionName")
+                    b.Property<string>("TargetObjcConName")
                         .HasColumnType("text")
                         .HasColumnName("target_objc_con_name");
 
-                    b.Property<char?>("TruncateTableAfterLoad")
+                    b.Property<string>("TblDbsName")
+                        .HasColumnType("text")
+                        .HasColumnName("tbl_dbs_name");
+
+                    b.Property<string>("TblName")
+                        .HasColumnType("text")
+                        .HasColumnName("tbl_name");
+
+                    b.Property<char?>("TrunctTblAftrLoad")
                         .HasColumnType("character(1)")
                         .HasColumnName("trunct_tbl_aftr_load");
 
-                    b.Property<char?>("TruncateTableBeforeLoad")
+                    b.Property<char?>("TrunctTblBefrLoad")
                         .HasColumnType("character(1)")
                         .HasColumnName("trunct_tbl_befr_load");
 
-                    b.Property<string>("Type2Columns")
+                    b.Property<string>("Type2Colmns")
                         .HasColumnType("text")
                         .HasColumnName("type2_colmns");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("Usrname")
                         .HasColumnType("text")
                         .HasColumnName("usrname");
 
@@ -233,7 +233,7 @@ namespace Dnct.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("years_of_history");
 
-                    b.HasKey("DatbsSrcId", "ConfigurationEffectiveEndTime");
+                    b.HasKey("DatbsSrcId", "ConfgrtnEffEndTs");
 
                     b.ToTable("datbs_srcs", "codebotmstr");
                 });
@@ -530,6 +530,40 @@ namespace Dnct.Infrastructure.Persistence.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserTokens", "usr");
+                });
+
+            modelBuilder.Entity("Dnct.Domain.Entities.UserQueries", b =>
+                {
+                    b.Property<int?>("UserQueryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("usr_qry_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("UserQueryId"));
+
+                    b.Property<int?>("BaseQueryIndicator")
+                        .HasColumnType("integer")
+                        .HasColumnName("base_query_ind");
+
+                    b.Property<int?>("QueryOrderIndicator")
+                        .HasColumnType("integer")
+                        .HasColumnName("qry_order_ind");
+
+                    b.Property<DateTime?>("RowInsertTimestamp")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("row_instr_ts");
+
+                    b.Property<int?>("TableConfigId")
+                        .HasColumnType("integer")
+                        .HasColumnName("table_config_id");
+
+                    b.Property<string>("UserQuery")
+                        .HasColumnType("text")
+                        .HasColumnName("usr_qry");
+
+                    b.HasKey("UserQueryId");
+
+                    b.ToTable("usr_queries", "codebotmstr");
                 });
 
             modelBuilder.Entity("TableConfiguration", b =>
