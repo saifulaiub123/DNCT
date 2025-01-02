@@ -9,7 +9,11 @@
               <mat-icon>close</mat-icon>
             </button>
           </ng-template>
-          <app-object-setup-form [databaseSourceId] = "ids[i]"></app-object-setup-form>
+          <div class="bg-light-primary mat-body-1 p-16 rounded m-t-12">
+            <!-- <app-object-setup-form [databaseSourceId] = "ids[i]"></app-object-setup-form> -->
+            <app-query-setup-form></app-query-setup-form>
+          </div>
+
         </mat-tab>
       </mat-tab-group>
     </mat-card-content>

@@ -14,6 +14,7 @@ import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
 import { ObjectSetupFormComponent } from '../Component/object-setup-form/object-setup-form.component';
 import { TreeViewStateService } from 'src/app/core/shared/state-service/tree-view-state.service';
+import { QuerySetupFormComponent } from "../Component/query-setup-form/query-setup-form.component";
 
 
 export interface productsData {
@@ -23,38 +24,11 @@ export interface productsData {
   pkColumn: boolean;
 }
 
-const PRODUCT_DATA: productsData[] = [
-  {
-    id: 1,
-    columnName: 'Name',
-    type2: true,
-    pkColumn: false,
-  },
-  {
-    id: 1,
-    columnName: 'Age',
-    type2: false,
-    pkColumn: true,
-  },
-  {
-    id: 1,
-    columnName: 'Department',
-    type2: true,
-    pkColumn: false,
-  },
-  {
-    id: 1,
-    columnName: 'Salary',
-    type2: true,
-    pkColumn: false,
-  },
-];
-
 
 @Component({
   selector: 'app-new-object-setup',
   standalone: true,
-  imports: [ObjectSetupFormComponent, MaterialModule, TablerIconsModule, MatFormFieldModule, MatInputModule, MatRadioModule, MatCheckboxModule, MatDatepickerModule, MatTableModule, CommonModule,],
+  imports: [ObjectSetupFormComponent, MaterialModule, TablerIconsModule, MatFormFieldModule, MatInputModule, MatRadioModule, MatCheckboxModule, MatDatepickerModule, MatTableModule, CommonModule, QuerySetupFormComponent],
   templateUrl: './new-object-setup.component.html',
   styleUrl: './new-object-setup.component.scss'
 })
