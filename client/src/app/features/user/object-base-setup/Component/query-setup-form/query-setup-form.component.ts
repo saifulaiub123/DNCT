@@ -14,9 +14,11 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { DbNameObjectSetupResponse } from 'src/app/core/model/contract/db-source-object-setup-response';
 import { ServerResponse } from 'src/app/core/model/contract/server-response';
+import { UserQueriesResponse } from 'src/app/core/model/contract/user-queries-response';
 import { ServerDto } from 'src/app/core/model/dto/server-dto';
 import { CommonService } from 'src/app/core/services/api-services/common.service';
 import { DatabaseSourceService } from 'src/app/core/services/api-services/database-source.service';
+import { UserQueryService } from 'src/app/core/services/api-services/user-query.service';
 import { MaterialModule } from 'src/app/material.module';
 import { Employee } from 'src/app/pages/apps/employee/employee.component';
 import { AppAddKichenSinkComponent } from 'src/app/pages/datatable/kichen-sink/add/add.component';
@@ -132,22 +134,67 @@ const employees = [
   templateUrl: './query-setup-form.component.html',
   styleUrl: './query-setup-form.component.scss'
 })
-export class QuerySetupFormComponent {
+export class QuerySetupFormComponent implements OnInit {
 
 @ViewChild(MatTable, { static: true }) table: MatTable<any> =
     Object.create(null);
+userQueryData: UserQueriesResponse[] = [];
   searchText: any;
   displayedColumns: string[] = [
     'select',
-    'query id',
-    'full query',
-    'sead query',
-    'qry order',
+    'queryId',
+    'fullQuery',
+    'seadQuery',
+    'qryOrder',
+    'validationResult',
     'action'
   ];
   dataSource = new MatTableDataSource(employees);
 
-  constructor(public dialog: MatDialog, public datePipe: DatePipe) {}
+  constructor(
+    public dialog: MatDialog,
+    public datePipe: DatePipe,
+  private _userQueryService: UserQueryService) {}
+
+
+  ngOnInit(): void {
+    this.initialize();
+  }
+  initialize() {
+
+    this._userQueryService.getAll().subscribe((res: ServerResponse<UserQueriesResponse>)=> {
+      this.userQueryData = res.data;
+      // this.form.patchValue({
+      //     databaseSourceId : this.databaseSourceId,
+      //     databaseName: res.data.length > 0 ? res.data[0].databaseName : '',
+      //     truncateBeforeLoad: 'Y'
+      //   })
+
+    })
+  }
+
+  submit()
+  {
+    // if(!this.form.valid)
+    // {
+    //   return;
+    // }
+    // this._ngxService.start();
+    // this._databaseSourceService.createNewObject(this.form.value).subscribe((res: ServerResponse<any>) => {
+    //   this._ngxService.stop();
+    //   this.form.reset();
+    //   this.connections = [];
+    //   this.initialize();
+    //   this._toastr.success("Object created successfully");
+    // },
+    // (ex) => {
+    //   console.log(ex);
+    //   this._toastr.error("Something went wrong","Error!");
+    //   this._ngxService.stopAll();
+    // })
+  }
+
+
   openDialog(action: string, obj: any): void {
       obj.action = action;
       const dialogRef = this.dialog.open(AppKichenSinkDialogContentComponent, {

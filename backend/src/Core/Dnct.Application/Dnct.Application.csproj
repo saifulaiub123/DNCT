@@ -21,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\Table\Query\" />
+    <Folder Include="Features\UserQuery\Commands\" />
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { ProcessDDLResponse } from '../../model/contract/process-ddl-response';
 
 const controller = 'table';
+
 @Injectable({
   providedIn: 'root'
 })

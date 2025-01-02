@@ -1,7 +1,7 @@
 <mat-card class="cardWithShadow">
   <mat-card-content class="p-24">
     <div class="table-responsive">
-      <table mat-table [dataSource]="dataSource" class="w-100">
+      <table mat-table [dataSource]="userQueryData" class="w-100">
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">Select</th>
           <td mat-cell *matCellDef="let element" class="f-s-14">
@@ -9,40 +9,47 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="query id">
+        <ng-container matColumnDef="queryId">
           <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
             Query Id
           </th>
-          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.Email }}</td>
+          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.userQueryId }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="full query">
-          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+        <ng-container matColumnDef="fullQuery">
+          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600" style="width: 150px;">
             Full Query
           </th>
-          <td mat-cell *matCellDef="let element" class="f-s-14">
-            {{ element.Mobile }}
+          <td mat-cell *matCellDef="let element" class="f-s-14" style="width: 150px;">
+            {{ element.userQuery }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="sead query">
+        <ng-container matColumnDef="seadQuery">
           <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
             Sead Query
           </th>
           <td mat-cell *matCellDef="let element" class="f-s-14">
-            {{ element.DateOfJoining | date : "fullDate" }}
+            {{ element.baseQueryIndicator }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="qry order">
+        <ng-container matColumnDef="qryOrder">
           <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
             Query Order
           </th>
           <td mat-cell *matCellDef="let element" class="f-s-14">
-            {{ element.Salary }}
+            {{ element.queryOrderIndicator }}
           </td>
         </ng-container>
+        <ng-container matColumnDef="validationResult">
+          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+            Validation Result
+          </th>
+          <td mat-cell *matCellDef="let element" class="f-s-14">
 
+          </td>
+        </ng-container>
         <!-- <ng-container matColumnDef="save action">
           <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
             Projects
@@ -57,11 +64,16 @@
             Action
           </th>
           <td mat-cell *matCellDef="let element" class="action-link">
+            <!-- <a
+              (click)="openDialog('Update', element)"
+              class="m-r-10 cursor-pointer"
+              ><i-tabler name="edit" class="icon-18"></i-tabler>
+            </a> -->
             <a
               (click)="openDialog('Update', element)"
               class="m-r-10 cursor-pointer"
-              ><i-tabler name="edit" class="icon-18"></i-tabler
-            ></a>
+              ><mat-icon>save_alt</mat-icon>
+            </a>
             <a
               (click)="openDialog('Delete', element)"
               class="m-r-10 cursor-pointer"
@@ -74,10 +86,28 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
-      <mat-paginator
-        [pageSizeOptions]="[5, 10, 20]"
-        showFirstLastButtons
-      ></mat-paginator>
+
+      <form class="m-t-30">
+        <div class="row m-t-20">
+          <div class="col-lg-6">
+            <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Displaying User Query Id: 24</mat-label>
+            <mat-form-field appearance="outline" class="w-100" color="primary">
+              <!-- <textarea matInput rows="5" formControlName="userQuery"></textarea> -->
+              <mat-hint class="m-b-16 error-msg">
+                <!-- @if(true) {
+                  <div class="text-error">Required</div>
+                  } -->
+              </mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div class="col-lg-6">
+
+
+
+          </div>
+        </div>
+        </form>
     </div>
   </mat-card-content>
 </mat-card>

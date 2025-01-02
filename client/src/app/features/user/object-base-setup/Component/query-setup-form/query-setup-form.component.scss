@@ -1,0 +1,10 @@
+.mat-column-name {
+  width: 150px; /* Set your desired width */
+  overflow: hidden; /* Optional: Handle overflow */
+  white-space: nowrap; /* Optional: Prevent wrapping */
+}
+
+/* Set fixed width for the "age" column */
+.mat-column-fullQuery {
+  width: 100px; /* Set your desired width */
+}

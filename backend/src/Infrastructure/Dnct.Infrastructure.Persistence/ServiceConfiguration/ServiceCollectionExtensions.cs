@@ -17,6 +17,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IDatabaseSourcesRepository, DatabaseSourcesRepository>();
         services.AddScoped<IConnectionMasterRepository, ConnectionMasterRepository>();
         services.AddScoped<ITableConfigurationRepository, TableConfigurationRepository>();
+        services.AddScoped<IUserQueryRepository, UserQueryRepository>();
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {
