@@ -22,6 +22,18 @@ export const navItems: NavItem[] = [
     ],
   },
   {
+    displayName: 'Query Tables',
+    iconName: 'apps',
+    route: 'apps',
+    ddType: '',
+    children: [
+      {
+        displayName: 'query table',
+        iconName: 'point',
+        route: '/user/object-setup/query-table',
+      }]
+    },
+  {
     displayName: 'Apps',
     iconName: 'apps',
     route: 'apps',
