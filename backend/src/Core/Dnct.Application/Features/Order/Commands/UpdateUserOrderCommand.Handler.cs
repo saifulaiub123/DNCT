@@ -1,25 +1,25 @@
-﻿using Dnct.Application.Contracts.Persistence;
-using Dnct.Application.Models.Common;
-using Mediator;
+﻿//using Dnct.Application.Contracts.Persistence;
+//using Dnct.Application.Models.Common;
+//using Mediator;
 
-namespace Dnct.Application.Features.Order.Commands;
+//namespace Dnct.Application.Features.Order.Commands;
 
-public class UpdateUserOrderCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<UpdateUserOrderCommand,OperationResult<bool>>
-{
+//public class UpdateUserOrderCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<UpdateUserOrderCommand,OperationResult<bool>>
+//{
 
 
-    public async ValueTask<OperationResult<bool>> Handle(UpdateUserOrderCommand request, CancellationToken cancellationToken)
-    {
-        var order = await unitOfWork.OrderRepository.GetUserOrderByIdAndUserIdAsync(request.UserId, request.OrderId,
-            true);
+//    public async ValueTask<OperationResult<bool>> Handle(UpdateUserOrderCommand request, CancellationToken cancellationToken)
+//    {
+//        var order = await unitOfWork.OrderRepository.GetUserOrderByIdAndUserIdAsync(request.UserId, request.OrderId,
+//            true);
 
-        if(order is null)
-            return OperationResult<bool>.NotFoundResult("Specified Order not found");
+//        if(order is null)
+//            return OperationResult<bool>.NotFoundResult("Specified Order not found");
 
-        order.OrderName=request.OrderName;
+//        order.OrderName=request.OrderName;
 
-        await unitOfWork.CommitAsync();
+//        await unitOfWork.CommitAsync();
 
-        return OperationResult<bool>.SuccessResult(true);
-    }
-}
+//        return OperationResult<bool>.SuccessResult(true);
+//    }
+//}

@@ -1,26 +1,26 @@
-﻿using Dnct.Application.Contracts.Persistence;
-using Dnct.Application.Models.Common;
-using Mediator;
+﻿//using Dnct.Application.Contracts.Persistence;
+//using Dnct.Application.Models.Common;
+//using Mediator;
 
-namespace Dnct.Application.Features.Order.Queries.GetUserOrders;
+//namespace Dnct.Application.Features.Order.Queries.GetUserOrders;
 
-internal class GetUserOrdersQueryHandler:IRequestHandler<GetUserOrdersQueryModel,OperationResult<List<GetUsersQueryResultModel>>>
-{
-    private readonly IUnitOfWork _unitOfWork;
+//internal class GetUserOrdersQueryHandler:IRequestHandler<GetUserOrdersQueryModel,OperationResult<List<GetUsersQueryResultModel>>>
+//{
+//    private readonly IUnitOfWork _unitOfWork;
 
-    public GetUserOrdersQueryHandler(IUnitOfWork unitOfWork)
-    {
-        _unitOfWork = unitOfWork;
-    }
-    public async ValueTask<OperationResult<List<GetUsersQueryResultModel>>> Handle(GetUserOrdersQueryModel request, CancellationToken cancellationToken)
-    {
-        var orders = await _unitOfWork.OrderRepository.GetAllUserOrdersAsync(request.UserId);
+//    public GetUserOrdersQueryHandler(IUnitOfWork unitOfWork)
+//    {
+//        _unitOfWork = unitOfWork;
+//    }
+//    public async ValueTask<OperationResult<List<GetUsersQueryResultModel>>> Handle(GetUserOrdersQueryModel request, CancellationToken cancellationToken)
+//    {
+//        var orders = await _unitOfWork.OrderRepository.GetAllUserOrdersAsync(request.UserId);
 
-        if(!orders.Any())
-            return OperationResult<List<GetUsersQueryResultModel>>.NotFoundResult("You Don't Have Any Orders");
+//        if(!orders.Any())
+//            return OperationResult<List<GetUsersQueryResultModel>>.NotFoundResult("You Don't Have Any Orders");
 
-        var result = orders.Select(c => new GetUsersQueryResultModel(c.Id, c.OrderName));
+//        var result = orders.Select(c => new GetUsersQueryResultModel(c.Id, c.OrderName));
 
-        return OperationResult<List<GetUsersQueryResultModel>>.SuccessResult(result.ToList());
-    }
-}
+//        return OperationResult<List<GetUsersQueryResultModel>>.SuccessResult(result.ToList());
+//    }
+//}

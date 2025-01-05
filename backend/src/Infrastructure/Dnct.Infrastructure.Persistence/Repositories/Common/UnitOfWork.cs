@@ -7,14 +7,14 @@ public class UnitOfWork : IUnitOfWork
     private readonly ApplicationDbContext _db;
        
     public IUserRefreshTokenRepository UserRefreshTokenRepository { get; }
-    public IOrderRepository OrderRepository { get; }
+    public ITableColConfigurationRepository OrderRepository { get; }
     public IDatabaseSourcesRepository DatabaseSourcesRepository { get; }
 
     public UnitOfWork(ApplicationDbContext db)
     {
         _db = db;
         UserRefreshTokenRepository = new UserRefreshTokenRepository(_db);
-        OrderRepository= new OrderRepository(_db);
+        //OrderRepository= new TableColConfigurationRepository(_db);
     }
 
     public  Task CommitAsync()

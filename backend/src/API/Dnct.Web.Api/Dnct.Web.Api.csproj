@@ -11,6 +11,9 @@
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Controllers\V1\TableColConfigController.cs" />
+  </ItemGroup>
+  <ItemGroup>
 	  <PackageReference Include="Carter" Version="8.0.0" />
 	  <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
 	  <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />

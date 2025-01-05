@@ -1,25 +1,25 @@
-﻿using Dnct.Application.Contracts.Persistence;
-using Dnct.Application.Models.Common;
-using Mediator;
+﻿//using Dnct.Application.Contracts.Persistence;
+//using Dnct.Application.Models.Common;
+//using Mediator;
 
-namespace Dnct.Application.Features.Order.Queries.GetAllOrders
-{
-    internal class GetAllOrdersQueryHandler:IRequestHandler<GetAllOrdersQuery,OperationResult<List<GetAllOrdersQueryResult>>>
-    {
-        private readonly IUnitOfWork _unitOfWork;
+//namespace Dnct.Application.Features.Order.Queries.GetAllOrders
+//{
+//    internal class GetAllOrdersQueryHandler:IRequestHandler<GetAllOrdersQuery,OperationResult<List<GetAllOrdersQueryResult>>>
+//    {
+//        private readonly IUnitOfWork _unitOfWork;
 
-        public GetAllOrdersQueryHandler(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+//        public GetAllOrdersQueryHandler(IUnitOfWork unitOfWork)
+//        {
+//            _unitOfWork = unitOfWork;
+//        }
 
-        public async ValueTask<OperationResult<List<GetAllOrdersQueryResult>>> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
-        {
-            var orders = await _unitOfWork.OrderRepository.GetAllOrdersWithRelatedUserAsync();
+//        public async ValueTask<OperationResult<List<GetAllOrdersQueryResult>>> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
+//        {
+//            var orders = await _unitOfWork.OrderRepository.GetAllOrdersWithRelatedUserAsync();
 
-            var result = orders.Select(c => new GetAllOrdersQueryResult(c.Id, c.OrderName, c.UserId, c.User.UserName)).ToList();
+//            var result = orders.Select(c => new GetAllOrdersQueryResult(c.Id, c.OrderName, c.UserId, c.User.UserName)).ToList();
 
-            return OperationResult<List<GetAllOrdersQueryResult>>.SuccessResult(result);
-        }
-    }
-}
+//            return OperationResult<List<GetAllOrdersQueryResult>>.SuccessResult(result);
+//        }
+//    }
+//}
