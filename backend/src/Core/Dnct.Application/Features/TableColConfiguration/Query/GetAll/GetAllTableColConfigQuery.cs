@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using Dnct.Application.Contracts.Persistence;
+using Dnct.Application.Features.UserQuery.Query.GetAllTableColConfig;
 using Dnct.Application.Models.Common;
 using Mediator;
 using Microsoft.Extensions.Logging;
 
-namespace Dnct.Application.Features.UserQuery.Query.GetAllTableColConfig
+namespace Dnct.Application.Features.TableColConfiguration.Query.GetAllTableColConfig
 {
     public class GetAllTableColConfigQuery : IRequest<OperationResult<List<GetAllTableColConfigResponse>>>
     {

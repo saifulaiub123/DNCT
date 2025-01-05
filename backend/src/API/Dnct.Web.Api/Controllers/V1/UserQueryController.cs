@@ -93,7 +93,7 @@ namespace Dnct.Web.Api.Controllers.V1
             return base.OperationResult(result);
         }
         [HttpDelete("Delete")]
-        public async Task<IActionResult> CreateOrUpdate([FromRoute] int userQueryId, [FromQuery] int tableConfigId)
+        public async Task<IActionResult> Delete([FromQuery] int userQueryId, [FromQuery] int tableConfigId)
         {
             var command = new DeleteUserQueryCommand
             {

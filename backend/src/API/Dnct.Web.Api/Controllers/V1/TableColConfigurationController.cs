@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Dnct.Application.Features.TableColConfiguration.Query.GetAllTableColConfig;
 using Dnct.Application.Features.UserQuery.Query.GetAllTableColConfig;
 using Dnct.Application.Features.UserQuery.Query.GetUserQuery;
 using Dnct.WebFramework.BaseController;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol.Plugins;
 using Mediator;
+using Dnct.Application.Features.TableColConfiguration.Commands.CreateMultiple;
 
 namespace Dnct.Web.Api.Controllers.V1
 {
@@ -24,6 +26,21 @@ namespace Dnct.Web.Api.Controllers.V1
             var command = await sender.Send(query);
 
             return base.OperationResult(command);
+        }
+        [HttpGet("createMulti")]
+        public async Task<IActionResult> CreateMulti([FromBody] CreateMultipleTblColConfigCommand command)
+        {
+             await sender.Send(command);
+
+            return Ok();
+        }
+        [HttpDelete("delete")]
+        public async Task<IActionResult> Delete([FromQuery] int tbleColConfigId, [FromQuery] int tableConfigId)
+        {
+            var command = new GetAllTableColConfigQuery();
+            await sender.Send(command);
+
+            return Ok();
         }
     }
 }
