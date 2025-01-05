@@ -24,6 +24,66 @@ namespace Dnct.Web.Api.Controllers.V1
 
             return base.OperationResult(command);
         }
+        [HttpGet("autoPopulate")]
+        public async Task<JsonResult> AutoPopulate()
+        {
+            var records = new List<SqlRecord>
+            {
+                new SqlRecord
+                {
+                    ColunmId = 1,
+                    SqlTxt = "SELECT * FROM Table1",
+                    Att1 = "Attribute1_Value1",
+                    Att2 = "Attribute2_Value1"
+                },
+                new SqlRecord
+                {
+                    ColunmId = 2,
+                    SqlTxt = "SELECT * FROM Table2 WHERE Column = 'Value'",
+                    Att1 = "Attribute1_Value2",
+                    Att2 = "Attribute2_Value2"
+                },
+                new SqlRecord
+                {
+                    ColunmId = 3,
+                    SqlTxt = "INSERT INTO Table3 (Column1, Column2) VALUES ('Value1', 'Value2')",
+                    Att1 = "Attribute1_Value3",
+                    Att2 = "Attribute2_Value3"
+                }
+            };
+
+            return new JsonResult(records);
+        }
+        [HttpGet("validateQuery")]
+        public async Task<JsonResult> ValidateQuery()
+        {
+            var records = new List<SqlRecord>
+            {
+                new SqlRecord
+                {
+                    ColunmId = 1,
+                    SqlTxt = "SELECT * FROM Table1",
+                    Att1 = "Attribute1_Value1",
+                    Att2 = "Attribute2_Value1"
+                },
+                new SqlRecord
+                {
+                    ColunmId = 2,
+                    SqlTxt = "SELECT * FROM Table2 WHERE Column = 'Value'",
+                    Att1 = "Attribute1_Value2",
+                    Att2 = "Attribute2_Value2"
+                },
+                new SqlRecord
+                {
+                    ColunmId = 3,
+                    SqlTxt = "INSERT INTO Table3 (Column1, Column2) VALUES ('Value1', 'Value2')",
+                    Att1 = "Attribute1_Value3",
+                    Att2 = "Attribute2_Value3"
+                }
+            };
+
+            return new JsonResult(records);
+        }
         [HttpPost("CreateOrUpdate")]
         public async Task<IActionResult> CreateOrUpdate([FromBody] DeleteUserQueryCommand command)
         {
@@ -43,5 +103,13 @@ namespace Dnct.Web.Api.Controllers.V1
 
             return base.OperationResult(result);
         }
+    }
+
+    public class SqlRecord
+    {
+        public int ColunmId { get; set; }
+        public string SqlTxt { get; set; }
+        public string Att1 { get; set; }
+        public string Att2 { get; set; }
     }
 }
