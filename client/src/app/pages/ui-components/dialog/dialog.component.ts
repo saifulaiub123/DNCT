@@ -29,6 +29,13 @@ export interface DialogData {
 })
 export class AppDialogOverviewComponent {
   constructor(public dialogRef: MatDialogRef<AppDialogOverviewComponent>) {}
+  onNoClick(): void {
+    this.dialogRef.close(false);
+  }
+
+  onYesClick(): void {
+    this.dialogRef.close(true); 
+}
 }
 
 /**

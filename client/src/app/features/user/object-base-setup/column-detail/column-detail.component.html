@@ -1,0 +1,227 @@
+<form [formGroup]="ColumnDetailFormGroup">
+  <ng-container formArrayName="ColumnDetail">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+
+      <!-- Column ID -->
+      <ng-container matColumnDef="columnId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Column ID </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          {{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].columnId}}</td>
+      </ng-container>
+
+      <!-- Column Name -->
+      <ng-container matColumnDef="columnName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Column Name </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="text" formControlName="columnName" />
+          </mat-form-field>
+          }@else{
+          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].columnName}}</span>
+          }
+        </td>
+      </ng-container>
+
+      <!-- Data Type -->
+      <ng-container matColumnDef="dataType">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Data Type </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="text" formControlName="dataType" />
+          </mat-form-field>
+          }@else{
+          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].dataType}}</span>
+          }
+        </td>
+      </ng-container>
+
+      <!-- Transform SQL -->
+      <ng-container matColumnDef="transformSql">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Transform SQL </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="text" formControlName="transformSql" />
+          </mat-form-field>
+          }@else{
+          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].transformSql}}</span>
+          }
+        </td>
+      </ng-container>
+
+      <!-- Generate SK -->
+      <ng-container matColumnDef="generateSk">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Generate SK </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="text" formControlName="generateSk" />
+          </mat-form-field>
+          }@else{
+          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].generateSk}}</span>
+          }
+        </td>
+      </ng-container>
+
+      <!-- Type2 Start Indicator -->
+      <ng-container matColumnDef="type2StartInd">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Type2_Start_Ind </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="text" formControlName="type2StartInd" />
+          </mat-form-field>
+          }@else{
+          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].type2StartInd}}</span>
+          }
+        </td>
+      </ng-container>
+
+      <!-- Type2 End Indicator -->
+      <ng-container matColumnDef="type2EndInd">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Type2_End_Ind </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="text" formControlName="type2EndInd" />
+          </mat-form-field>
+          }@else{
+          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].type2EndInd}}</span>
+          }
+        </td>
+      </ng-container>
+
+      <!-- Current Active Indicator -->
+      <ng-container matColumnDef="curActiveInd">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cur_row_Ind </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="text" formControlName="curActiveInd" />
+          </mat-form-field>
+          }@else{
+          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].curActiveInd}}</span>
+          }
+        </td>
+      </ng-container>
+
+      <!-- Pattern 1 -->
+      <ng-container matColumnDef="pattern1">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Pattern 1 </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="text" formControlName="pattern1" />
+          </mat-form-field>
+          }@else{
+          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].pattern1}}</span>
+          }
+        </td>
+      </ng-container>
+
+      <!-- Pattern 2 -->
+      <ng-container matColumnDef="pattern2">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Pattern 2 </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="text" formControlName="pattern2" />
+          </mat-form-field>
+          }@else{
+          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].pattern2}}</span>
+          }
+        </td>
+      </ng-container>
+
+      <!-- Pattern 3 -->
+      <ng-container matColumnDef="pattern3">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Pattern 3 </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="text" formControlName="pattern3" />
+          </mat-form-field>
+          }@else{
+          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].pattern3}}</span>
+          }
+        </td>
+      </ng-container>
+
+      <!-- Load Indicator -->
+      <ng-container matColumnDef="loadInd">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Load Indicator </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="text" formControlName="loadInd" />
+          </mat-form-field>
+          }@else{
+          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].loadInd}}</span>
+          }
+        </td>
+      </ng-container>
+
+      <!-- Join Duplicate Indicator -->
+      <ng-container matColumnDef="joinDupInd">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Join Duplicate Indicator </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="text" formControlName="joinDupInd" />
+          </mat-form-field>
+          }@else{
+          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].joinDupInd}}</span>
+          }
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+          <div class="d-flex gap-10">
+            @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+            <button mat-icon-button class="material-icons app-toolbar-menu cancel-button" matTooltip="Cancel Changes"
+              color="warn" (click)="CancelSVO(ColumnDetailFormGroup,i)">
+              <mat-icon>cancel</mat-icon>
+            </button>
+            }
+            <button mat-icon-button class="material-icons app-toolbar-menu save-button" matTooltip="Save Changes"
+              (click)="SaveVO(ColumnDetailFormGroup,i)" color="primary">
+              <mat-icon>check_circle</mat-icon>
+            </button>
+          </div>
+          }
+          @if(!ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+          <button mat-icon-button class="material-icons app-toolbar-menu save-button" matTooltip="Edit" color="primary"
+            (click)="EditSVO(ColumnDetailFormGroup,i)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          }
+        </td>
+      </ng-container>
+
+      <!-- Table Header and Rows -->
+      <!-- [class.bg-light-error]="row?.validationResult === 0"
+      [class.bg-light-success]="row?.validationResult === 1" -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"
+        [class.bg-light-primary]="row === selectedRow" (click)="selectRow(row)"></tr>
+    </table>
+
+  </ng-container>
+</form>
+
+
+<div class="m-t-30 d-flex gap-8">
+  <button mat-raised-button color="primary" (click)="copyToCells()">Copy To Cells</button>
+  <button mat-raised-button color="warn" (click)="removeSelectedRow()">Remove Column</button>
+  <button mat-raised-button color="primary" (click)="addRow()">Add New Column</button>
+  @if(dataSource.data.length > 0){
+  <button mat-raised-button color="primary" (click)="saveRows()">Save</button>
+  }
+  <button mat-raised-button color="primary" (click)="validateSyntax()">Validate Syntax</button>
+  <button mat-raised-button color="primary" (click)="refreshRow()">Refresh</button>
+  <button mat-raised-button color="warn" (click)="clearAllTransformations()">Clear All Transformations</button>
+</div>

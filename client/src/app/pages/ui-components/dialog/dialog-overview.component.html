@@ -3,8 +3,8 @@
   Would you like to delete cat.jpeg?
 </div>
 <div mat-dialog-actions class="p-24 p-t-0">
-  <button mat-stroked-button color="warn" mat-dialog-close>No</button>
-  <button mat-flat-button color="primary" mat-dialog-close cdkFocusInitial>
+  <button mat-stroked-button color="warn" (click)="onNoClick()">No</button>
+  <button mat-flat-button color="primary" (click)="onYesClick()" cdkFocusInitial>
     Ok
   </button>
 </div>

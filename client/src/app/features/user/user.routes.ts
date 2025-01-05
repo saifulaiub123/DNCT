@@ -17,7 +17,7 @@ export const UserRoutes: Routes = [
       {
         path: 'object-setup',
         loadChildren: () =>
-          import('./object-base-setup/Object-base.routes').then(
+          import('./object-base-setup/object-base.routes').then(
             (m) => m.ObjectBaseRoutes
           ),
       },
