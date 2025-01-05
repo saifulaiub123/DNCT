@@ -25,8 +25,20 @@ namespace Dnct.Web.Api.Controllers.V1
             return base.OperationResult(command);
         }
         [HttpPost("CreateOrUpdate")]
-        public async Task<IActionResult> CreateOrUpdate([FromBody] CreateOrUpdateUserQueryCommand command)
+        public async Task<IActionResult> CreateOrUpdate([FromBody] DeleteUserQueryCommand command)
         {
+            var result = await sender.Send(command);
+
+            return base.OperationResult(result);
+        }
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> CreateOrUpdate([FromRoute] int userQueryId, [FromQuery] int tableConfigId)
+        {
+            var command = new DeleteUserQueryCommand
+            {
+                UserQueryId = userQueryId,
+                TableConfigId = tableConfigId
+            };
             var result = await sender.Send(command);
 
             return base.OperationResult(result);

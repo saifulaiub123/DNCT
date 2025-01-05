@@ -118,5 +118,19 @@ namespace Dnct.Infrastructure.Persistence.Repositories
             }
 
         }
+        public async Task Delete(UserQueryModel userQuery)
+        {
+            string sql = @"
+            DELETE FROM codebotmstr.usr_queries
+            WHERE usr_qry_id = @UserQueryId
+            ND table_config_id = @TableConfigId;
+        ";
+            using (var conn = new NpgsqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                await conn.ExecuteAsync(sql, userQuery);
+            }
+
+        }
     }
 }

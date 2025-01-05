@@ -8,17 +8,13 @@ using Dnct.Domain.Model;
 
 namespace Dnct.Application.Features.Table.Commands.Create
 {
-    public class CreateOrUpdateUserQueryCommand : IRequest<OperationResult<bool>>,
-    IValidatableModel<CreateOrUpdateUserQueryCommand>
+    public class DeleteUserQueryCommand : IRequest<OperationResult<bool>>,
+    IValidatableModel<DeleteUserQueryCommand>
     {
         public int UserQueryId { get; set; }
         public int TableConfigId { get; set; }
-        public string UserQuery { get; set; }
-        public int? BaseQueryIndicator { get; set; }
-        public int? QueryOrderIndicator { get; set; }
-        public DateTime? RowInsertTimestamp { get; set; }
-
-        public IValidator<CreateOrUpdateUserQueryCommand> ValidateApplicationModel(ApplicationBaseValidationModelProvider<CreateOrUpdateUserQueryCommand> validator)
+        
+        public IValidator<DeleteUserQueryCommand> ValidateApplicationModel(ApplicationBaseValidationModelProvider<DeleteUserQueryCommand> validator)
         {
             validator.RuleFor(c => c.UserQueryId)
                 .NotEmpty()
@@ -28,16 +24,12 @@ namespace Dnct.Application.Features.Table.Commands.Create
                 .NotEmpty()
                 .NotNull()
                 .WithMessage("TableConfigId is required");
-            validator.RuleFor(c => c.UserQuery)
-                .NotEmpty()
-                .NotNull()
-                .WithMessage("UserQuery is required");
 
             return validator;
         }
     }
 
-    internal class CreateOrUpdateUserQueryCommandHandler : IRequestHandler<CreateOrUpdateUserQueryCommand, OperationResult<bool>>
+    internal class CreateOrUpdateUserQueryCommandHandler : IRequestHandler<DeleteUserQueryCommand, OperationResult<bool>>
     {
         private readonly IUserQueryRepository _userQueryRepository;
 
@@ -46,34 +38,14 @@ namespace Dnct.Application.Features.Table.Commands.Create
             _userQueryRepository = userQueryRepository;
         }
 
-        public async ValueTask<OperationResult<bool>> Handle(CreateOrUpdateUserQueryCommand request, CancellationToken cancellationToken)
+        public async ValueTask<OperationResult<bool>> Handle(DeleteUserQueryCommand request, CancellationToken cancellationToken)
         {
-            if (request.UserQueryId == -1)
+            await _userQueryRepository.Delete(new UserQueryModel()
             {
-                await _userQueryRepository.Create(new UserQueryModel()
-                {
-                    UserQueryId = request.UserQueryId,
-                    TableConfigId = request.TableConfigId,
-                    UserQuery = request.UserQuery,
-                    BaseQueryIndicator = request.BaseQueryIndicator,
-                    QueryOrderIndicator = request.QueryOrderIndicator,
-                    RowInsertTimestamp = request.RowInsertTimestamp,
-                });
-            }
-            else
-            {
-                var userQueries = (await _userQueryRepository.GetUserQueryByQueryId(request.UserQueryId));
-                await _userQueryRepository.Update(new UserQueryModel()
-                {
-                    UserQueryId = userQueries.UserQueryId,
-                    TableConfigId = userQueries.TableConfigId,
-                    UserQuery = request.UserQuery,
-                    BaseQueryIndicator = request.BaseQueryIndicator,
-                    QueryOrderIndicator = request.QueryOrderIndicator,
-                    RowInsertTimestamp = DateTime.Now,
-                });
-            }
-
+                UserQueryId = request.UserQueryId,
+                TableConfigId = request.TableConfigId,
+            });
+            
             return OperationResult<bool>.SuccessResult(true);
         }
     }

@@ -9,5 +9,6 @@ namespace Dnct.Application.Contracts.Persistence
         Task<UserQueryModel> GetUserQueryByQueryId(int queryId);
         Task Create(UserQueryModel userQuery);
         Task Update(UserQueryModel userQuery);
+        Task Delete(UserQueryModel userQuery);
     }
 }
