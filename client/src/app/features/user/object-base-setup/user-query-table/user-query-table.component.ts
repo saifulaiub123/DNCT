@@ -7,6 +7,15 @@ import { delay, first, Observable, of } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { AppDialogOverviewComponent } from 'src/app/pages/ui-components/dialog/dialog.component';
 export class MockAPIClass {
+   simulateApiValidation(rows: { tbl_col_confrtn_id: number; transformSql: string }[]) {
+    return new Promise<{ tbl_col_confrtn_id: number; validationResult: number }[]>(resolve => {
+      const response = rows.map(row => ({
+        tbl_col_confrtn_id: row.tbl_col_confrtn_id,
+        validationResult: Math.random() < 0.5 ? 0 : 1 // Randomly return 0 or 1
+      }));
+      setTimeout(() => resolve(response), 1000); // Simulate network delay
+    });
+  }
   deleteRowFromAPI(
     tableConfigId: number,
     queryId: number
@@ -33,7 +42,7 @@ export class MockAPIClass {
       },
     }).pipe(delay(1000));
   }
-  SaveQueryTableRow(_row: IUserQueryTable): Observable<any> {
+  SaveQueryTableRow(_row: any): Observable<any> {
     console.log(_row);
     return of({
       success: true,
@@ -68,22 +77,18 @@ export class UserQueryTableComponent extends MockAPIClass {
   private dialog = inject(MatDialog);
 
   saveRow(_row: IUserQueryTable) {
-    this.dialog.open(AppDialogOverviewComponent).afterClosed().pipe(first()).subscribe((res) => {
-      if (res) {
-        this.SaveQueryTableRow(_row).pipe(first()).subscribe({
-          next: (response) => {
-            if (response.success) {
-              this.snackBar.open(response.message, 'Close', {
-                duration: 3000,
-              });
-            }
-          },
-          error: () => {
-            this.snackBar.open('Failed to save the row. Please try again.');
-          },
-        });
-      }
-    })
+    this.SaveQueryTableRow(_row).pipe(first()).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.snackBar.open(response.message, 'Close', {
+            duration: 3000,
+          });
+        }
+      },
+      error: () => {
+        this.snackBar.open('Failed to save the row. Please try again.');
+      },
+    });
   }
 
   removeRow(row: any) {

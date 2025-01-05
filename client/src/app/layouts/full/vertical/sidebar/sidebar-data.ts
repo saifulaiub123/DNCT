@@ -28,10 +28,16 @@ export const navItems: NavItem[] = [
     ddType: '',
     children: [
       {
-        displayName: 'query table',
+        displayName: 'Column Detail',
+        iconName: 'point',
+        route: '/user/object-setup/column-details',
+      },
+      {
+        displayName: 'Query Table',
         iconName: 'point',
         route: '/user/object-setup/query-table',
-      }]
+      },
+    ]
     },
   {
     displayName: 'Apps',
