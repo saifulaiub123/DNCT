@@ -69,24 +69,24 @@ namespace Dnct.Infrastructure.Persistence.Repositories
             var maxIdSql = "SELECT MAX(usr_qry_id) from codebotmstr.usr_queries;";
 
             string sql = @"
-            INSERT INTO codebotmstr.usr_queries
-            (
-                usr_qry_id, 
-                table_config_id, 
-                usr_qry, 
-                base_query_ind, 
-                qry_order_ind, 
-                row_instr_ts
-            )
-            VALUES
-            (
-                @UserQueryId, 
-                @TableConfigId, 
-                @UserQuery, 
-                @BaseQueryIndicator, 
-                @QueryOrderIndicator, 
-                @RowInsertTimestamp
-            );
+                INSERT INTO codebotmstr.usr_queries
+                (
+                    usr_qry_id, 
+                    table_config_id, 
+                    usr_qry, 
+                    base_query_ind, 
+                    qry_order_ind, 
+                    row_instr_ts
+                )
+                VALUES
+                (
+                    @UserQueryId, 
+                    @TableConfigId, 
+                    @UserQuery, 
+                    @BaseQueryIndicator, 
+                    @QueryOrderIndicator, 
+                    @RowInsertTimestamp
+                );
             ";
             using (var conn = new NpgsqlConnection(_connectionString))
             {
@@ -100,17 +100,16 @@ namespace Dnct.Infrastructure.Persistence.Repositories
         }
         public async Task Update(UserQueryModel userQuery)
         {
-
-
             string sql = @"
-            UPDATE codebotmstr.usr_queries
-            SET
-                usr_qry = @UserQuery,
-                base_query_ind = @BaseQueryIndicator,
-                qry_order_ind = @QueryOrderIndicator,
-                row_instr_ts = @RowInsertTimestamp
-            WHERE
-                usr_qry_id = @UserQueryId;
+                UPDATE codebotmstr.usr_queries
+                SET
+                    usr_qry = @UserQuery,
+                    base_query_ind = @BaseQueryIndicator,
+                    qry_order_ind = @QueryOrderIndicator,
+                    row_instr_ts = @RowInsertTimestamp
+                WHERE
+                    usr_qry_id = @UserQueryId;
+                AND table_config_id = @TableConfigId
             ";
             using (var conn = new NpgsqlConnection(_connectionString))
             {
