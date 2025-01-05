@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Dnct.Application.Features.Table.Commands.Create;
 using Dnct.Application.Features.Table.Commands.DDLProcess;
+using Dnct.Application.Features.Table.Commands.DeleteUserQueryCommand;
 using Dnct.Application.Features.UserQuery.Query.GetUserQuery;
 using Dnct.WebFramework.BaseController;
 using Mediator;
@@ -85,7 +86,7 @@ namespace Dnct.Web.Api.Controllers.V1
             return new JsonResult(records);
         }
         [HttpPost("CreateOrUpdate")]
-        public async Task<IActionResult> CreateOrUpdate([FromBody] DeleteUserQueryCommand command)
+        public async Task<IActionResult> CreateOrUpdate([FromBody] CreateOrUpdateUserQueryCommand command)
         {
             var result = await sender.Send(command);
 

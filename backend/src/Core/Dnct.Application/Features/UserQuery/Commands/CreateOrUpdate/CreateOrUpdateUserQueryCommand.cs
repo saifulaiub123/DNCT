@@ -8,13 +8,16 @@ using Dnct.Domain.Model;
 
 namespace Dnct.Application.Features.Table.Commands.Create
 {
-    public class DeleteUserQueryCommand : IRequest<OperationResult<bool>>,
-    IValidatableModel<DeleteUserQueryCommand>
+    public class CreateOrUpdateUserQueryCommand : IRequest<OperationResult<bool>>,
+    IValidatableModel<CreateOrUpdateUserQueryCommand>
     {
         public int UserQueryId { get; set; }
         public int TableConfigId { get; set; }
-        
-        public IValidator<DeleteUserQueryCommand> ValidateApplicationModel(ApplicationBaseValidationModelProvider<DeleteUserQueryCommand> validator)
+        public string UserQuery { get; set; }
+        public int? BaseQueryIndicator { get; set; }
+        public int? QueryOrderIndicator { get; set; }
+
+        public IValidator<CreateOrUpdateUserQueryCommand> ValidateApplicationModel(ApplicationBaseValidationModelProvider<CreateOrUpdateUserQueryCommand> validator)
         {
             validator.RuleFor(c => c.UserQueryId)
                 .NotEmpty()
@@ -29,7 +32,7 @@ namespace Dnct.Application.Features.Table.Commands.Create
         }
     }
 
-    internal class CreateOrUpdateUserQueryCommandHandler : IRequestHandler<DeleteUserQueryCommand, OperationResult<bool>>
+    internal class CreateOrUpdateUserQueryCommandHandler : IRequestHandler<CreateOrUpdateUserQueryCommand, OperationResult<bool>>
     {
         private readonly IUserQueryRepository _userQueryRepository;
 
@@ -38,13 +41,38 @@ namespace Dnct.Application.Features.Table.Commands.Create
             _userQueryRepository = userQueryRepository;
         }
 
-        public async ValueTask<OperationResult<bool>> Handle(DeleteUserQueryCommand request, CancellationToken cancellationToken)
+        public async ValueTask<OperationResult<bool>> Handle(CreateOrUpdateUserQueryCommand request, CancellationToken cancellationToken)
         {
-            await _userQueryRepository.Delete(new UserQueryModel()
+
+            if (request.UserQueryId == -1)
             {
-                UserQueryId = request.UserQueryId,
-                TableConfigId = request.TableConfigId,
-            });
+                await _userQueryRepository.Create(new UserQueryModel()
+                {
+                    UserQueryId = request.UserQueryId,
+                    TableConfigId = request.TableConfigId,
+                    UserQuery = request.UserQuery,
+                    BaseQueryIndicator = request.BaseQueryIndicator,
+                    QueryOrderIndicator = request.QueryOrderIndicator,
+                    RowInsertTimestamp = DateTime.Now,
+                });
+            }
+            else
+            {
+                var userQueries = (await _userQueryRepository.GetUserQueryByQueryId(request.UserQueryId));
+                await _userQueryRepository.Update(new UserQueryModel()
+                {
+                    UserQueryId = userQueries.UserQueryId,
+                    TableConfigId = userQueries.TableConfigId,
+                    UserQuery = request.UserQuery,
+                    BaseQueryIndicator = request.BaseQueryIndicator,
+                    QueryOrderIndicator = request.QueryOrderIndicator,
+                    RowInsertTimestamp = DateTime.Now,
+                });
+            }
+
+
+
+            
             
             return OperationResult<bool>.SuccessResult(true);
         }

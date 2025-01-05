@@ -40,31 +40,11 @@ namespace Dnct.Application.Features.Table.Commands.DeleteUserQueryCommand
 
         public async ValueTask<OperationResult<bool>> Handle(DeleteUserQueryCommand request, CancellationToken cancellationToken)
         {
-            if (request.UserQueryId == -1)
+            await _userQueryRepository.Delete(new UserQueryModel()
             {
-                await _userQueryRepository.Create(new UserQueryModel()
-                {
-                    UserQueryId = request.UserQueryId,
-                    TableConfigId = request.TableConfigId,
-                    UserQuery = request.UserQuery,
-                    BaseQueryIndicator = request.BaseQueryIndicator,
-                    QueryOrderIndicator = request.QueryOrderIndicator,
-                    RowInsertTimestamp = request.RowInsertTimestamp,
-                });
-            }
-            else
-            {
-                var userQueries = (await _userQueryRepository.GetUserQueryByQueryId(request.UserQueryId));
-                await _userQueryRepository.Update(new UserQueryModel()
-                {
-                    UserQueryId = userQueries.UserQueryId,
-                    TableConfigId = userQueries.TableConfigId,
-                    UserQuery = request.UserQuery,
-                    BaseQueryIndicator = request.BaseQueryIndicator,
-                    QueryOrderIndicator = request.QueryOrderIndicator,
-                    RowInsertTimestamp = DateTime.Now,
-                });
-            }
+                UserQueryId = request.UserQueryId,
+                TableConfigId = request.TableConfigId,
+            });
 
             return OperationResult<bool>.SuccessResult(true);
         }
