@@ -24,5 +24,12 @@ namespace Dnct.Web.Api.Controllers.V1
 
             return base.OperationResult(command);
         }
+        [HttpPost("CreateOrUpdate")]
+        public async Task<IActionResult> CreateOrUpdate([FromBody] CreateOrUpdateUserQueryCommand command)
+        {
+            var result = await sender.Send(command);
+
+            return base.OperationResult(result);
+        }
     }
 }
