@@ -20,10 +20,6 @@ export class MockAPIClass {
     tableConfigId: number,
     queryId: number
   ): Observable<{ success: boolean; message: string }> {
-    console.log(
-      `API Call: Deleting row with TableConfigId=${tableConfigId}, QueryId=${queryId}`
-    );
-
     return of({
       success: true,
       message: `Row with TableConfigId=${tableConfigId} and QueryId=${queryId} deleted successfully.`,

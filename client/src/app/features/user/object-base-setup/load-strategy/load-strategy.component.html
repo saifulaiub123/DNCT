@@ -1,0 +1,179 @@
+<div class="row">
+  <div class="col-6">
+    <div class="" style="height: 50vh;">
+      <table mat-table [dataSource]="loadStrategyTabledataSource" matSort multiTemplateDataRows>
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            Select
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox [(ngModel)]="row.isSelected" (change)="onLoadStragtegyRowSelect(row)"></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="loadStrategy">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Load Strategy</th>
+          <td mat-cell *matCellDef="let row">{{ row.loadStrategy }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="loadStrategyDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: loadStrategyDisplayedColumns;"></tr>
+      </table>
+    </div>
+    <div class="" style="height: 50vh;">
+      <form [formGroup]="instanceNameForm">
+        <ng-container formArrayName="instanceName">
+          <table mat-table [dataSource]="instanceNameTabledataSource" matSort >
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                Select
+              </th>
+              <td mat-cell *matCellDef="let element;let i = index" [formGroup]="element">
+                <mat-checkbox
+                formControlName="isSelected"
+                 [checked]="instanceNameForm.get('instanceName')?.value[i]?.isSelected" 
+                (change)="onInstanceNameRowSelect(element, $event, i)"></mat-checkbox>
+
+                <span>{{instanceNameForm.get('instanceName')?.value[i]?.isSelected}}</span>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="instance">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Instance Name</th>
+              <td mat-cell *matCellDef="let element;let i = index" [formGroup]="element">
+                {{instanceNameForm.get('instanceName')?.value[i]?.instanceName}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="order">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Order</th>
+              <td mat-cell *matCellDef="let element;let i = index" [formGroup]="element">
+                @if(instanceNameForm.get('instanceName')?.value[i]?.isEditable){
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                  <input matInput type="text" formControlName="order" />
+                </mat-form-field>
+                }@else{
+                <span>{{instanceNameForm.get('instanceName')?.value[i]?.order}}</span>
+                }
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="overlap">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Overlap</th>
+              <td mat-cell *matCellDef="let element;let i = index" [formGroup]="element">
+                @if(instanceNameForm.get('instanceName')?.value[i]?.isEditable){
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                  <input matInput type="text" formControlName="overlap" />
+                </mat-form-field>
+                }@else{
+                <span>{{instanceNameForm.get('instanceName')?.value[i]?.overlap}}</span>
+                }
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef>Action</th>
+              <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+                
+                @if(instanceNameForm.get('instanceName')?.value[i]?.isEditable){
+                <div class="d-flex gap-10">
+                  <button mat-icon-button class="material-icons app-toolbar-menu cancel-button"
+                    matTooltip="Cancel Changes" color="warn" (click)="CancelInstanceNameEditing(instanceNameForm,i)">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                  <button mat-icon-button class="material-icons app-toolbar-menu save-button" matTooltip="Save Changes"
+                    (click)="SaveInstanceNameChanges(instanceNameForm,i)" color="primary">
+                    <mat-icon>check_circle</mat-icon>
+                  </button>
+                </div>
+                }
+                @if(!instanceNameForm.get('instanceName')?.value[i]?.isEditable){
+                <button mat-icon-button class="material-icons app-toolbar-menu save-button" matTooltip="Edit"
+                  color="primary" (click)="EditInstanceNameRow(instanceNameForm,i)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                }
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="overlapDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: overlapDisplayedColumns;"></tr>
+          </table>
+        </ng-container>
+      </form>
+    </div>
+  </div>
+
+  <!-- parameter table -->
+  <div class="col-6">
+    <!-- parameter table -->
+    <div class="" style="height: 50vh;">
+      <form [formGroup]="parameterForm">
+        <ng-container formArrayName="parameters">
+          <table mat-table [dataSource]="parameterTabledataSource" matSort>
+            <!-- parameter -->
+            <ng-container matColumnDef="parameter">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Parameter</th>
+              <td mat-cell *matCellDef="let element;let i= index" [formGroup]="element">
+                {{parameterForm.get('parameters')?.value[i]?.parameter}}
+              </td>
+            </ng-container>
+
+            <!-- value -->
+            <ng-container matColumnDef="value">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Value</th>
+              <td mat-cell *matCellDef="let element;let i = index" [formGroup]="element">
+                @if(parameterForm.get('parameters')?.value[i]?.isEditable){
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                  <input matInput type="text" formControlName="value" />
+                </mat-form-field>
+                }@else{
+                <span>{{parameterForm.get('parameters')?.value[i]?.value}}</span>
+                }
+              </td>
+            </ng-container>
+
+            <!-- action -->
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef>Action</th>
+              <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+                
+                @if(parameterForm.get('parameters')?.value[i]?.isEditable){
+                <div class="d-flex gap-10">
+                  <button mat-icon-button class="material-icons app-toolbar-menu cancel-button"
+                    matTooltip="Cancel Changes" color="warn" (click)="CancelSVO(parameterForm,i)">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                  <button mat-icon-button class="material-icons app-toolbar-menu save-button" matTooltip="Save Changes"
+                    (click)="SaveVO(parameterForm,i)" color="primary">
+                    <mat-icon>check_circle</mat-icon>
+                  </button>
+                </div>
+                }
+                @if(!parameterForm.get('parameters')?.value[i]?.isEditable){
+                <button mat-icon-button class="material-icons app-toolbar-menu save-button" matTooltip="Edit"
+                  color="primary" (click)="EditSVO(parameterForm,i)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                }
+              </td>
+            </ng-container>
+
+            <!--  -->
+            <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumns;"></tr>
+          </table>
+        </ng-container>
+      </form>
+    </div>
+    <div class="row " style="height: 50vh;">
+      <div class="col-6 d-flex flex-column">
+        <button mat-raised-button color="primary" (click)="onShowCurrentScript()">Show Current Script</button>
+        <button mat-raised-button color="primary" class="m-t-15" (click)="onSaveRuntime()">Save Runtime</button>
+        <button mat-raised-button color="primary" class="m-t-15" (click)="onRefreshRuntime()">Refresh Runtime</button>
+      </div>
+      <div class="col-6 d-flex flex-column">
+        <button mat-raised-button color="primary" (click)="onAnalyzeSpecsAndGenerateCode()">Analyze Specs and Generate
+          Code</button>
+        <button mat-raised-button color="primary" class="m-t-15" (click)="onAnalyzeSpecs()">Analyze Specs</button>
+        <button mat-raised-button color="primary" class="m-t-15" (click)="onGenerateCode()">Generate Code</button>
+      </div>
+
+    </div>
+  </div>
+</div>

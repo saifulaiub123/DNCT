@@ -39,15 +39,15 @@ export class ColumnDetailComponent extends MockAPIClass {
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
   private fb = inject(FormBuilder);
-  ngOnInit(): void {
+  ngOnInit(): void { this.formInit();}
+  
+  formInit():void{
     this.dataSource = new MatTableDataSource<IColumnDetails>([...this.initialData]);
-    this.ColumnDetailFormGroup = this.fb.group({
-      ColumnDetail: this.fb.array([])
-    });
     this.ColumnDetailFormGroup = this.fb.group({
       ColumnDetail: this.fb.array(ColumnDetails.map(row => this.createRowForm(row)))
     })
     this.dataSource = new MatTableDataSource((this.ColumnDetailFormGroup.get('ColumnDetail') as FormArray).controls);
+    
   }
 
   createRowForm(row: IColumnDetails): FormGroup {

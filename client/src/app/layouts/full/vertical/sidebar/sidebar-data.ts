@@ -37,6 +37,11 @@ export const navItems: NavItem[] = [
         iconName: 'point',
         route: '/user/object-setup/query-table',
       },
+      {
+        displayName: 'Load Strategy',
+        iconName: 'point',
+        route: '/user/object-setup/load-strategy',
+      },
     ]
     },
   {
