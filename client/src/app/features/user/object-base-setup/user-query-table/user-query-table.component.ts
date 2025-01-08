@@ -1,13 +1,16 @@
 import { Component, inject } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MaterialModule } from 'src/app/material.module';
-import { IUserQueryTable } from './user-query-table.model';
+import { AutoPopulate, CreateUpdateQuery, UserQuery, ValidateSyntax } from './user-query-table.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { delay, first, Observable, of } from 'rxjs';
+import { catchError, delay, EMPTY, EmptyError, first, Observable, of } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { AppDialogOverviewComponent } from 'src/app/pages/ui-components/dialog/dialog.component';
+import { ServerResponse } from 'src/app/core/model/contract/server-response';
+import { UserQueryService } from './user-query.service';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { ToastrService } from 'ngx-toastr';
 export class MockAPIClass {
-   simulateApiValidation(rows: { tbl_col_confrtn_id: number; transformSql: string }[]) {
+  simulateApiValidation(rows: { tbl_col_confrtn_id: number; transformSql: string }[]) {
     return new Promise<{ tbl_col_confrtn_id: number; validationResult: number }[]>(resolve => {
       const response = rows.map(row => ({
         tbl_col_confrtn_id: row.tbl_col_confrtn_id,
@@ -50,6 +53,7 @@ export class MockAPIClass {
   selector: 'app-user-query-table',
   standalone: true,
   imports: [MaterialModule],
+  providers: [UserQueryService],
   templateUrl: './user-query-table.component.html',
 })
 export class UserQueryTableComponent extends MockAPIClass {
@@ -64,169 +68,133 @@ export class UserQueryTableComponent extends MockAPIClass {
     'Validation Result',
   ];
   selectedQuery: string = '';
-  queryId!: string
-  dataSource = new MatTableDataSource<IUserQueryTable>(QueryTableDataSource)
-
-
+  queryId!: number;
+  dataSource = new MatTableDataSource<UserQuery>()
   // injectables
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
-
-  saveRow(_row: IUserQueryTable) {
-    this.SaveQueryTableRow(_row).pipe(first()).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.snackBar.open(response.message, 'Close', {
-            duration: 3000,
-          });
-        }
-      },
-      error: () => {
-        this.snackBar.open('Failed to save the row. Please try again.');
-      },
-    });
+  private userQueryService = inject(UserQueryService);
+  private _ngxService = inject(NgxUiLoaderService);
+  private _toastr = inject(ToastrService);
+  ngOnInit(): void {
+    this.fetchAllUserQueries();
+  }
+  fetchAllUserQueries(): void {
+    this._ngxService.start();
+    this.userQueryService.fetchAllUserQueries().pipe(first()).subscribe((res: ServerResponse<UserQuery>) => {
+      if (res.isSuccess) {
+        this.dataSource.data = res.data.map((userQuery: UserQuery) => {
+          return {
+            ...userQuery, isSelected: false
+          }
+        });
+        this._ngxService.stop();
+      }
+    })
+  }
+  saveRow(_row: UserQuery): void {
+    const selectedRows = this.dataSource.data.filter((row) => row.isSelected);
+    if (selectedRows.length === 0) {
+      this._toastr.error('Row Should be checked.', 'Error');
+      return;
+    }
+    const payload: CreateUpdateQuery = {
+      userQueryId: _row.userQueryId,
+      tableConfigId: _row.tableConfigId,
+      userQuery: _row.userQuery,
+      baseQueryIndicator: _row.baseQueryIndicator,
+      queryOrderIndicator: _row.queryOrderIndicator,
+    }
+    this._ngxService.start();
+    this.userQueryService.createOrUpdateQuery(payload).pipe(first(), catchError(error => {
+      this._ngxService.stop();
+      this._toastr.error('Error occured', 'Error');
+      return EMPTY
+    })).subscribe((res: ServerResponse<CreateUpdateQuery>) => {
+      this._ngxService.stop();
+      if (res) {console.log('create update query ===>>>', res); this.fetchAllUserQueries();}
+    })
   }
 
-  removeRow(row: any) {
-    const { tableConfigId, queryId } = row;
-    this.dialog.open(AppDialogOverviewComponent).afterClosed().pipe(first()).subscribe((res) => {
-      if (res) {
-        this.deleteRowFromAPI(tableConfigId, queryId).pipe(first()).subscribe({
-          next: (response) => {
-            if (response.success) {
-              this.dataSource.data = this.dataSource.data.filter(
-                (data) => data.tableConfigId !== tableConfigId
-              );
-              this.snackBar.open(response.message, 'Close', {
-                duration: 3000,
-              });
-            }
-          },
-          error: () => {
-            this.snackBar.open('Failed to delete the row. Please try again.');
-          },
-        });
+  removeRow(row: UserQuery) {
+    const parameters:{userQueryId:number, tableConfigId: number} = {
+      tableConfigId:row.tableConfigId, userQueryId:row.userQueryId
+    }
+    this.userQueryService.removeQuery(parameters).pipe(first(), catchError(() => {
+      this._ngxService.stop();
+      this._toastr.error('Failed to delete the row. Please try again.', 'Error');
+      return EMPTY
+    })).subscribe((res: ServerResponse<any>) => {
+      this._ngxService.stop();
+      if (res) {console.log('delete query ===>>>', res)
+        this.fetchAllUserQueries();
       }
     })
   }
 
-  toggleAllRows(event: any) {
-    const isChecked = event.checked;
-    this.dataSource.data.forEach((row: any) => (row.isSelected = isChecked));
-  }
-
-  onRowSelect(row: any) {
+  onRowSelect(row: UserQuery) {
     this.dataSource.data.forEach((item) => {
       if (item !== row) {
         item.isSelected = false;
       }
     });
-    this.queryId = row.isSelected ? row.queryId : ''
-    this.selectedQuery = row.isSelected ? row.fullQuery : '';
+    this.queryId = row.isSelected ? row.userQueryId : 0
+    this.selectedQuery = row.isSelected ? row.userQuery : '';
   }
 
   addNewQuery() {
-    const existingRow = this.dataSource.data.find(row => row.queryId === -1);
+    const existingRow = this.dataSource.data.find(row => row.userQueryId === -1);
     if (existingRow) {
-      this.snackBar.open('A row with Query ID -1 already exists!', 'Close', {
-        duration: 3000,
-      });
+      this._toastr.error('A row with Query ID -1 already exists!', 'Error');
     } else {
-      const newRow = {
+      const newRow: UserQuery = {
         isSelected: false,
-        tableConfigId: this.dataSource.data[this.dataSource.data.length - 1].tableConfigId + 1,
-        queryId: -1,
-        fullQuery: '',
-        seedQuery: 0,
-        qtyOrder: 0,
+        userQueryId: -1,
+        tableConfigId: 0,
+        userQuery: '',
+        baseQueryIndicator: 0,
+        queryOrderIndicator: 0,
+        rowInsertTimestamp: null,
       };
       this.dataSource.data = [...this.dataSource.data, newRow];
     }
   }
 
   refreshData() {
-    this.dataSource.data = [];
     this.selectedQuery = '';
-    this.queryId = '';
-    this.dataSource.data = QueryTableDataSource;
+    this.queryId = 0;
+    this.fetchAllUserQueries();
   }
   autoPopulate() {
     const selectedRows = this.dataSource.data.filter((row) => row.isSelected);
     if (selectedRows.length === 0) {
-      this.snackBar.open('Please select one row.', 'Close', {
-        duration: 3000
-      });
+      this._toastr.error('Please select one row.', 'Error');
       return;
     }
-    const selectedRow = selectedRows[0];
-    this.autoPopulateColumnsAPI(selectedRow.tableConfigId, selectedRow.queryId).pipe(first()).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.snackBar.open('Columns auto-populated successfully!', 'Close', {
-            duration: 3000
-          });
-        }
-      },
-      error: () => {
-        this.snackBar.open('Failed to auto-populate columns. Please try again.', 'Close', {
-          duration: 3000
-        });
-      },
+    this._ngxService.start();
+    this.userQueryService.autoPopulate().pipe(first()).subscribe((res: ServerResponse<AutoPopulate>) => {
+      if (res) {
+        console.log('auto populate api calll======>>>>', res.data);
+        this._ngxService.stop();
+      }
     });
   }
   validateQuery() {
     const selectedRows = this.dataSource.data.filter((row) => row.isSelected);
     if (selectedRows.length === 0) {
-      this.snackBar.open('Please select one row.', 'Close', {
-        duration: 3000
-      });
+      this._toastr.error('Please select one row.', 'Error');
       return;
-    }
-    const selectedRow = selectedRows[0];
-    this.autoPopulateColumnsAPI(selectedRow.tableConfigId, selectedRow.queryId).pipe(first()).subscribe({
-      next: (response) => {
-        if (response.success) {
-          console.log(response.body)
-          this.snackBar.open('Query Validated successfully!', 'Close', {
-            duration: 3000
-          });
-        }
-      },
-      error: () => {
-        this.snackBar.open('Failed to validate query. Please try again.', 'Close', {
-          duration: 3000
-        });
-      },
+    };
+    this._ngxService.start();
+    this.userQueryService.validateSyntax().pipe(first()).subscribe((res: ServerResponse<ValidateSyntax>) => {
+      if (res) {
+        console.log('validate syntac api called ======>>>>', res.data);
+        this._ngxService.stop();
+      }
     });
   }
 
 }
 
-export const QueryTableDataSource: IUserQueryTable[] = [
-  {
-    isSelected: false,
-    tableConfigId: 101,
-    queryId: 23,
-    fullQuery: 'CREATE TABLE ...',
-    seedQuery: 0,
-    qtyOrder: 0,
-  },
-  {
-    isSelected: false,
-    tableConfigId: 102,
-    queryId: 24,
-    fullQuery: 'SELECT * FROM ...',
-    seedQuery: 0,
-    qtyOrder: 0,
-  },
-  {
-    isSelected: false,
-    tableConfigId: 103,
-    queryId: 26,
-    fullQuery: 'SELECT TRIM(...)',
-    seedQuery: 0,
-    qtyOrder: 0,
-  },
-]
 
 

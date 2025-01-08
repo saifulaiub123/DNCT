@@ -210,7 +210,7 @@ export class BaseApiService {
       headers: this.getHeaders(currentUser?.token.accessToken),//this.getHeaders(this.$currentUser.value?.AccessToken),
     };
     return this._httpClient
-      .delete<ServerResponse<any>>(`${this._baseUrl}/${this._apiVersion}/${action}/${paramter}`, option)
+      .delete<ServerResponse<any>>(`${this._baseUrl}/${this._apiVersion}/${action}?${paramter}`, option)
       .pipe(
         tap(
           (response) => {

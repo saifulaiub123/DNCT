@@ -3,7 +3,6 @@
       <!-- Select Checkbox -->
       <ng-container matColumnDef="Select">
         <th mat-header-cell *matHeaderCellDef>
-          <!-- <mat-checkbox (change)="toggleAllRows($event)"></mat-checkbox> -->
            Select
         </th>
         <td mat-cell *matCellDef="let row">
@@ -14,27 +13,27 @@
       <!-- Query ID -->
       <ng-container matColumnDef="Query Id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Query Id</th>
-        <td mat-cell *matCellDef="let row">{{ row.queryId }}</td>
+        <td mat-cell *matCellDef="let row">{{ row.userQueryId}}</td>
       </ng-container>
   
       <!-- Full Query -->
       <ng-container matColumnDef="Full Query">
         <th mat-header-cell *matHeaderCellDef>Full Query</th>
         <td mat-cell *matCellDef="let row">
-          {{ row.fullQuery }}
+          {{ row.userQuery}}
         </td>
       </ng-container>
   
       <!-- Seed Query -->
       <ng-container matColumnDef="Seed Query">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Seed Query</th>
-        <td mat-cell *matCellDef="let row">{{ row.seedQuery }}</td>
+        <td mat-cell *matCellDef="let row">{{ row.baseQueryIndicator}}</td>
       </ng-container>
   
       <!-- Qty Order -->
       <ng-container matColumnDef="Qty Order">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Qty Order</th>
-        <td mat-cell *matCellDef="let row">{{ row.qtyOrder }}</td>
+        <td mat-cell *matCellDef="let row">{{ row.queryOrderIndicator }}</td>
       </ng-container>
   
       <!-- Save Button -->
@@ -60,7 +59,7 @@
       <!-- Validation Result -->
       <ng-container matColumnDef="Validation Result">
         <th mat-header-cell *matHeaderCellDef>Validation Result</th>
-        <td mat-cell *matCellDef="let row">{{ row.validationResult }}</td>
+        <td mat-cell *matCellDef="let row">{{ row.rowInsertTimestamp   }}</td>
       </ng-container>
   
       <!-- Table Header -->

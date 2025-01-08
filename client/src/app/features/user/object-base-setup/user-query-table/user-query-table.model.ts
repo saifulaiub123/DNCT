@@ -1,9 +1,24 @@
-export interface IUserQueryTable {
+export interface UserQuery {
     isSelected:       boolean;
-    tableConfigId: number;
-    queryId:          number;
-    fullQuery:        string;
-    seedQuery:        number;
-    qtyOrder:         number;
-    validationResult?: string;
+    userQueryId:         number;
+    tableConfigId:       number;
+    userQuery:           string;
+    baseQueryIndicator:  number;
+    queryOrderIndicator: number;
+    rowInsertTimestamp:  null;
 }
+export interface AutoPopulate {
+    colunmId: number;
+    sqlTxt:   string;
+    att1:     string;
+    att2:     string;
+}
+export interface ValidateSyntax extends AutoPopulate{}
+export interface CreateUpdateQuery {
+    userQueryId:         number;
+    tableConfigId:       number;
+    userQuery:           string;
+    baseQueryIndicator:  number;
+    queryOrderIndicator: number;
+}
+
