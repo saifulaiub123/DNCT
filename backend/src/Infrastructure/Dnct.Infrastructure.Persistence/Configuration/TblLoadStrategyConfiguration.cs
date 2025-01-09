@@ -1,6 +1,7 @@
 ﻿using Dnct.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Dnct.Domain.Constant;
 
 namespace Dnct.Infrastructure.Persistence.Configuration
 {
@@ -9,7 +10,7 @@ namespace Dnct.Infrastructure.Persistence.Configuration
         public void Configure(EntityTypeBuilder<TblLoadStrategy> builder)
         {
             // Map to the table
-            builder.ToTable("tbl_load_strategy");
+            builder.ToTable("tbl_load_strategy", DbConst.Codebotmstr);
             builder.HasNoKey();
 
             // Configure properties

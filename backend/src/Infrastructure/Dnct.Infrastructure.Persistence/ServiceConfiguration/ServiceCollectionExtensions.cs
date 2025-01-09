@@ -19,6 +19,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITableConfigurationRepository, TableConfigurationRepository>();
         services.AddScoped<ITableColConfigurationRepository, TableColConfigurationRepository>();
         services.AddScoped<IUserQueryRepository, UserQueryRepository>();
+        services.AddScoped<ILoadStrategyRepository, LoadStrategyRepository>();
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {
