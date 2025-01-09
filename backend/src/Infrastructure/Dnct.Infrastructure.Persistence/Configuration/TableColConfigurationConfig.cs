@@ -10,7 +10,7 @@ namespace Dnct.Infrastructure.Persistence.Configuration
         public void Configure(EntityTypeBuilder<TableColConfiguration> builder)
         {
             // Table Mapping
-            builder.ToTable("tbl_col_confgrtn", DbConst.SchemaDbo);
+            builder.ToTable("tbl_col_confgrtn", DbConst.Codebotmstr);
 
             // Primary Key
             builder.HasKey(t => t.TblColConfgrtnId);

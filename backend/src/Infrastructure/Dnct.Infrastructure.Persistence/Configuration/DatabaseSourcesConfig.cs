@@ -9,7 +9,7 @@ namespace Dnct.Infrastructure.Persistence.Configuration
     {
         public void Configure(EntityTypeBuilder<DatabaseSources> builder)
         {
-            builder.ToTable("datbs_srcs", DbConst.SchemaDbo);
+            builder.ToTable("datbs_srcs", DbConst.Codebotmstr);
             builder.HasKey(x => new { x.DatbsSrcId, x.ConfgrtnEffEndTs });
         }
     }

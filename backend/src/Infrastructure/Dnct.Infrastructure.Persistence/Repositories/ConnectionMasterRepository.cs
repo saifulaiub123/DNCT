@@ -30,7 +30,7 @@ namespace Dnct.Infrastructure.Persistence.Repositories
             {
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
                 await connection.OpenAsync();
-                servers = (await connection.QueryAsync<ConnectionsMaster>($"SELECT * FROM {DbConst.SchemaDbo}.contns_mstr")).ToList();
+                servers = (await connection.QueryAsync<ConnectionsMaster>($"SELECT * FROM {DbConst.Codebotmstr}.contns_mstr")).ToList();
             }
             return servers;
         }
