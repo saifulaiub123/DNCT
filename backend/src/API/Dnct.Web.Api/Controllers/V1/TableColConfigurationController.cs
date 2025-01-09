@@ -27,7 +27,7 @@ namespace Dnct.Web.Api.Controllers.V1
 
             return base.OperationResult(command);
         }
-        [HttpGet("createMulti")]
+        [HttpPost("createMulti")]
         public async Task<IActionResult> CreateMulti([FromBody] CreateMultipleTblColConfigCommand command)
         {
              await sender.Send(command);
