@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol.Plugins;
 using Mediator;
 using Dnct.Application.Features.TableColConfiguration.Commands.CreateMultiple;
+using Dnct.Domain.Model;
 
 namespace Dnct.Web.Api.Controllers.V1
 {
@@ -30,9 +31,11 @@ namespace Dnct.Web.Api.Controllers.V1
         [HttpPost("createMulti")]
         public async Task<IActionResult> CreateMulti([FromBody] CreateMultipleTblColConfigCommand command)
         {
-             await sender.Send(command);
+            //var command = new CreateMultipleTblColConfigCommand();
+            ////command.Data = Data;
+            var reuslt = await sender.Send(command);
 
-            return Ok();
+            return Ok(reuslt);
         }
         [HttpDelete("delete")]
         public async Task<IActionResult> Delete([FromQuery] int tbleColConfigId, [FromQuery] int tableConfigId)

@@ -11,11 +11,15 @@ namespace Dnct.Application.Features.TableColConfiguration.Commands.CreateMultipl
 {
     public class CreateMultipleTblColConfigCommand : IRequest<OperationResult<bool>>
     {
+        public CreateMultipleTblColConfigCommand()
+        {
+            Data = new List<TableColConfigurationModel>();
+        }
         public List<TableColConfigurationModel> Data { get; set; }
         
     }
 
-    internal class CreateMultipleTblColConfigCommandHandler : IRequestHandler<CreateMultipleTblColConfigCommand, OperationResult<bool>>
+    public class CreateMultipleTblColConfigCommandHandler : IRequestHandler<CreateMultipleTblColConfigCommand, OperationResult<bool>>
     {
         private readonly ITableColConfigurationRepository _tableColConfigurationRepository;
         private readonly IMapper _mapper;
@@ -41,28 +45,30 @@ namespace Dnct.Application.Features.TableColConfiguration.Commands.CreateMultipl
                     var data = await _tableColConfigurationRepository.GetById(item.TblColConfgrtnId, item.TblConfgrtnId);
                     if (data is not null)
                     {
-                        data.ColmnName = item.ColmnName;
-                        data.DataType = item.DataType;
-                        data.ColmnTrnsfrmtnStep1 = item.ColmnTrnsfrmtnStep1;
-                        data.GenrtIdInd = item.GenrtIdInd;
-                        data.IdGenrtnStratgyId = item.IdGenrtnStratgyId;
-                        data.Type2StartInd = item.Type2StartInd;
-                        data.Type2EndInd = item.Type2EndInd;
-                        data.CurrRowInd = item.CurrRowInd;
-                        data.Pattern1 = item.Pattern1;
-                        data.Pattern2 = item.Pattern2;
-                        data.Pattern3 = item.Pattern3;
-                        data.LadInd = item.LadInd;
-                        data.JoinDupsInd = item.JoinDupsInd;
-                        data.ConfgrtnEffStartTs = item.ConfgrtnEffStartTs;
-                        data.ConfgrtnEffEndTs = item.ConfgrtnEffEndTs;
+                        //data.ColmnName = item.ColmnName;
+                        //data.DataType = item.DataType;
+                        //data.ColmnTrnsfrmtnStep1 = item.ColmnTrnsfrmtnStep1;
+                        //data.GenrtIdInd = item.GenrtIdInd;
+                        //data.IdGenrtnStratgyId = item.IdGenrtnStratgyId;
+                        //data.Type2StartInd = item.Type2StartInd;
+                        //data.Type2EndInd = item.Type2EndInd;
+                        //data.CurrRowInd = item.CurrRowInd;
+                        //data.Pattern1 = item.Pattern1;
+                        //data.Pattern2 = item.Pattern2;
+                        //data.Pattern3 = item.Pattern3;
+                        //data.LadInd = item.LadInd;
+                        //data.JoinDupsInd = item.JoinDupsInd;
+                        //data.ConfgrtnEffStartTs = item.ConfgrtnEffStartTs;
+                        //data.ConfgrtnEffEndTs = item.ConfgrtnEffEndTs;
                         await _tableColConfigurationRepository.Update(_mapper.Map<Domain.Entities.TableColConfiguration>(data));
+                        return OperationResult<bool>.SuccessResult(true);
+
                     }
-                    
+
                 }
             }
 
-            return OperationResult<bool>.SuccessResult(true);
+            return OperationResult<bool>.NotFoundResult("Table configuration id not found");
         }
     }
 }

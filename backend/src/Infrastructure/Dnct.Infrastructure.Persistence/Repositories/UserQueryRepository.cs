@@ -123,7 +123,7 @@ namespace Dnct.Infrastructure.Persistence.Repositories
             string sql = @"
             DELETE FROM codebotmstr.usr_queries
             WHERE usr_qry_id = @UserQueryId
-            ND table_config_id = @TableConfigId;
+            AND table_config_id = @TableConfigId;
         ";
             using (var conn = new NpgsqlConnection(_connectionString))
             {
