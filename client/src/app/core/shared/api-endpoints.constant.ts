@@ -8,4 +8,13 @@ export const ApiEndpoints = {
       createOrUpdate: 'CreateOrUpdate',
       delete: 'Delete'
     },
+    tableConfiguration:{
+      getAll: 'getAll',
+      createMulti: 'createMulti',
+      delete: 'delete'
+    },
+    loadStrategy:{
+      getAll: 'getAll',
+      create: 'create',
+    }
   };

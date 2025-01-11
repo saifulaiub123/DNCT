@@ -6,7 +6,6 @@ import { MockAPIClass } from '../user-query-table/user-query-table.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ContentObserver } from '@angular/cdk/observers';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({

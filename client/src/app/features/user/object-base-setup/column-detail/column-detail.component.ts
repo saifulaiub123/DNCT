@@ -1,27 +1,34 @@
 import { Component, inject } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MaterialModule } from 'src/app/material.module';
-import { IColumnDetails } from './column-detail.model';
+import { TableConfiguration } from './column-detail.model';
 import { MockAPIClass } from '../user-query-table/user-query-table.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { first } from 'rxjs';
+import { catchError, EMPTY, first } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { AppDialogOverviewComponent } from 'src/app/pages/ui-components/dialog/dialog.component';
-import {  FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TableConfigurationService } from './column-detail.service';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { ServerResponse } from 'src/app/core/model/contract/server-response';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-column-detail',
   standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule],
+  imports: [MaterialModule, ReactiveFormsModule, CommonModule, TablerIconsModule],
+  providers: [TableConfigurationService],
   templateUrl: './column-detail.component.html',
+  styleUrl: './column-details.component.scss',
 })
 export class ColumnDetailComponent extends MockAPIClass {
   displayedColumns: string[] = [
     'columnId',
     'columnName',
     'dataType',
-    'transformSql',
-    'generateSk',
+    'colmnTrnsfrmtnStep1',
+    'idGenrtnStratgyId',
     'type2StartInd',
     'type2EndInd',
     'curActiveInd',
@@ -29,122 +36,215 @@ export class ColumnDetailComponent extends MockAPIClass {
     'pattern2',
     'pattern3',
     'loadInd',
-    'joinDupInd','action'
+    'joinDupInd', 'action'
   ];
   dataSource = new MatTableDataSource<any>();
-  initialData: IColumnDetails[] = ColumnDetails;
   selectedRow: FormGroup | null = null;
-  selectedRows: IColumnDetails[] = [];
-  ColumnDetailFormGroup: FormGroup;
+  selectedRows: TableConfiguration[] = [];
+  tableConfigFormGroup: FormGroup;
   private snackBar = inject(MatSnackBar);
+  private _toaster = inject(ToastrService);
   private dialog = inject(MatDialog);
   private fb = inject(FormBuilder);
-  ngOnInit(): void { this.formInit();}
-  
-  formInit():void{
-    this.dataSource = new MatTableDataSource<IColumnDetails>([...this.initialData]);
-    this.ColumnDetailFormGroup = this.fb.group({
-      ColumnDetail: this.fb.array(ColumnDetails.map(row => this.createRowForm(row)))
+  private _ngxService = inject(NgxUiLoaderService);
+  private tableConfigService = inject(TableConfigurationService);
+  private initialData: TableConfiguration[];
+
+  ngOnInit(): void {
+    this.tableConfigFormGroup = this.fb.group({
+      tableConfig: this.fb.array([])
+    });
+    this.fetchAllTableConfigs();
+  }
+  initForm(_formData: TableConfiguration[]): void {
+    this.tableConfigFormGroup = this.fb.group({
+      tableConfig: this.fb.array(_formData.map(row => this.createRowForm(row)))
     })
-    this.dataSource = new MatTableDataSource((this.ColumnDetailFormGroup.get('ColumnDetail') as FormArray).controls);
-    
+    this.initialData = (this.tableConfigFormGroup.get('tableConfig') as FormArray).value;
+    this.dataSource = new MatTableDataSource((this.tableConfigFormGroup.get('tableConfig') as FormArray).controls);
+  }
+  initialTableConfig(): void {
+    this._ngxService.start();
+    const defaultRow = {
+      data: [
+        {
+          tblColConfgrtnId: 0,
+          tblConfgrtnId: 0,
+          colmnName: "string",
+          dataType: "string",
+          colmnTrnsfrmtnStep1: "string",
+          genrtIdInd: "g",
+          idGenrtnStratgyId: 0,
+          type2StartInd: 0,
+          type2EndInd: 0,
+          currRowInd: 0,
+          pattern1: "string",
+          pattern2: "string",
+          pattern3: "p",
+          ladInd: 0,
+          joinDupsInd: 0,
+          confgrtnEffStartTs: new Date(),
+          confgrtnEffEndTs: new Date(),
+          // Additional fields for editable form purposes
+          status: 'unchanged',
+          action: 'existingRecord',
+          isEditable: false,
+          isNewRow: false
+        }
+      ]
+    };
+
+    this.tableConfigService.createMulti(defaultRow).pipe(first(), catchError(err => {
+      this._ngxService.stop();
+      return EMPTY;
+    })).subscribe((res: ServerResponse<TableConfiguration>) => {
+      if (res.isSuccess) {
+        this._ngxService.stop();
+        if (res.data.length > 0) {
+          const mappedTableConfig = res.data.map((tableconfig: TableConfiguration) => {
+            return {
+              ...tableconfig, isSelected: false
+            }
+          });
+        }
+      }
+    })
   }
 
-  createRowForm(row: IColumnDetails): FormGroup {
+  fetchAllTableConfigs(): void {
+    this._ngxService.start();
+    this.tableConfigService.fetchAll().pipe(first(), catchError((err) => {
+      this._toaster.error('Error Occured' + err, 'Error')
+      return EMPTY;
+    })).subscribe((res: ServerResponse<TableConfiguration>) => {
+      if (res.isSuccess) {
+
+        this.initForm(res.data);
+        this._ngxService.stop();
+      }
+    })
+  }
+  getFormArrayControl(_controlName: string, _index: number): FormControl | undefined {
+    return ((this.tableConfigFormGroup.get('tableConfig') as FormArray).controls[_index] as FormGroup).controls[_controlName] as FormControl
+  }
+
+  createRowForm(row: TableConfiguration): FormGroup {
     return this.fb.group({
-      columnId: new FormControl(row.columnId),
-      columnName: new FormControl(row.columnName),
-      tbl_confrtn_id: new FormControl(row.tbl_confrtn_id),
+      tblColConfgrtnId: new FormControl(row.tblColConfgrtnId),
+      tblConfgrtnId: new FormControl(row.tblConfgrtnId),
+      colmnName: new FormControl(row.colmnName, [Validators.maxLength(100)]),
       dataType: new FormControl(row.dataType),
-      transformSql: new FormControl(row.transformSql),
-      generateSk: new FormControl(row.generateSk),
+      colmnTrnsfrmtnStep1: new FormControl(row.colmnTrnsfrmtnStep1),
+      genrtIdInd: new FormControl(row.genrtIdInd, Validators.maxLength(1)),
+      idGenrtnStratgyId: new FormControl(row.idGenrtnStratgyId),
       type2StartInd: new FormControl(row.type2StartInd),
       type2EndInd: new FormControl(row.type2EndInd),
-      curActiveInd: new FormControl(row.curActiveInd),
-      pattern1: new FormControl(row.pattern1),
-      pattern2: new FormControl(row.pattern2),
-      pattern3: new FormControl(row.pattern3),
-      loadInd: new FormControl(row.loadInd),
-      joinDupInd: new FormControl(row.joinDupInd),
+      currRowInd: new FormControl(row.currRowInd),
+      pattern1: new FormControl(row.pattern1, [Validators.maxLength(1000)]),
+      pattern2: new FormControl(row.pattern2, [Validators.maxLength(1000)]),
+      pattern3: new FormControl(row.pattern3, Validators.maxLength(1)),
+      ladInd: new FormControl(row.ladInd),
+      joinDupsInd: new FormControl(row.joinDupsInd),
+      confgrtnEffStartTs: new FormControl(row.confgrtnEffStartTs),
+      confgrtnEffEndTs: new FormControl(row.confgrtnEffEndTs),
+      // Additional fields for editable form purposes
       status: new FormControl('unchanged'),
-      // for editable form purposes
       action: new FormControl('existingRecord'),
       isEditable: new FormControl(false),
       isNewRow: new FormControl(false)
     });
   }
   addRow(): void {
+    // create new row with default values
     const newRow = this.fb.group({
-      columnId: new FormControl(-1),
-      columnName: new FormControl(''),
-      tbl_confrtn_id: new FormControl(this.dataSource.data.length + 1),
+      tblColConfgrtnId: new FormControl(-1),
+      tblConfgrtnId: new FormControl(this.dataSource.data.length + 1),
+      colmnName: new FormControl('', [Validators.maxLength(100)]),
       dataType: new FormControl(''),
-      transformSql: new FormControl(''),
-      generateSk: new FormControl(0),
+      colmnTrnsfrmtnStep1: new FormControl(''),
+      genrtIdInd: new FormControl('', Validators.maxLength(1)),
+      idGenrtnStratgyId: new FormControl(0),
       type2StartInd: new FormControl(0),
       type2EndInd: new FormControl(0),
-      curActiveInd: new FormControl(0),
-      pattern1: new FormControl(''),
-      pattern2: new FormControl(''),
-      pattern3: new FormControl(''),
-      loadInd: new FormControl(0),
-      joinDupInd: new FormControl(0),
+      currRowInd: new FormControl(0),
+      pattern1: new FormControl('', Validators.maxLength(1000)),
+      pattern2: new FormControl('', Validators.maxLength(1000)),
+      pattern3: new FormControl('', Validators.maxLength(1)),
+      ladInd: new FormControl(0),
+      joinDupsInd: new FormControl(0),
+      confgrtnEffStartTs: new FormControl(new Date()),
+      confgrtnEffEndTs: new FormControl(new Date()),
+      // Additional fields for editable form purposes
       status: new FormControl('changed'),
-      // for editable form purposes
       action: new FormControl('existingRecord'),
       isEditable: new FormControl(false),
       isNewRow: new FormControl(false)
     });
-    const currentControl = this.ColumnDetailFormGroup.get('ColumnDetail') as FormArray;
+    this.initialData.push(newRow.value as TableConfiguration);
+    const currentControl = this.tableConfigFormGroup.get('tableConfig') as FormArray;
     currentControl.push(newRow);
-    this.dataSource = new  MatTableDataSource(currentControl.controls);
+    this.dataSource = new MatTableDataSource(currentControl.controls);
   }
-  SaveVO(form:any, i:number) {
-    form.get('ColumnDetail').at(i).get('isEditable').patchValue(false);
+  updateTableConfig(_form: any, _index: number) {
+    this.initialData[_index] = _form.get('tableConfig').at(_index).value;  // update initial state data
+    _form.get('tableConfig').at(_index).get('isEditable').patchValue(false);
+    _form.get('tableConfig').at(_index).get('status').patchValue('changed');
   }
-   CancelSVO(form:any, i:number) {
-    form.get('ColumnDetail').at(i).get('isEditable').patchValue(false);
+  Cancel(_form: any, _index: number) {
+    _form.get('tableConfig').at(_index).patchValue(this.initialData[_index]);
+    _form.get('tableConfig').at(_index).get('isEditable').patchValue(false);
   }
-  EditSVO(form:any, i:number) {
-    form.get('ColumnDetail').at(i).get('isEditable').patchValue(true);
+  EditTableConfig(form: any, i: number) {
+    if (this.tableConfigFormGroup.valid)
+      form.get('tableConfig').at(i).get('isEditable').patchValue(true);
+    else this._toaster.error('Fill form with valid values', 'Error')
   }
   refreshRow(): void {
-    this.selectedRow = null;
-    this.ColumnDetailFormGroup = this.fb.group({
-      ColumnDetail: this.fb.array(this.getInitialColumnDetails().map(row => this.createRowForm(row)))
-    });
-    this.dataSource = new MatTableDataSource((this.ColumnDetailFormGroup.get('ColumnDetail') as FormArray).controls)
-  }
-  
-  getInitialColumnDetails(): IColumnDetails[] {
-    return JSON.parse(JSON.stringify(ColumnDetails));
+    this.fetchAllTableConfigs();
   }
   selectRow(_row: FormGroup): void {
-    // if (this.selectedRows?.includes(_row)) {
-    //   this.selectedRows = this.selectedRows.filter(selected => selected !== _row);
-    // } else {
-    //   this.selectedRows?.push(_row);
-    // }
     this.selectedRow = _row;
   }
   saveRows(): void {
-    const rows = this.dataSource.data;
-    const isChange = rows.find(row => row.controls['status'].value === 'new' || row.controls['status'].value === 'changed');
+    const rows = (this.tableConfigFormGroup.get('tableConfig') as FormArray).value;
+    const mappedRows: TableConfiguration[] = rows.map((row: TableConfiguration) => {
+      return {
+        tblColConfgrtnId: row.tblColConfgrtnId,
+        tblConfgrtnId: row.tblConfgrtnId,
+        colmnName: row.colmnName,
+        dataType: row.dataType,
+        colmnTrnsfrmtnStep1: row.colmnTrnsfrmtnStep1,
+        genrtIdInd: row.genrtIdInd,
+        idGenrtnStratgyId: row.idGenrtnStratgyId,
+        type2StartInd: row.type2StartInd,
+        type2EndInd: row.type2EndInd,
+        currRowInd: row.currRowInd,
+        pattern1: row.pattern1,
+        pattern2: row.pattern2,
+        pattern3: row.pattern3,
+        ladInd: row.ladInd,
+        joinDupsInd: row.joinDupsInd,
+        confgrtnEffStartTs: row.confgrtnEffStartTs,
+        confgrtnEffEndTs: row.confgrtnEffEndTs
+      }
+    });
+    const payload: { data: TableConfiguration[] } = {
+      data: mappedRows,
+    }
+    // save when this condition met.
+    const isChange = rows.find((row: TableConfiguration) => row.status === 'new' || row.status === 'changed');
     if (isChange) {
-      this.SaveQueryTableRow(rows).pipe(first()).subscribe({
-        next: (response) => {
-          if (response.success) {
-            this.snackBar.open(response.message, 'Close', {
-              duration: 3000,
-            });
+      this.tableConfigService.createMulti(payload).pipe(first()).subscribe(res => {
+        if (res.isSuccess) {
+          if (res.data.errorMessage) {
+            this._toaster.error(res.data.errorMessage, 'Error');
+          } else {
+            this._toaster.success(res.message, 'Success');
           }
-        },
-        error: () => {
-          this.snackBar.open('Failed to save the row. Please try again.');
-        },
-      });
-    }else{
-      this.snackBar.open('Can save when changes happen in table');
+        }
+      })
+    } else {
+      this._toaster.error('Can save when any change happened in table', 'Error');
     }
   }
   removeSelectedRow(): void {
@@ -154,51 +254,39 @@ export class ColumnDetailComponent extends MockAPIClass {
       });
       return
     }
-    const Ids = {
-      tbl_confrtn_id: this.selectedRow.controls['tbl_confrtn_id'].value,
-      tbl_col_confrtn_id: this.selectedRow.controls['tbl_confrtn_id'].value
+    const params = {
+      tableConfigId: this.selectedRow.controls['tblConfgrtnId'].value,
+      tbleColConfigId: this.selectedRow.controls['tblColConfgrtnId'].value
     }
     this.dialog.open(AppDialogOverviewComponent).afterClosed().pipe(first()).subscribe((res) => {
       if (res) {
-        this.deleteRowFromAPI(Ids.tbl_confrtn_id, Ids.tbl_col_confrtn_id).pipe(first()).subscribe({
-          next: (response) => {
-            if (response.success) {
-              const index = (this.ColumnDetailFormGroup.get('ColumnDetail') as FormArray).controls.
-              findIndex((control:any) => control.controls['tbl_confrtn_id'].value === this.selectedRow?.controls['tbl_confrtn_id'].value);
-              if( index !== -1)
-              (this.ColumnDetailFormGroup.get('ColumnDetail') as FormArray).controls.splice(index, 1);
-            this.dataSource = new MatTableDataSource((this.ColumnDetailFormGroup.get('ColumnDetail') as FormArray).controls);
-              this.snackBar.open(response.message, 'Close', {
-                duration: 3000,
-              });
-            }
-          },
-          error: () => {
-            this.snackBar.open('Failed to delete the row. Please try again.');
-          },
-        });
+        this.tableConfigService.remove(params).pipe(first()).subscribe(res => {
+          if (res.isSuccess) {
+            const index = (this.tableConfigFormGroup.get('tableConfig') as FormArray).controls.
+            findIndex((control: any) => control.controls['tblConfgrtnId'].value === this.selectedRow?.controls['tblConfgrtnId'].value);
+            if (index !== -1)
+              (this.tableConfigFormGroup.get('tableConfig') as FormArray).controls.splice(index, 1);
+            this.dataSource = new MatTableDataSource((this.tableConfigFormGroup.get('tableConfig') as FormArray).controls);
+            this._toaster.success('Column Configuration delete successfully', 'Delete');
+          }
+        })
       }
     })
-
   }
 
   copyToCells(): void {
     if (!this.selectedRow) {
-      this.snackBar.open('Please select a row first!', 'Close', {
-        duration: 3000,
-      });
+      this._toaster.error('Please select a row first!', 'Error');
       return;
     }
-    const transformSqlToCopy = this.selectedRow.controls['transformSql'].value;
+    const transformSqlToCopy = this.selectedRow.controls['colmnTrnsfrmtnStep1'].value;
     if (!transformSqlToCopy) {
-      this.snackBar.open('The selected row has an empty Transformation SQL value.', 'Close', {
-        duration: 3000,
-      });
+      this._toaster.error('The selected row has an empty Transformation SQL value.', 'Error');
       return;
     }
-    this.dataSource.data = this.dataSource.data.map((row:FormGroup) => {
-      if (!row.controls['transformSql'].value) {
-        row.controls['transformSql'].setValue(transformSqlToCopy);
+    this.dataSource.data = this.dataSource.data.map((row: FormGroup) => {
+      if (!row.controls['colmnTrnsfrmtnStep1'].value) {
+        row.controls['colmnTrnsfrmtnStep1'].setValue(transformSqlToCopy);
         row.controls['status'].setValue('changed');
       }
       return row;
@@ -232,58 +320,8 @@ export class ColumnDetailComponent extends MockAPIClass {
     // });
   }
   clearAllTransformations(): void {
-   this.dataSource.data.forEach((element:FormGroup) => {
-      element.controls['transformSql'].setValue('');
+    this.dataSource.data.forEach((element: FormGroup) => {
+      element.controls['colmnTrnsfrmtnStep1'].setValue('');
     });
   }
 }
-
-export const ColumnDetails: IColumnDetails[] = [{
-  columnId: 1001,
-  tbl_confrtn_id: 1002,
-  columnName: '',
-  dataType: '',
-  transformSql: '',
-  generateSk: 0,
-  type2StartInd: 0,
-  type2EndInd: 0,
-  curActiveInd: 0,
-  pattern1: '',
-  pattern2: '',
-  pattern3: '',
-  loadInd: 0,
-  joinDupInd: 0,
-},
-{
-  columnId: 1002,
-  tbl_confrtn_id: 1003,
-  columnName: '',
-  dataType: '',
-  transformSql: '',
-  generateSk: 0,
-  type2StartInd: 0,
-  type2EndInd: 0,
-  curActiveInd: 0,
-  pattern1: '',
-  pattern2: '',
-  pattern3: '',
-  loadInd: 0,
-  joinDupInd: 0,
-},
-{
-  columnId: 1003,
-  tbl_confrtn_id: 1004,
-  columnName: '',
-  dataType: '',
-  transformSql: 'transformsql',
-  generateSk: 0,
-  type2StartInd: 0,
-  type2EndInd: 0,
-  curActiveInd: 0,
-  pattern1: '',
-  pattern2: '',
-  pattern3: '',
-  loadInd: 0,
-  joinDupInd: 0,
-},
-]

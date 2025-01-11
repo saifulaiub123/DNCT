@@ -1,24 +1,26 @@
-<form [formGroup]="ColumnDetailFormGroup">
-  <ng-container formArrayName="ColumnDetail">
+<form [formGroup]="tableConfigFormGroup">
+  <ng-container formArrayName="tableConfig">
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
 
       <!-- Column ID -->
       <ng-container matColumnDef="columnId">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Column ID </th>
         <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-          {{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].columnId}}</td>
+          {{tableConfigFormGroup.get('tableConfig')?.value[i].tblColConfgrtnId}}</td>
       </ng-container>
 
       <!-- Column Name -->
       <ng-container matColumnDef="columnName">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Column Name </th>
         <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
-          <mat-form-field appearance="outline" class="w-100" color="primary">
-            <input matInput type="text" formControlName="columnName" />
+          @if(tableConfigFormGroup.get('tableConfig')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-75" color="primary">
+            <input matInput type="text" formControlName="colmnName" />
           </mat-form-field>
-          }@else{
-          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].columnName}}</span>
+          @if(getFormArrayControl('colmnName',i)?.hasError('maxlength')){
+          <mat-error style="font-size: 11px;">Max length: {{getFormArrayControl('colmnName',i)?.errors?.['maxlength']?.requiredLength}}</mat-error>
+          }}@else{
+          <span>{{tableConfigFormGroup.get('tableConfig')?.value[i].colmnName}}</span>
           }
         </td>
       </ng-container>
@@ -27,40 +29,43 @@
       <ng-container matColumnDef="dataType">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Data Type </th>
         <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
-          <mat-form-field appearance="outline" class="w-100" color="primary">
+          @if(tableConfigFormGroup.get('tableConfig')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-75" color="primary">
             <input matInput type="text" formControlName="dataType" />
           </mat-form-field>
           }@else{
-          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].dataType}}</span>
+          <span>{{tableConfigFormGroup.get('tableConfig')?.value[i].dataType}}</span>
           }
         </td>
       </ng-container>
 
       <!-- Transform SQL -->
-      <ng-container matColumnDef="transformSql">
+      <ng-container matColumnDef="colmnTrnsfrmtnStep1">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Transform SQL </th>
         <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
-          <mat-form-field appearance="outline" class="w-100" color="primary">
-            <input matInput type="text" formControlName="transformSql" />
+          @if(tableConfigFormGroup.get('tableConfig')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-75" color="primary">
+            <input matInput type="text" formControlName="colmnTrnsfrmtnStep1" />
           </mat-form-field>
           }@else{
-          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].transformSql}}</span>
+          <span>{{tableConfigFormGroup.get('tableConfig')?.value[i].colmnTrnsfrmtnStep1}}</span>
           }
         </td>
       </ng-container>
 
       <!-- Generate SK -->
-      <ng-container matColumnDef="generateSk">
+      <ng-container matColumnDef="idGenrtnStratgyId">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Generate SK </th>
         <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
-          <mat-form-field appearance="outline" class="w-100" color="primary">
-            <input matInput type="text" formControlName="generateSk" />
+          @if(tableConfigFormGroup.get('tableConfig')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-75" color="primary">
+            <input matInput type="text" formControlName="genrtIdInd" />
           </mat-form-field>
+          @if(getFormArrayControl('genrtIdInd',i)?.hasError('maxlength')){
+            <mat-error style="font-size: 11px;">Max length: {{getFormArrayControl('genrtIdInd',i)?.errors?.['maxlength']?.requiredLength}}</mat-error>
+            }
           }@else{
-          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].generateSk}}</span>
+          <span>{{tableConfigFormGroup.get('tableConfig')?.value[i].genrtIdInd}}</span>
           }
         </td>
       </ng-container>
@@ -69,12 +74,12 @@
       <ng-container matColumnDef="type2StartInd">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Type2_Start_Ind </th>
         <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
-          <mat-form-field appearance="outline" class="w-100" color="primary">
+          @if(tableConfigFormGroup.get('tableConfig')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-75" color="primary">
             <input matInput type="text" formControlName="type2StartInd" />
           </mat-form-field>
           }@else{
-          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].type2StartInd}}</span>
+          <span>{{tableConfigFormGroup.get('tableConfig')?.value[i].type2StartInd}}</span>
           }
         </td>
       </ng-container>
@@ -83,12 +88,12 @@
       <ng-container matColumnDef="type2EndInd">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Type2_End_Ind </th>
         <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
-          <mat-form-field appearance="outline" class="w-100" color="primary">
+          @if(tableConfigFormGroup.get('tableConfig')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-75" color="primary">
             <input matInput type="text" formControlName="type2EndInd" />
           </mat-form-field>
           }@else{
-          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].type2EndInd}}</span>
+          <span>{{tableConfigFormGroup.get('tableConfig')?.value[i].type2EndInd}}</span>
           }
         </td>
       </ng-container>
@@ -97,12 +102,12 @@
       <ng-container matColumnDef="curActiveInd">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Cur_row_Ind </th>
         <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
-          <mat-form-field appearance="outline" class="w-100" color="primary">
-            <input matInput type="text" formControlName="curActiveInd" />
+          @if(tableConfigFormGroup.get('tableConfig')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-75" color="primary">
+            <input matInput type="text" formControlName="currRowInd" />
           </mat-form-field>
           }@else{
-          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].curActiveInd}}</span>
+          <span>{{tableConfigFormGroup.get('tableConfig')?.value[i].currRowInd}}</span>
           }
         </td>
       </ng-container>
@@ -111,12 +116,15 @@
       <ng-container matColumnDef="pattern1">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Pattern 1 </th>
         <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
-          <mat-form-field appearance="outline" class="w-100" color="primary">
+          @if(tableConfigFormGroup.get('tableConfig')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-75" color="primary">
             <input matInput type="text" formControlName="pattern1" />
           </mat-form-field>
+          @if(getFormArrayControl('pattern1',i)?.hasError('maxlength')){
+            <mat-error style="font-size: 11px;">Max length: {{getFormArrayControl('pattern1',i)?.errors?.['maxlength']?.requiredLength}}</mat-error>
+            }
           }@else{
-          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].pattern1}}</span>
+          <span>{{tableConfigFormGroup.get('tableConfig')?.value[i].pattern1}}</span>
           }
         </td>
       </ng-container>
@@ -125,12 +133,15 @@
       <ng-container matColumnDef="pattern2">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Pattern 2 </th>
         <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
-          <mat-form-field appearance="outline" class="w-100" color="primary">
+          @if(tableConfigFormGroup.get('tableConfig')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-75" color="primary">
             <input matInput type="text" formControlName="pattern2" />
           </mat-form-field>
+          @if(getFormArrayControl('pattern2',i)?.hasError('maxlength')){
+            <mat-error style="font-size: 11px;">Max length: {{getFormArrayControl('pattern2',i)?.errors?.['maxlength']?.requiredLength}}</mat-error>
+            }
           }@else{
-          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].pattern2}}</span>
+          <span>{{tableConfigFormGroup.get('tableConfig')?.value[i].pattern2}}</span>
           }
         </td>
       </ng-container>
@@ -139,12 +150,15 @@
       <ng-container matColumnDef="pattern3">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Pattern 3 </th>
         <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
-          <mat-form-field appearance="outline" class="w-100" color="primary">
+          @if(tableConfigFormGroup.get('tableConfig')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-75" color="primary">
             <input matInput type="text" formControlName="pattern3" />
           </mat-form-field>
+          @if(getFormArrayControl('pattern3',i)?.hasError('maxlength')){
+            <mat-error style="font-size: 11px;">Max length: {{getFormArrayControl('pattern3',i)?.errors?.['maxlength']?.requiredLength}}</mat-error>
+            }
           }@else{
-          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].pattern3}}</span>
+          <span>{{tableConfigFormGroup.get('tableConfig')?.value[i].pattern3}}</span>
           }
         </td>
       </ng-container>
@@ -153,12 +167,12 @@
       <ng-container matColumnDef="loadInd">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Load Indicator </th>
         <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
-          <mat-form-field appearance="outline" class="w-100" color="primary">
-            <input matInput type="text" formControlName="loadInd" />
+          @if(tableConfigFormGroup.get('tableConfig')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-75" color="primary">
+            <input matInput type="text" formControlName="ladInd" />
           </mat-form-field>
           }@else{
-          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].loadInd}}</span>
+          <span>{{tableConfigFormGroup.get('tableConfig')?.value[i].ladInd}}</span>
           }
         </td>
       </ng-container>
@@ -167,44 +181,40 @@
       <ng-container matColumnDef="joinDupInd">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Join Duplicate Indicator </th>
         <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
-          <mat-form-field appearance="outline" class="w-100" color="primary">
-            <input matInput type="text" formControlName="joinDupInd" />
+          @if(tableConfigFormGroup.get('tableConfig')?.value[i].isEditable){
+          <mat-form-field appearance="outline" class="w-75" color="primary">
+            <input matInput type="text" formControlName="joinDupsInd" />
           </mat-form-field>
           }@else{
-          <span>{{ColumnDetailFormGroup.get('ColumnDetail')?.value[i].joinDupInd}}</span>
+          <span>{{tableConfigFormGroup.get('tableConfig')?.value[i].joinDupsInd}}</span>
           }
         </td>
       </ng-container>
-      <ng-container matColumnDef="action">
+      <ng-container matColumnDef="action" stickyEnd>
         <th mat-header-cell *matHeaderCellDef>Action</th>
         <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-          @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+          @if(tableConfigFormGroup.get('tableConfig')?.value[i].isEditable){
           <div class="d-flex gap-10">
-            @if(ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+            @if(tableConfigFormGroup.get('tableConfig')?.value[i].isEditable){
             <button mat-icon-button class="material-icons app-toolbar-menu cancel-button" matTooltip="Cancel Changes"
-              color="warn" (click)="CancelSVO(ColumnDetailFormGroup,i)">
+              color="warn" (click)="Cancel(tableConfigFormGroup,i)">
               <mat-icon>cancel</mat-icon>
             </button>
             }
             <button mat-icon-button class="material-icons app-toolbar-menu save-button" matTooltip="Save Changes"
-              (click)="SaveVO(ColumnDetailFormGroup,i)" color="primary">
+              (click)="updateTableConfig(tableConfigFormGroup,i)" color="primary">
               <mat-icon>check_circle</mat-icon>
             </button>
           </div>
           }
-          @if(!ColumnDetailFormGroup.get('ColumnDetail')?.value[i].isEditable){
+          @if(!tableConfigFormGroup.get('tableConfig')?.value[i].isEditable){
           <button mat-icon-button class="material-icons app-toolbar-menu save-button" matTooltip="Edit" color="primary"
-            (click)="EditSVO(ColumnDetailFormGroup,i)">
-            <mat-icon>edit</mat-icon>
+            (click)="EditTableConfig(tableConfigFormGroup,i)">
+            <i-tabler name="edit" class="icon-18"></i-tabler>
           </button>
           }
         </td>
       </ng-container>
-
-      <!-- Table Header and Rows -->
-      <!-- [class.bg-light-error]="row?.validationResult === 0"
-      [class.bg-light-success]="row?.validationResult === 1" -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"
         [class.bg-light-primary]="row === selectedRow" (click)="selectRow(row)"></tr>

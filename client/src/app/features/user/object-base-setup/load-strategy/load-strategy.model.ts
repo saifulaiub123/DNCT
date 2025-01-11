@@ -24,3 +24,8 @@ action?: 'existingRecord',
 isEditable?: false,
 isNewRow?: false
 }
+
+export interface Create{
+    loadStrategyId: number,
+    tblConfigId: number
+}
