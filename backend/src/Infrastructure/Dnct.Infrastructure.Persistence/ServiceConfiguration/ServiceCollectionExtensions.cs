@@ -21,6 +21,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUserQueryRepository, UserQueryRepository>();
         services.AddScoped<ILoadStrategyRepository, LoadStrategyRepository>();
         services.AddScoped<IRunTimeParametersMasterRepository, RunTimeParametersMasterRepository>();
+        services.AddScoped<ITableInstanceRunTimeRepository, TableInstanceRunTimeRepository>();
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {

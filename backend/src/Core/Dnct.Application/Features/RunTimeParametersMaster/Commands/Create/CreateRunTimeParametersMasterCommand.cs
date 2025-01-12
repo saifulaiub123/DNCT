@@ -9,10 +9,10 @@ namespace Dnct.Application.Features.RunTimeParametersMaster.Commands.Create
 {
     public class CreateRunTimeParametersMasterCommand : IRequest<OperationResult<bool>>
     {
-        public List<Data> Data { get; set; }
+        public List<Datat> Data { get; set; }
     }
 
-    public class Data
+    public class Datat
     {
         public int RuntimeParametersMasterId { get; set; }
         public string ParameterValue { get; set; }

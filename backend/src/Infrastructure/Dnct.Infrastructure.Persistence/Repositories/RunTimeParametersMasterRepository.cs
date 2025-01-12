@@ -44,23 +44,8 @@ namespace Dnct.Infrastructure.Persistence.Repositories
 
 
         public async Task Create(List<RunTimeParametersMasterModel> models)
+
         {
-            string sql = @"
-                BEGIN;
-                    update  codebotmstr.tbl_load_strategy
-                    set confgrtn_eff_end_ts = current_timestamp(0)
-                    where table_config_id = 200
-                    and confgrtn_eff_end_ts >  current_timestamp(0);
-
-                   INSERT INTO codebotmstr.tbl_load_strategy (
-                        table_config_id,
-                        load_stratgy_id,
-                        confgrtn_eff_start_ts,
-                        confgrtn_eff_end_ts
-                    ) Values(@TableConfigId, @LoadStrategyId, @ConfigurationEffectiveStartTimestamp, @ConfigurationEffectiveEndTimestamp);
-               COMMIT;
-            ";
-
             using (var conn = new NpgsqlConnection(_connectionString))
             {
                 await conn.OpenAsync();

@@ -1,4 +1,5 @@
-﻿using Dnct.Domain.Model;
+﻿using Dnct.Application.Features.TableInstanceRunTime.Commands.CreateTableInstanceRunTime;
+using Dnct.Domain.Model;
 
 namespace Dnct.Application.Contracts.Persistence
 {
