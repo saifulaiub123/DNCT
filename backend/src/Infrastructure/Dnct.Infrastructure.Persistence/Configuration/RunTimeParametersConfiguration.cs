@@ -12,6 +12,9 @@ namespace Dnct.Infrastructure.Persistence.Configuration
         {
             builder.ToTable("run_time_parmtrs", DbConst.Codebotmstr);
             builder.HasNoKey();
+            //builder.HasIndex(p => new { p.TableConfigId, p.RuntimeParametersMasterId })
+            //    .IsUnique();
+
         }
     }
 }
