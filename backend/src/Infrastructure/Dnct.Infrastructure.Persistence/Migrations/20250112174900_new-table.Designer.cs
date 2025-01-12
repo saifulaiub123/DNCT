@@ -3,6 +3,7 @@ using System;
 using Dnct.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dnct.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250112174900_new-table")]
+    partial class newtable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -288,31 +291,6 @@ namespace Dnct.Infrastructure.Persistence.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Order");
-                });
-
-            modelBuilder.Entity("Dnct.Domain.Entities.RunTimeParameters", b =>
-                {
-                    b.Property<DateTime>("ConfigurationEffectiveEndTimestamp")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("confgrtn_eff_end_ts");
-
-                    b.Property<DateTime?>("ConfigurationEffectiveStartTimestamp")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("confgrtn_eff_start_ts");
-
-                    b.Property<string>("ParameterValue")
-                        .HasColumnType("text")
-                        .HasColumnName("parmtr_val");
-
-                    b.Property<int?>("RuntimeParametersMasterId")
-                        .HasColumnType("integer")
-                        .HasColumnName("rtm_parmtrs_mstr_id");
-
-                    b.Property<int?>("TableConfigId")
-                        .HasColumnType("integer")
-                        .HasColumnName("table_config_id");
-
-                    b.ToTable("run_time_parmtrs", "codebotmstr");
                 });
 
             modelBuilder.Entity("Dnct.Domain.Entities.RunTimeParametersMaster", b =>
