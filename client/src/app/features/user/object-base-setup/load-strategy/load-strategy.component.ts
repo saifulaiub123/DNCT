@@ -1,17 +1,25 @@
 import { Component, inject } from '@angular/core';
 import { MaterialModule } from 'src/app/material.module';
-import { IInstanceName, ILoadStrategy, IParameter } from './load-strategy.model';
+import { RunTimeInstance, LoadStrategy, RunTimeParameter } from './load-strategy.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MockAPIClass } from '../user-query-table/user-query-table.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { ToastrService } from 'ngx-toastr';
+import { LoadStrategyService } from './load-strategy.service';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { catchError, EMPTY, first } from 'rxjs';
+const loadStrategycontroller = 'load-strategy';
+const runtimeParameterController = 'run-time-master'
+const runtimeInstanceController = 'table-instance-run-time'
 @Component({
   selector: 'app-load-strategy',
   standalone: true,
-  imports: [MaterialModule, CommonModule, ReactiveFormsModule],
+  imports: [MaterialModule, CommonModule, ReactiveFormsModule, TablerIconsModule],
+  providers: [LoadStrategyService],
   templateUrl: './load-strategy.component.html',
 })
 export class LoadStrategyComponent extends MockAPIClass {
@@ -25,36 +33,74 @@ export class LoadStrategyComponent extends MockAPIClass {
     'select',
     'instance',
     'order',
-    'overlap','action'
+    'overlap', 'action'
   ];
 
   //injectable
   private snackBar = inject(MatSnackBar);
   private fb = inject(FormBuilder);
+  private toastrService = inject(ToastrService);
+  private loadStrategyService = inject(LoadStrategyService);
+  private ngxLoaderService = inject(NgxUiLoaderService);
 
   // table datasources
-  loadStrategyTabledataSource = new MatTableDataSource<ILoadStrategy>(Load_Strategy)
-  instanceNameTabledataSource = new MatTableDataSource<any>()
-  parameterTabledataSource = new MatTableDataSource<any>()
+  loadStrategyTabledataSource = new MatTableDataSource<any>();
+  instanceNameTabledataSource = new MatTableDataSource<any>();
+  parameterTabledataSource = new MatTableDataSource<any>();     
 
-
+  private RunTimeParameterInitialFormState:RunTimeParameter[];
+  private initRunTimeInstanceInitialFormState:[];
   // forms
   instanceNameForm: FormGroup;
   parameterForm: FormGroup;
-  selectedLoadStragtegyRow: ILoadStrategy;
+  selectedLoadStragtegyRow: LoadStrategy;
   table_config_id = 1000;
   ngOnInit(): void {
-    this.initParameterForm();
-    this.initInstanceNameForm();
+    this.loadStrategyFormInit();
+    this.initRunTimeParameterForm([]);
+    this.initInstanceNameForm([]);
   }
-  initParameterForm(): void {
-    this.parameterTabledataSource = new MatTableDataSource<IParameter>([...Parameter]);
-    this.parameterForm = this.fb.group({
-      parameters: this.fb.array(Parameter.map(row => this.createParameterForm(row)))
+  loadStrategyFormInit(): void {
+    this.ngxLoaderService.start();
+    this.loadStrategyService.fetchAll(loadStrategycontroller).pipe(first(), catchError(err => {
+      this.ngxLoaderService.stop();
+      this.toastrService.error(`error Occurred ${err}`, 'Error');
+      return EMPTY;
+    })).subscribe(res => {
+      this.ngxLoaderService.stop();
+      if (res.isSuccess) {this.loadStrategyTabledataSource.data = res.data.map((res:LoadStrategy) => {
+        return {
+          ...res, tableConfigId: 1, // dummy config id replace with actual
+        }
+      });
+      this.loadRunTimeParameter();
+      this.loadRunTimeInstance();
+    }
     })
+  }
+  
+  initRunTimeParameterForm(_parameters: RunTimeParameter[]): void {
+    this.parameterTabledataSource = new MatTableDataSource<RunTimeParameter>();
+    this.parameterForm = this.fb.group({
+      parameters: this.fb.array(_parameters.map(row => this.createParameterForm(row)))
+    })
+    this.RunTimeParameterInitialFormState = (this.parameterForm.get('parameters') as FormArray).value;
     this.parameterTabledataSource = new MatTableDataSource((this.parameterForm.get('parameters') as FormArray).controls);
   }
-  createParameterForm(parameter: IParameter): FormGroup {
+  loadRunTimeParameter():void{
+    this.ngxLoaderService.start();
+    const tableConfigId = this.selectedLoadStragtegyRow?.tblConfigId;
+    const parameter = tableConfigId ? `?TableConfigId=${tableConfigId}` : ''; //
+    this.loadStrategyService.fetchAll(runtimeParameterController, parameter).pipe(first(), catchError(err => {
+      this.ngxLoaderService.stop();
+      this.toastrService.error(`error Occurred ${err}`, 'Error');
+      return EMPTY;
+    })).subscribe(res => {
+      this.ngxLoaderService.stop();
+      if (res.isSuccess) {this.parameterTabledataSource = res.data; this.initRunTimeParameterForm(res.data);}
+    })
+  }
+  createParameterForm(parameter: RunTimeParameter): FormGroup {
     return this.fb.group({
       value: new FormControl(parameter.value),
       parameter: new FormControl(parameter.parameter),
@@ -67,14 +113,28 @@ export class LoadStrategyComponent extends MockAPIClass {
     });
   }
 
-  initInstanceNameForm(): void {
-    this.instanceNameTabledataSource = new MatTableDataSource<IInstanceName>([...InstanceName]);
+  initInstanceNameForm(_instance: []): void {
+    this.instanceNameTabledataSource = new MatTableDataSource<RunTimeInstance>();
     this.instanceNameForm = this.fb.group({
-      instanceName: this.fb.array(InstanceName.map(row => this.createInstanceNameForm(row)))
+      instanceName: this.fb.array(_instance.map(row => this.createInstanceNameForm(row)))
     })
+    this.RunTimeParameterInitialFormState = (this.parameterForm.get('instanceName') as FormArray).value;
     this.instanceNameTabledataSource = new MatTableDataSource((this.instanceNameForm.get('instanceName') as FormArray).controls);
   }
-  createInstanceNameForm(_row: IInstanceName): FormGroup {
+  loadRunTimeInstance():void{
+    this.ngxLoaderService.start();
+    const tableConfigId = this.selectedLoadStragtegyRow?.tblConfigId;
+    const parameter = tableConfigId ? `?TableConfigId=${tableConfigId}` : ''; //
+    this.loadStrategyService.fetchAll(runtimeInstanceController, parameter).pipe(first(), catchError(err => {
+      this.ngxLoaderService.stop();
+      this.toastrService.error(`error Occurred ${err}`, 'Error');
+      return EMPTY;
+    })).subscribe(res => {
+      this.ngxLoaderService.stop();
+      if (res.isSuccess) {this.instanceNameTabledataSource = res.data; this.initInstanceNameForm(res.data);}
+    })
+  }
+  createInstanceNameForm(_row: RunTimeInstance): FormGroup {
     return this.fb.group({
       isSelected: new FormControl(_row.isSelected),
       instanceName: new FormControl(_row.instanceName),
@@ -87,46 +147,52 @@ export class LoadStrategyComponent extends MockAPIClass {
     })
   }
   onShowCurrentScript(): void { }
+
+  // what I understood there has a one button if it pressed all the three table values values should be save
   onSaveRuntime(): void {
     if (!this.selectedLoadStragtegyRow) {
       this.snackBar.open('Row from load strategy table should be selected!', 'Close', {
-        duration: 3000
+        duration: 3000, 
+        verticalPosition: 'top'
       });
       return
     }
-    const selectedRow = {
-      table_config_id: this.selectedLoadStragtegyRow.table_config_id,
-      load_strategy_id: this.selectedLoadStragtegyRow.load_stratgy_id,
+    const loadStrategyPayload = {
+      tblConfigId: this.selectedLoadStragtegyRow.tblConfigId,
+      loadStrategyId: this.selectedLoadStragtegyRow.loadStrategyId,
     };
-    if(!this.saveParameterGridData()) return
-    
-    this.autoPopulateColumnsAPI(selectedRow.table_config_id, selectedRow.load_strategy_id).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.snackBar.open('Selected row and parameter grid data save successfully!', 'Close', {
-            duration: 3000
-          });
-        }
-      },
-      error: () => {
-        this.snackBar.open('Failed to save. Please try again.', 'Close', {
-          duration: 3000
-        });
-      }
+
+    //
+    if (!this.saveParameterGridData()) return
+
+    // saving load strategy selected row
+    this.loadStrategyService.create(loadStrategycontroller, loadStrategyPayload).pipe(first(), catchError(err => {
+      this.ngxLoaderService.stop();
+      this.toastrService.error(`error Occurred ${err}`, 'Error');
+      return EMPTY;
+    })).subscribe(res => {
+      this.ngxLoaderService.stop();
+      if (res.isSuccess) { this.toastrService.success('Selected Row from load Strategy save successfully', res.message)};
     })
+   
+
+    // 
+    
 
   }
-  saveParameterGridData(): IParameter[] | undefined {
+  saveParameterGridData(): RunTimeParameter[] | undefined {
     const parametersArray = this.parameterForm.get('parameters') as FormArray;
-    const hasEmptyValues = parametersArray.controls.some((row) => { const value = row.get('value')?.value;
-      return value === null || value === undefined || value === '';});
+    const hasEmptyValues = parametersArray.controls.some((row) => {
+      const value = row.get('value')?.value;
+      return value === null || value === undefined || value === '';
+    });
     if (hasEmptyValues) {
       this.snackBar.open('Please fill in all values in the Value column.', 'Close', {
         duration: 3000,
       });
       return;
     }
-    const parameterGridData: IParameter[] = parametersArray.controls.map(control => {
+    const parameterGridData: RunTimeParameter[] = parametersArray.controls.map(control => {
       return {
         value: control.value['value'],
         parameter: control.value['parameter'],
@@ -137,15 +203,15 @@ export class LoadStrategyComponent extends MockAPIClass {
     return parameterGridData
   }
   onRefreshRuntime(): void {
-    this.selectedInstanceNameRows=[];
-    this.loadStrategyTabledataSource = new MatTableDataSource<ILoadStrategy>(Load_Strategy)
-    this.initInstanceNameForm();
-    this.initParameterForm();
-   }
+    this.selectedInstanceNameRows = [];
+    this.loadStrategyFormInit();
+    this.initInstanceNameForm(this.initRunTimeInstanceInitialFormState);
+    this.initRunTimeParameterForm(this.RunTimeParameterInitialFormState);
+  }
   onAnalyzeSpecsAndGenerateCode(): void { }
   onAnalyzeSpecs(): void { }
   onGenerateCode(): void { }
-  onLoadStragtegyRowSelect(_row: ILoadStrategy): void {
+  onLoadStragtegyRowSelect(_row: LoadStrategy): void {
     this.selectedLoadStragtegyRow = _row
     this.loadStrategyTabledataSource.data.forEach((item) => {
       if (item !== _row) {
@@ -153,7 +219,7 @@ export class LoadStrategyComponent extends MockAPIClass {
       }
     });
   }
-  selectedInstanceNameRows: IInstanceName[] =[];
+  selectedInstanceNameRows: RunTimeInstance[] = [];
   onInstanceNameRowSelect(_row: FormGroup, _event: MatCheckboxChange, _index: number): void {
     if (_row.get('order')?.value && _row.get('overlap')?.value) {
       _row.patchValue({ isSelected: _event.checked });
@@ -196,84 +262,3 @@ export class LoadStrategyComponent extends MockAPIClass {
     form.get('instanceName').at(i).get('isEditable').patchValue(true);
   }
 }
-export const Load_Strategy = [
-  {
-    isSelected: false,
-    loadStrategy: 'processing',
-    table_config_id: 1001,
-    load_stratgy_id: 1001,
-  },
-  {
-    isSelected: false,
-    loadStrategy: 'Loading',
-    table_config_id: 1002,
-    load_stratgy_id: 1002,
-  },
-  {
-    isSelected: false,
-    loadStrategy: 'configurring',
-    table_config_id: 1003,
-    load_stratgy_id: 1003,
-  },
-]
-export const Parameter: IParameter[] = [
-  {
-    value: 0,
-    parameter: 'processing',
-    action: 'existingRecord',
-    table_config_id: 1003,
-    rtm_parmtrs_mstr_id: 1003,
-    isEditable: false,
-    isNewRow: false
-  },
-  {
-    value: 0,
-    parameter: 'Loading',
-    table_config_id: 1004,
-    rtm_parmtrs_mstr_id: 1004,
-    action: 'existingRecord',
-    isEditable: false,
-    isNewRow: false
-  },
-  {
-    value: 0,
-    parameter: 'configurring',
-    action: 'existingRecord',
-    table_config_id: 1005,
-    rtm_parmtrs_mstr_id: 1005,
-    isEditable: false,
-    isNewRow: false
-  },
-]
-export const InstanceName: IInstanceName[] = [
-  {
-    isSelected: false,
-    instanceName: 'string',
-    order: 'order',
-    overlap: 'overlap',
-    tbl_confgrtn_id: 1000,
-    action: 'existingRecord',
-    isEditable: false,
-    isNewRow: false
-  },
-  {
-    isSelected: false,
-    instanceName: 'string',
-    order: 'order',
-    overlap: 'overlap',
-    tbl_confgrtn_id: 1001,
-    action: 'existingRecord',
-    isEditable: false,
-    isNewRow: false
-  },
-  {
-    isSelected: false,
-    instanceName: 'string',
-    order: 'order',
-    overlap: 'overlap',
-    tbl_confgrtn_id: 1002,
-    action: 'existingRecord',
-    isEditable: false,
-    isNewRow: false
-  },
-]

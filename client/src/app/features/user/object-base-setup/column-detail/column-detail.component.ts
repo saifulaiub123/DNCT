@@ -38,17 +38,19 @@ export class ColumnDetailComponent extends MockAPIClass {
     'loadInd',
     'joinDupInd', 'action'
   ];
+  private initialFormState: TableConfiguration[];
   dataSource = new MatTableDataSource<any>();
   selectedRow: FormGroup | null = null;
-  selectedRows: TableConfiguration[] = [];
+  selectedRows: FormGroup | null = null;
   tableConfigFormGroup: FormGroup;
+
+  //injectors
   private snackBar = inject(MatSnackBar);
   private _toaster = inject(ToastrService);
   private dialog = inject(MatDialog);
   private fb = inject(FormBuilder);
   private _ngxService = inject(NgxUiLoaderService);
   private tableConfigService = inject(TableConfigurationService);
-  private initialData: TableConfiguration[];
 
   ngOnInit(): void {
     this.tableConfigFormGroup = this.fb.group({
@@ -56,61 +58,13 @@ export class ColumnDetailComponent extends MockAPIClass {
     });
     this.fetchAllTableConfigs();
   }
-  initForm(_formData: TableConfiguration[]): void {
+  formInit(_formData: TableConfiguration[]): void {
     this.tableConfigFormGroup = this.fb.group({
       tableConfig: this.fb.array(_formData.map(row => this.createRowForm(row)))
     })
-    this.initialData = (this.tableConfigFormGroup.get('tableConfig') as FormArray).value;
+    this.initialFormState = (this.tableConfigFormGroup.get('tableConfig') as FormArray).value;
     this.dataSource = new MatTableDataSource((this.tableConfigFormGroup.get('tableConfig') as FormArray).controls);
   }
-  initialTableConfig(): void {
-    this._ngxService.start();
-    const defaultRow = {
-      data: [
-        {
-          tblColConfgrtnId: 0,
-          tblConfgrtnId: 0,
-          colmnName: "string",
-          dataType: "string",
-          colmnTrnsfrmtnStep1: "string",
-          genrtIdInd: "g",
-          idGenrtnStratgyId: 0,
-          type2StartInd: 0,
-          type2EndInd: 0,
-          currRowInd: 0,
-          pattern1: "string",
-          pattern2: "string",
-          pattern3: "p",
-          ladInd: 0,
-          joinDupsInd: 0,
-          confgrtnEffStartTs: new Date(),
-          confgrtnEffEndTs: new Date(),
-          // Additional fields for editable form purposes
-          status: 'unchanged',
-          action: 'existingRecord',
-          isEditable: false,
-          isNewRow: false
-        }
-      ]
-    };
-
-    this.tableConfigService.createMulti(defaultRow).pipe(first(), catchError(err => {
-      this._ngxService.stop();
-      return EMPTY;
-    })).subscribe((res: ServerResponse<TableConfiguration>) => {
-      if (res.isSuccess) {
-        this._ngxService.stop();
-        if (res.data.length > 0) {
-          const mappedTableConfig = res.data.map((tableconfig: TableConfiguration) => {
-            return {
-              ...tableconfig, isSelected: false
-            }
-          });
-        }
-      }
-    })
-  }
-
   fetchAllTableConfigs(): void {
     this._ngxService.start();
     this.tableConfigService.fetchAll().pipe(first(), catchError((err) => {
@@ -118,8 +72,7 @@ export class ColumnDetailComponent extends MockAPIClass {
       return EMPTY;
     })).subscribe((res: ServerResponse<TableConfiguration>) => {
       if (res.isSuccess) {
-
-        this.initForm(res.data);
+        this.formInit(res.data);
         this._ngxService.stop();
       }
     })
@@ -151,7 +104,6 @@ export class ColumnDetailComponent extends MockAPIClass {
       status: new FormControl('unchanged'),
       action: new FormControl('existingRecord'),
       isEditable: new FormControl(false),
-      isNewRow: new FormControl(false)
     });
   }
   addRow(): void {
@@ -178,26 +130,38 @@ export class ColumnDetailComponent extends MockAPIClass {
       status: new FormControl('changed'),
       action: new FormControl('existingRecord'),
       isEditable: new FormControl(false),
-      isNewRow: new FormControl(false)
     });
-    this.initialData.push(newRow.value as TableConfiguration);
+
+    this.initialFormState.push(newRow.value as TableConfiguration);
     const currentControl = this.tableConfigFormGroup.get('tableConfig') as FormArray;
     currentControl.push(newRow);
     this.dataSource = new MatTableDataSource(currentControl.controls);
   }
   updateTableConfig(_form: any, _index: number) {
-    this.initialData[_index] = _form.get('tableConfig').at(_index).value;  // update initial state data
-    _form.get('tableConfig').at(_index).get('isEditable').patchValue(false);
-    _form.get('tableConfig').at(_index).get('status').patchValue('changed');
+    if (this.tableConfigFormGroup.valid) {
+      this.isAlreadyEditing = false;
+      this.initialFormState[_index] = _form.get('tableConfig').at(_index).value;  // update initial state  to check where table state is changed
+      _form.get('tableConfig').at(_index).get('isEditable').patchValue(false);
+      _form.get('tableConfig').at(_index).get('status').patchValue('changed');
+    }
+    else this._toaster.error('Fill all mandatory fields', 'Error')
   }
   Cancel(_form: any, _index: number) {
-    _form.get('tableConfig').at(_index).patchValue(this.initialData[_index]);
+    this.isAlreadyEditing = false;
+    _form.get('tableConfig').at(_index).patchValue(this.initialFormState[_index]);
     _form.get('tableConfig').at(_index).get('isEditable').patchValue(false);
   }
+  isAlreadyEditing: boolean = false;
   EditTableConfig(form: any, i: number) {
-    if (this.tableConfigFormGroup.valid)
-      form.get('tableConfig').at(i).get('isEditable').patchValue(true);
-    else this._toaster.error('Fill form with valid values', 'Error')
+    if (this.isAlreadyEditing) {
+      this.snackBar.open('Already Editing. Complete it first.', 'Close', {
+        duration: 2000,
+        verticalPosition: 'top'
+      });
+      return
+    }
+    form.get('tableConfig').at(i).get('isEditable').patchValue(true);
+    this.isAlreadyEditing = form.get('tableConfig').at(i).get('isEditable').value;
   }
   refreshRow(): void {
     this.fetchAllTableConfigs();
@@ -231,7 +195,7 @@ export class ColumnDetailComponent extends MockAPIClass {
     const payload: { data: TableConfiguration[] } = {
       data: mappedRows,
     }
-    // save when this condition met.
+    // save when changes happened into the table.
     const isChange = rows.find((row: TableConfiguration) => row.status === 'new' || row.status === 'changed');
     if (isChange) {
       this.tableConfigService.createMulti(payload).pipe(first()).subscribe(res => {
@@ -250,7 +214,8 @@ export class ColumnDetailComponent extends MockAPIClass {
   removeSelectedRow(): void {
     if (!this.selectedRow) {
       this.snackBar.open('Please select a row first! Just click on row', 'Close', {
-        duration: 3000,
+        duration: 2000,
+        verticalPosition: 'top'
       });
       return
     }
@@ -263,7 +228,7 @@ export class ColumnDetailComponent extends MockAPIClass {
         this.tableConfigService.remove(params).pipe(first()).subscribe(res => {
           if (res.isSuccess) {
             const index = (this.tableConfigFormGroup.get('tableConfig') as FormArray).controls.
-            findIndex((control: any) => control.controls['tblConfgrtnId'].value === this.selectedRow?.controls['tblConfgrtnId'].value);
+              findIndex((control: any) => control.controls['tblConfgrtnId'].value === this.selectedRow?.controls['tblConfgrtnId'].value);
             if (index !== -1)
               (this.tableConfigFormGroup.get('tableConfig') as FormArray).controls.splice(index, 1);
             this.dataSource = new MatTableDataSource((this.tableConfigFormGroup.get('tableConfig') as FormArray).controls);
@@ -276,7 +241,10 @@ export class ColumnDetailComponent extends MockAPIClass {
 
   copyToCells(): void {
     if (!this.selectedRow) {
-      this._toaster.error('Please select a row first!', 'Error');
+      this.snackBar.open('Please select a row first!', 'Close', {
+        duration: 2000,
+        verticalPosition: 'top'
+      });
       return;
     }
     const transformSqlToCopy = this.selectedRow.controls['colmnTrnsfrmtnStep1'].value;
@@ -297,7 +265,8 @@ export class ColumnDetailComponent extends MockAPIClass {
   validateSyntax(): void {
     // if (this.selectedRows.length === 0) {
     //   this.snackBar.open('Select at least one row!','Close',{
-    //     duration: 3000
+    //     duration: 2000
+    //  verticalPosition: 'top'
     //   })
     //   return;
     // }

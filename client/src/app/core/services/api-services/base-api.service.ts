@@ -70,7 +70,7 @@ export class BaseApiService {
     let url = `${this._baseUrl}/${this._apiVersion}/${action}`;
     if(paramter != '')
     {
-      url = `${url}/${paramter}`;
+      url = `${url}${paramter}`;
     }
     if(query != '')
     {
