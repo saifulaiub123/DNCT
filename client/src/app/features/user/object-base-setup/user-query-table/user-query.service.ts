@@ -26,7 +26,7 @@ export class UserQueryService extends BaseApiService{
     }
     removeQuery(_parameters: {userQueryId:number, tableConfigId: number}):Observable<ServerResponse<CreateUpdateQuery>>{
         const action =`${controller}/${ApiEndpoints.userQuery.delete}`;
-        const parameters = `userQueryId=${_parameters.userQueryId}&tableConfigId${_parameters.tableConfigId}`
+        const parameters = `userQueryId=${_parameters.userQueryId}&tableConfigId=${_parameters.tableConfigId}`
        return  this.delete(action,parameters);
     }
 }
