@@ -61,14 +61,16 @@ namespace Dnct.Application.Features.TableColConfiguration.Commands.CreateMultipl
                         //data.ConfgrtnEffStartTs = item.ConfgrtnEffStartTs;
                         //data.ConfgrtnEffEndTs = item.ConfgrtnEffEndTs;
                         await _tableColConfigurationRepository.Update(_mapper.Map<Domain.Entities.TableColConfiguration>(data));
-                        return OperationResult<bool>.SuccessResult(true);
 
+                    }
+                    else
+                    {
+                        return OperationResult<bool>.NotFoundResult("Table configuration id not found");
                     }
 
                 }
             }
-
-            return OperationResult<bool>.NotFoundResult("Table configuration id not found");
+            return OperationResult<bool>.SuccessResult(true);
         }
     }
 }
