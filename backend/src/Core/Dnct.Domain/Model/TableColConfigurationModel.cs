@@ -18,7 +18,7 @@ namespace Dnct.Domain.Model
         public short? CurrRowInd { get; set; }
         public string Pattern1 { get; set; }
         public string Pattern2 { get; set; }
-        public string? Pattern3 { get; set; }
+        public char? Pattern3 { get; set; }
         public short? LadInd { get; set; }
         public short? JoinDupsInd { get; set; }
         public DateTime? ConfgrtnEffStartTs { get; set; }

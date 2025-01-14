@@ -20,4 +20,8 @@ export class TableConfigurationService extends BaseApiService{
         const params = `?tbleColConfigId=${_params.tbleColConfigId}&tableConfigId=${_params.tableConfigId}`
        return  this.delete(action,params);
     }
+    validateSystax(_model: {data: TableConfiguration[]}): Observable<ServerResponse<TableConfiguration>>{
+      const action =`${controller}/${ApiEndpoints.tableConfiguration.validateSystax}`;
+     return  this.post(action,_model);
+  }
 }

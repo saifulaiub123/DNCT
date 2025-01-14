@@ -1,4 +1,5 @@
-﻿using Asp.Versioning;
+﻿using System.Runtime.InteropServices.JavaScript;
+using Asp.Versioning;
 using Dnct.Application.Features.TableColConfiguration.Query.GetAllTableColConfig;
 using Dnct.Application.Features.UserQuery.Query.GetAllTableColConfig;
 using Dnct.Application.Features.UserQuery.Query.GetUserQuery;
@@ -44,6 +45,25 @@ namespace Dnct.Web.Api.Controllers.V1
             await sender.Send(command);
 
             return Ok();
+        }
+
+        [HttpPost("validateSystax")]
+        public async Task<IActionResult> ValidateSystax([FromBody] CreateMultipleTblColConfigCommand command)
+        {
+            var result = new List<object>();
+            Random random = new Random();
+
+
+
+            var list = new List<KeyValuePair<int, int>>();
+            
+
+            foreach (var item in command.Data)
+            {
+                list.Add(new KeyValuePair<int, int>(item.TblColConfgrtnId, random.Next(0, 2)));
+                result.Add(new { TblColConfgrtnId = item.TblColConfgrtnId, Value = random.Next(0, 2) });
+            }
+            return Ok(list);
         }
     }
 }

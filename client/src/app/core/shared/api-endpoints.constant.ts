@@ -11,10 +11,11 @@ export const ApiEndpoints = {
     tableConfiguration:{
       getAll: 'getAll',
       createMulti: 'createMulti',
-      delete: 'delete'
+      delete: 'delete',
+      validateSystax: 'validateSystax'
     },
     loadStrategy:{
       getAll: 'getAll',
       create: 'create',
-    }
+    },
   };

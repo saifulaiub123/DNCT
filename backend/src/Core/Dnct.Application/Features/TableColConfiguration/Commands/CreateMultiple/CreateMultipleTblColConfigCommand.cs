@@ -37,6 +37,8 @@ namespace Dnct.Application.Features.TableColConfiguration.Commands.CreateMultipl
             {
                 if (item.TblColConfgrtnId == -1)
                 {
+                    item.ConfgrtnEffStartTs = DateTime.Now;
+                    item.ConfgrtnEffEndTs = DateTime.Now.AddDays(365);
                     await _tableColConfigurationRepository.Create(
                         _mapper.Map<Domain.Entities.TableColConfiguration>(item));
                 }
@@ -45,23 +47,20 @@ namespace Dnct.Application.Features.TableColConfiguration.Commands.CreateMultipl
                     var data = await _tableColConfigurationRepository.GetById(item.TblColConfgrtnId, item.TblConfgrtnId);
                     if (data is not null)
                     {
-                        //data.ColmnName = item.ColmnName;
-                        //data.DataType = item.DataType;
-                        //data.ColmnTrnsfrmtnStep1 = item.ColmnTrnsfrmtnStep1;
-                        //data.GenrtIdInd = item.GenrtIdInd;
-                        //data.IdGenrtnStratgyId = item.IdGenrtnStratgyId;
-                        //data.Type2StartInd = item.Type2StartInd;
-                        //data.Type2EndInd = item.Type2EndInd;
-                        //data.CurrRowInd = item.CurrRowInd;
-                        //data.Pattern1 = item.Pattern1;
-                        //data.Pattern2 = item.Pattern2;
-                        //data.Pattern3 = item.Pattern3;
-                        //data.LadInd = item.LadInd;
-                        //data.JoinDupsInd = item.JoinDupsInd;
-                        //data.ConfgrtnEffStartTs = item.ConfgrtnEffStartTs;
-                        //data.ConfgrtnEffEndTs = item.ConfgrtnEffEndTs;
+                        data.ColmnName = item.ColmnName;
+                        data.DataType = item.DataType;
+                        data.ColmnTrnsfrmtnStep1 = item.ColmnTrnsfrmtnStep1;
+                        data.GenrtIdInd = item.GenrtIdInd;
+                        data.IdGenrtnStratgyId = item.IdGenrtnStratgyId;
+                        data.Type2StartInd = item.Type2StartInd;
+                        data.Type2EndInd = item.Type2EndInd;
+                        data.CurrRowInd = item.CurrRowInd;
+                        data.Pattern1 = item.Pattern1;
+                        data.Pattern2 = item.Pattern2;
+                        data.Pattern3 = item.Pattern3;
+                        data.LadInd = item.LadInd;
+                        data.JoinDupsInd = item.JoinDupsInd;
                         await _tableColConfigurationRepository.Update(_mapper.Map<Domain.Entities.TableColConfiguration>(data));
-
                     }
                     else
                     {

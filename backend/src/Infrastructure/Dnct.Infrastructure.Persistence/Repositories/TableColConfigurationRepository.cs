@@ -149,9 +149,7 @@ public class TableColConfigurationRepository : ITableColConfigurationRepository
                     pattern2 = @Pattern2,
                     pattern3 = @Pattern3,
                     lad_ind = @LadInd,
-                    join_dups_ind = @JoinDupsInd,
-                    confgrtn_eff_start_ts = @ConfgrtnEffStartTs,
-                    confgrtn_eff_end_ts = @ConfgrtnEffEndTs
+                    join_dups_ind = @JoinDupsInd
                 WHERE tbl_col_confgrtn_id = @TblColConfgrtnId AND tbl_confgrtn_id = 11";
         using (var conn = new NpgsqlConnection(_connectionString))
         {

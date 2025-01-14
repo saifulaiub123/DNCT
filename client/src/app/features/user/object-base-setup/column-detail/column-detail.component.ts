@@ -43,7 +43,8 @@ export class ColumnDetailComponent extends MockAPIClass {
   selectedRow: FormGroup | null = null;
   selectedRows: FormGroup | null = null;
   tableConfigFormGroup: FormGroup;
-
+  isValidatedSyntax: boolean = false;
+  validatedData: any[] = [];
   //injectors
   private snackBar = inject(MatSnackBar);
   private _toaster = inject(ToastrService);
@@ -111,19 +112,19 @@ export class ColumnDetailComponent extends MockAPIClass {
     const newRow = this.fb.group({
       tblColConfgrtnId: new FormControl(-1),
       tblConfgrtnId: new FormControl(this.dataSource.data.length + 1),
-      colmnName: new FormControl('', [Validators.maxLength(100)]),
-      dataType: new FormControl(''),
-      colmnTrnsfrmtnStep1: new FormControl(''),
-      genrtIdInd: new FormControl('', Validators.maxLength(1)),
-      idGenrtnStratgyId: new FormControl(0),
-      type2StartInd: new FormControl(0),
-      type2EndInd: new FormControl(0),
-      currRowInd: new FormControl(0),
-      pattern1: new FormControl('', Validators.maxLength(1000)),
-      pattern2: new FormControl('', Validators.maxLength(1000)),
-      pattern3: new FormControl('', Validators.maxLength(1)),
-      ladInd: new FormControl(0),
-      joinDupsInd: new FormControl(0),
+      colmnName: new FormControl(null, [Validators.maxLength(100)]),
+      dataType: new FormControl(null),
+      colmnTrnsfrmtnStep1: new FormControl(null),
+      genrtIdInd: new FormControl(null, Validators.maxLength(1)),
+      idGenrtnStratgyId: new FormControl(null),
+      type2StartInd: new FormControl(null),
+      type2EndInd: new FormControl(null),
+      currRowInd: new FormControl(null),
+      pattern1: new FormControl(null, Validators.maxLength(1000)),
+      pattern2: new FormControl(null, Validators.maxLength(1000)),
+      pattern3: new FormControl(null, Validators.maxLength(1)),
+      ladInd: new FormControl(null),
+      joinDupsInd: new FormControl(null),
       confgrtnEffStartTs: new FormControl(new Date()),
       confgrtnEffEndTs: new FormControl(new Date()),
       // Additional fields for editable form purposes
@@ -210,6 +211,7 @@ export class ColumnDetailComponent extends MockAPIClass {
     } else {
       this._toaster.error('Can save when any change happened in table', 'Error');
     }
+    this.fetchAllTableConfigs();
   }
   removeSelectedRow(): void {
     if (!this.selectedRow) {
@@ -287,6 +289,51 @@ export class ColumnDetailComponent extends MockAPIClass {
     //   });
     //   this.dataSource._updateChangeSubscription();
     // });
+
+
+    const rows = (this.tableConfigFormGroup.get('tableConfig') as FormArray).value;
+    const mappedRows: TableConfiguration[] = rows.map((row: TableConfiguration) => {
+      return {
+        tblColConfgrtnId: row.tblColConfgrtnId,
+        tblConfgrtnId: row.tblConfgrtnId,
+        colmnName: row.colmnName,
+        dataType: row.dataType,
+        colmnTrnsfrmtnStep1: row.colmnTrnsfrmtnStep1,
+        genrtIdInd: row.genrtIdInd,
+        idGenrtnStratgyId: row.idGenrtnStratgyId,
+        type2StartInd: row.type2StartInd,
+        type2EndInd: row.type2EndInd,
+        currRowInd: row.currRowInd,
+        pattern1: row.pattern1,
+        pattern2: row.pattern2,
+        pattern3: row.pattern3,
+        ladInd: row.ladInd,
+        joinDupsInd: row.joinDupsInd,
+        confgrtnEffStartTs: row.confgrtnEffStartTs,
+        confgrtnEffEndTs: row.confgrtnEffEndTs
+      }
+    });
+    const payload: { data: TableConfiguration[] } = {
+      data: mappedRows,
+    }
+
+    this.tableConfigService.validateSystax(payload).pipe(first()).subscribe(res => {
+      if (res.isSuccess) {
+        if (res.data.errorMessage) {
+          this._toaster.error(res.data.errorMessage, 'Error');
+        } else {
+          this.isValidatedSyntax = true;
+          this._toaster.success(res.message, 'Success');
+        }
+      }
+    })
+  }
+  getRowColor(tblColConfgrtnId: number): string {
+    const validation = this.validatedData.find((v: any) => v.key === tblColConfgrtnId);
+    if (validation) {
+      return validation.value === 1 ? 'green' : 'red';
+    }
+    return 'transparent'; // Default background color
   }
   clearAllTransformations(): void {
     this.dataSource.data.forEach((element: FormGroup) => {

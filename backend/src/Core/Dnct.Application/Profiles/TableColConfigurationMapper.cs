@@ -11,8 +11,8 @@ namespace Dnct.Application.Profiles
     {
         public TableColConfigurationMapper()
         {
-            CreateMap<TableColConfigurationModel, GetAllTableColConfigResponse>();
-            CreateMap<TableColConfigurationModel, TableColConfiguration>();
+            CreateMap<TableColConfigurationModel, GetAllTableColConfigResponse>().ReverseMap();
+            CreateMap<TableColConfigurationModel, TableColConfiguration>().ReverseMap();
         }
     }
 }

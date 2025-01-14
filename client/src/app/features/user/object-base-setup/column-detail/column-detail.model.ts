@@ -1,23 +1,23 @@
 export interface TableConfiguration {
-  tblColConfgrtnId: number;
-  tblConfgrtnId: number;
-  colmnName: string;
-  dataType: string;
-  colmnTrnsfrmtnStep1: string;
-  genrtIdInd: string;
-  idGenrtnStratgyId: number;
-  type2StartInd: number;
-  type2EndInd: number;
-  currRowInd: number;
-  pattern1: string;
-  pattern2: string;
-  pattern3: string;
-  ladInd: number;
-  joinDupsInd: number;
+  tblColConfgrtnId: number | null;
+  tblConfgrtnId: number | null;
+  colmnName: string | null;
+  dataType: string | null;
+  colmnTrnsfrmtnStep1: string | null;
+  genrtIdInd: string | null;
+  idGenrtnStratgyId: number | null;
+  type2StartInd: number | null;
+  type2EndInd: number | null;
+  currRowInd: number | null;
+  pattern1: string | null;
+  pattern2: string | null;
+  pattern3: string | null;
+  ladInd: number | null;
+  joinDupsInd: number | null;
   confgrtnEffStartTs: Date;
   confgrtnEffEndTs: Date;
-  status?: string;
-  validationResult?: number;
-  action?: string,
+  status?: string | null;
+  validationResult?: number | null;
+  action?: string | null,
   isEditable: boolean,
 }
