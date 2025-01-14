@@ -70,6 +70,7 @@ export class UserQueryTableComponent extends MockAPIClass {
   selectedQuery: string = '';
   queryId!: number;
   dataSource = new MatTableDataSource<UserQuery>()
+
   // injectables
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
@@ -101,7 +102,7 @@ export class UserQueryTableComponent extends MockAPIClass {
     const payload: CreateUpdateQuery = {
       userQueryId: _row.userQueryId,
       tableConfigId: _row.tableConfigId,
-      userQuery: _row.userQuery,
+      userQuery: this.selectedQuery,
       baseQueryIndicator: _row.baseQueryIndicator,
       queryOrderIndicator: _row.queryOrderIndicator,
     }
@@ -112,7 +113,10 @@ export class UserQueryTableComponent extends MockAPIClass {
       return EMPTY
     })).subscribe((res: ServerResponse<CreateUpdateQuery>) => {
       this._ngxService.stop();
-      if (res) {console.log('create update query ===>>>', res); this.fetchAllUserQueries();}
+      if (res) {
+        console.log('create update query ===>>>', res);
+        this.refreshData();
+      }
     })
   }
 

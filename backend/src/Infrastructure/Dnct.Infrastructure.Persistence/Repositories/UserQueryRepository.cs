@@ -108,7 +108,7 @@ namespace Dnct.Infrastructure.Persistence.Repositories
                     qry_order_ind = @QueryOrderIndicator,
                     row_instr_ts = @RowInsertTimestamp
                 WHERE
-                    usr_qry_id = @UserQueryId;
+                    usr_qry_id = @UserQueryId
                 AND table_config_id = @TableConfigId
             ";
             using (var conn = new NpgsqlConnection(_connectionString))
