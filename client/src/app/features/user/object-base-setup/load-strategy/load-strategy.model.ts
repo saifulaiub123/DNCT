@@ -12,8 +12,8 @@ export interface RunTimeParameter {
     table_config_id: number,
     rtm_parmtrs_mstr_id: number,
     action?: 'existingRecord',
-    isEditable?: false,
-    isNewRow?: false
+    isEditable?: boolean,
+    isEditing?: boolean
 }
 export interface RunTimeInstance {
     isSelected: boolean;
@@ -22,8 +22,8 @@ export interface RunTimeInstance {
     overlap: string | null;
     tbl_confgrtn_id: number
     action?: 'existingRecord',
-    isEditable?: false,
-    isNewRow?: false
+    isEditable?: boolean,
+    isEditing?: boolean
 }
 
 export interface Create {

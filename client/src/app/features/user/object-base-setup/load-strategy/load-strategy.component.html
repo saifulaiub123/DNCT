@@ -2,19 +2,20 @@
   <div class="col-6">
     <!-- load strtegy table -->
     <div class="" style="height: 50vh;">
-      <table mat-table [dataSource]="loadStrategyTabledataSource" matSort multiTemplateDataRows>
+      <table mat-table [dataSource]="loadStrategyDatasource" matSort multiTemplateDataRows>
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef>
             Select
           </th>
           <td mat-cell *matCellDef="let row">
-            <mat-checkbox [(ngModel)]="row.isSelected" (change)="onLoadStragtegyRowSelect(row)"></mat-checkbox>
+           
+            <mat-checkbox [(ngModel)]="row.isSelected" (change)="onLoadStragtegyRowSelect($event,row)"></mat-checkbox>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="loadStrategy">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Load Strategy</th>
-          <td mat-cell *matCellDef="let row">{{ row.loadStrategyName }}</td>
+          <td mat-cell *matCellDef="let element" >{{element.loadStrategyName }}</td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="loadStrategyDisplayedColumns"></tr>
@@ -25,7 +26,7 @@
     <div class="" style="height: 50vh;">
       <form [formGroup]="instanceNameForm">
         <ng-container formArrayName="instanceName">
-          <table mat-table [dataSource]="instanceNameTabledataSource" matSort >
+          <table mat-table [dataSource]="instanceNameDatasource" matSort >
             <ng-container matColumnDef="select">
               <th mat-header-cell *matHeaderCellDef>
                 Select
@@ -41,6 +42,7 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Instance Name</th>
               <td mat-cell *matCellDef="let element;let i = index" [formGroup]="element">
                 {{instanceNameForm.get('instanceName')?.value[i]?.instanceName}}
+                
               </td>
             </ng-container>
             <ng-container matColumnDef="order">
@@ -105,7 +107,7 @@
     <div class="" style="height: 50vh;">
       <form [formGroup]="parameterForm">
         <ng-container formArrayName="parameters">
-          <table mat-table [dataSource]="parameterTabledataSource" matSort>
+          <table mat-table [dataSource]="parameterDatasource" matSort>
             <!-- parameter -->
             <ng-container matColumnDef="parameter">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Parameter</th>
@@ -136,18 +138,18 @@
                 @if(parameterForm.get('parameters')?.value[i]?.isEditable){
                 <div class="d-flex gap-10">
                   <button mat-icon-button class="material-icons app-toolbar-menu cancel-button"
-                    matTooltip="Cancel Changes" color="warn" (click)="CancelSVO(parameterForm,i)">
+                    matTooltip="Cancel Changes" color="warn" (click)="cancelParameter(parameterForm,i)">
                     <mat-icon>cancel</mat-icon>
                   </button>
                   <button mat-icon-button class="material-icons app-toolbar-menu save-button" matTooltip="Save Changes"
-                    (click)="SaveVO(parameterForm,i)" color="primary">
+                    (click)="saveParamter(parameterForm,i)" color="primary">
                     <mat-icon>check_circle</mat-icon>
                   </button>
                 </div>
                 }
                 @if(!parameterForm.get('parameters')?.value[i]?.isEditable){
                 <button mat-icon-button class="material-icons app-toolbar-menu save-button" matTooltip="Edit"
-                  color="primary" (click)="EditSVO(parameterForm,i)">
+                  color="primary" (click)="editParameter(parameterForm,i)">
                   <i-tabler name="edit" class="icon-18"></i-tabler>
                 </button>
                 }

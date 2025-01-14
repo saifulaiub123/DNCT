@@ -1,0 +1,39 @@
+::ng-deep {
+    .mat-mdc-table {
+        .mat-mdc-row{
+            height: 60px;
+        }
+        .mat-sort-header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .mat-sort-header-content.ng-tns-c1137168538-9 {
+                width: 70px;
+            }
+        }
+        .mat-mdc-cell{
+            .mdc-icon-button{
+                height: 25px;
+                width: 27px;
+                padding: 0px;
+            }
+
+        }
+    }
+
+    .mat-mdc-form-field {
+        .mat-mdc-text-field-wrapper {
+            height: 36px;
+            width: 120px;
+        }
+
+        .mat-mdc-form-field-infix {
+            padding-top: 6px !important;
+        }
+
+        .mat-mdc-form-field-subscript-wrapper {
+            display: none !important;
+        }
+    }
+}
