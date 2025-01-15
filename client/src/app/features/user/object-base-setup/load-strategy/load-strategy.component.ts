@@ -82,7 +82,7 @@ export class LoadStrategyComponent extends MockAPIClass {
     }
     })
   }
-  
+
   runtimeParameterFormInit(_parameters: RunTimeParameter[]): void {
     this.parameterForm = this.fb.group({
       parameters: this.fb.array(_parameters.map(row => this.createParameterForm(row)))
@@ -91,17 +91,17 @@ export class LoadStrategyComponent extends MockAPIClass {
     this.parameterDatasource = new MatTableDataSource((this.parameterForm.get('parameters') as FormArray)?.controls);
   }
   loadRunTimeParameter():void{
-    this.ngxLoaderService.start();
+    // this.ngxLoaderService.start();
     const tableConfigId = this.selectedLoadStragtegyRow?.tblConfigId;
-    const parameter = tableConfigId ? `?TableConfigId=${tableConfigId}` : ''; 
-    this.loadStrategyService.fetchAll(runtimeParameterController, parameter).pipe(first(), catchError(err => {
-      this.ngxLoaderService.stop();
-      this.toastrService.error(`error Occurred ${err.message}`, err.statusText);
-      return EMPTY;
-    })).subscribe(res => {
-      this.ngxLoaderService.stop();
-      if (res.isSuccess) {this.parameterDatasource = res.data; this.runtimeParameterFormInit(res.data);}
-    })
+    const parameter = tableConfigId ? `?TableConfigId=${tableConfigId}` : '';
+    // this.loadStrategyService.fetchAll(runtimeParameterController, parameter).pipe(first(), catchError(err => {
+    //   this.ngxLoaderService.stop();
+    //   this.toastrService.error(`error Occurred ${err.message}`, err.statusText);
+    //   return EMPTY;
+    // })).subscribe(res => {
+    //   this.ngxLoaderService.stop();
+    //   if (res.isSuccess) {this.parameterDatasource = res.data; this.runtimeParameterFormInit(res.data);}
+    // })
   }
   createParameterForm(parameter: RunTimeParameter): FormGroup {
     return this.fb.group({
@@ -153,7 +153,7 @@ export class LoadStrategyComponent extends MockAPIClass {
   onSaveRuntime(): void {
     if (!this.selectedLoadStragtegyRow) {
       this.snackBar.open('Row from load strategy table should be selected!', 'Close', {
-        duration: 3000, 
+        duration: 3000,
         verticalPosition: 'top'
       });
       return
@@ -214,12 +214,12 @@ export class LoadStrategyComponent extends MockAPIClass {
         if (item !== _row) {
           item.isSelected = false;
         }
-      }); 
+      });
       this.loadRunTimeParameter();
       this.loadRunTimeParameter();
     }
   }
- 
+
   onInstanceNameRowSelect(_row: FormGroup, _event: MatCheckboxChange, _index: number): void {
     if (_row.get('order')?.value && _row.get('overlap')?.value) {
       _row.patchValue({ isSelected: _event.checked });
@@ -294,7 +294,7 @@ export const Parameter: RunTimeParameter[] = [
     table_config_id: 1003,
     rtm_parmtrs_mstr_id: 1003,
     isEditable: false,
-    isEditing: false 
+    isEditing: false
   },
   {
     value: 0,
@@ -303,7 +303,7 @@ export const Parameter: RunTimeParameter[] = [
     table_config_id: 1003,
     rtm_parmtrs_mstr_id: 1003,
     isEditable: false,
-    isEditing: false 
+    isEditing: false
   }
 ]
 export const InstanceName: RunTimeInstance[] = [
