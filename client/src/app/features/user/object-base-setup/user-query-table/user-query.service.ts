@@ -13,7 +13,7 @@ export class UserQueryService extends BaseApiService{
        return  this.get(action);
     }
     autoPopulate():Observable<ServerResponse<AutoPopulate>>{
-        const action =`${controller}/${ApiEndpoints.userQuery.autoPopulate}`;
+        const action =`${controller}/${ApiEndpoints.userQuery.autoPopulate}?tableConfigId=100&queryId=50`;
        return  this.get(action);
     }
     validateSyntax():Observable<ServerResponse<ValidateSyntax>>{

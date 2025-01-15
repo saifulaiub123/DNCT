@@ -101,7 +101,7 @@ export class UserQueryTableComponent extends MockAPIClass {
     }
     const payload: CreateUpdateQuery = {
       userQueryId: _row.userQueryId,
-      tableConfigId: _row.tableConfigId,
+      tableConfigId: _row.tableConfigId == 0 ? 100 : _row.tableConfigId,
       userQuery: this.selectedQuery,
       baseQueryIndicator: _row.baseQueryIndicator,
       queryOrderIndicator: _row.queryOrderIndicator,
@@ -114,6 +114,7 @@ export class UserQueryTableComponent extends MockAPIClass {
     })).subscribe((res: ServerResponse<CreateUpdateQuery>) => {
       this._ngxService.stop();
       if (res) {
+        this._toastr.success('Saved successfully', 'Success');
         console.log('create update query ===>>>', res);
         this.refreshData();
       }
@@ -130,7 +131,9 @@ export class UserQueryTableComponent extends MockAPIClass {
       return EMPTY
     })).subscribe((res: ServerResponse<any>) => {
       this._ngxService.stop();
-      if (res) {console.log('delete query ===>>>', res)
+      if (res) {
+        this._toastr.success('Removed successfully', 'Success');
+        console.log('delete query ===>>>', res)
         this.fetchAllUserQueries();
       }
     })

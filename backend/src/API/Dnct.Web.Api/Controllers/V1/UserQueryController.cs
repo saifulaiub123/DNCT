@@ -26,7 +26,7 @@ namespace Dnct.Web.Api.Controllers.V1
             return base.OperationResult(command);
         }
         [HttpGet("autoPopulate")]
-        public async Task<JsonResult> AutoPopulate()
+        public async Task<JsonResult> AutoPopulate([FromQuery] int tableConfigId, [FromQuery] int queryId)
         {
             var records = new List<SqlRecord>
             {

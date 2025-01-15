@@ -111,7 +111,7 @@ export class ColumnDetailComponent extends MockAPIClass {
     // create new row with default values
     const newRow = this.fb.group({
       tblColConfgrtnId: new FormControl(-1),
-      tblConfgrtnId: new FormControl(this.dataSource.data.length + 1),
+      tblConfgrtnId: new FormControl(11),
       colmnName: new FormControl(null, [Validators.maxLength(100)]),
       dataType: new FormControl(null),
       colmnTrnsfrmtnStep1: new FormControl(null),
