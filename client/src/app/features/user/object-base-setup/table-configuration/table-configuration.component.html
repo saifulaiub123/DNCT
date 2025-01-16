@@ -1,0 +1,22 @@
+<div class="col-lg-12">
+  <mat-card class="b-1 shadow-none">
+    <mat-card-content class="b-t-1">
+      <mat-tab-group [selectedIndex]="selectedIndex" animationDuration="0ms">
+        <mat-tab *ngFor="let label of tabs; let i = index">
+          <ng-template mat-tab-label>
+            {{ label }}
+            <button (click)="removeTab(i)" mat-icon-button>
+              <mat-icon>close</mat-icon>
+            </button>
+          </ng-template>
+          <div class="bg-light-primary mat-body-1 p-16 rounded m-t-12">
+            <app-object-setup-form [databaseSourceId] = "ids[i]"></app-object-setup-form>
+            <!-- <app-query-setup-form></app-query-setup-form> -->
+             <!-- <app-new-object-setup></app-new-object-setup> -->
+          </div>
+
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>

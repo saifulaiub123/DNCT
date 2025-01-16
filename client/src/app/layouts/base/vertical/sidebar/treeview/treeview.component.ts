@@ -217,13 +217,18 @@ export class SidebarTreeviewComponent implements OnInit {
     {
       this._commonService.GetTableInstanceByDatabaseSourceId(node.id).subscribe((res: ServerResponse<TreeViewResponse>)=>{
         this.addChildrenToNodeTree(node, res);
+
+        let uniqueName = `${node.id}-${node.name.toLowerCase()}`;
+        this._treeViewStateService.clickTableNode(node.id, uniqueName);
+        this._router.navigate(['/user/object-setup/new-object-setup']);
+
       })
     }
     else if(node.nodeType==='TableInstance')
     {
       let uniqueName = `${node.id}-${node.name.toLowerCase()}`;
       this._treeViewStateService.clickTableInstance(node.id, uniqueName);
-      this._router.navigate(['/user/object-setup/new-object-setup']);
+      this._router.navigate(['/user/table-instance-setup']);
     }
   }
   addChildrenToNodeTree(node: FlatNode, res: ServerResponse<TreeViewResponse>)

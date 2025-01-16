@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve --port 5200",
     "build": "ng build",
+    "clear-cache": "ng serve --clear-cache",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

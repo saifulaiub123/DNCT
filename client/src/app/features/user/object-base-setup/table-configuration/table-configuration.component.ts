@@ -1,38 +1,24 @@
-import { CommonModule, DatePipe } from '@angular/common';
-import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
-import { MatTabsModule } from '@angular/material/tabs';
 import { TablerIconsModule } from 'angular-tabler-icons';
+import { TreeViewStateService } from 'src/app/core/shared/state-service/tree-view-state.service';
 import { MaterialModule } from 'src/app/material.module';
 import { ObjectSetupFormComponent } from '../Component/object-setup-form/object-setup-form.component';
-import { TreeViewStateService } from 'src/app/core/shared/state-service/tree-view-state.service';
-import { QuerySetupFormComponent } from "../Component/query-setup-form/query-setup-form.component";
-
-
-export interface productsData {
-  id: number;
-  columnName: string;
-  type2: boolean;
-  pkColumn: boolean;
-}
-
 
 @Component({
-  selector: 'app-new-object-setup',
+  selector: 'app-table-configuration',
   standalone: true,
   imports: [ObjectSetupFormComponent, MaterialModule, TablerIconsModule, MatFormFieldModule, MatInputModule, MatRadioModule, MatCheckboxModule, MatDatepickerModule, MatTableModule, CommonModule],
-  templateUrl: './new-object-setup.component.html',
-  styleUrl: './new-object-setup.component.scss'
+  templateUrl: './table-configuration.component.html',
+  styleUrl: './table-configuration.component.scss'
 })
-export class NewObjectSetupComponent implements OnInit {
+export class TableConfigurationComponent implements OnInit {
 
   selectedIndex = 0;
 
@@ -76,5 +62,3 @@ export class NewObjectSetupComponent implements OnInit {
     }
   }
 }
-
-

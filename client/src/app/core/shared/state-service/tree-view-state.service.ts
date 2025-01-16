@@ -8,6 +8,21 @@ import {  map } from 'rxjs/operators';
 })
 export class TreeViewStateService {
 
+
+  //Table State
+  private isTableNodeClicked = new BehaviorSubject<any>(null);
+  public $isTableNodeClicked = this.isTableNodeClicked.asObservable();
+
+  public clickTableNode(id: number, name: string) {
+    this.isTableNodeClicked.next({id : id, name: name});
+  }
+  public clickTableNodeReset() {
+    this.isTableNodeClicked.next(null);
+  }
+
+
+
+  //TableInstance State
   private isTableInstanceClicked = new BehaviorSubject<any>(null);
   public $isTableInstanceClicked = this.isTableInstanceClicked.asObservable();
 
@@ -17,4 +32,8 @@ export class TreeViewStateService {
   public clickTableInstanceReset() {
     this.isTableInstanceClicked.next(null);
   }
+
+
+
+
 }
