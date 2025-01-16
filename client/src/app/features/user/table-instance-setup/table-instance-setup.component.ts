@@ -11,11 +11,13 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { TreeViewStateService } from 'src/app/core/shared/state-service/tree-view-state.service';
 import { UserQueryTableComponent } from "./user-query-table/user-query-table.component";
+import { ColumnDetailComponent } from "./column-detail/column-detail.component";
+import { LoadStrategyComponent } from "./load-strategy/load-strategy.component";
 
 @Component({
   selector: 'app-table-instance-setup',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, TablerIconsModule, MatTabsModule, MatFormFieldModule, MatSlideToggleModule, MatSelectModule, MatInputModule, MatButtonModule, UserQueryTableComponent],
+  imports: [CommonModule, MatCardModule, MatIconModule, TablerIconsModule, MatTabsModule, MatFormFieldModule, MatSlideToggleModule, MatSelectModule, MatInputModule, MatButtonModule, UserQueryTableComponent, ColumnDetailComponent, LoadStrategyComponent],
   templateUrl: './table-instance-setup.component.html',
   styleUrl: './table-instance-setup.component.scss'
 })

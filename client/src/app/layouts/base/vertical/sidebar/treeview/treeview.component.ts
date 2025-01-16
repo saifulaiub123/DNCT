@@ -220,7 +220,7 @@ export class SidebarTreeviewComponent implements OnInit {
 
         let uniqueName = `${node.id}-${node.name.toLowerCase()}`;
         this._treeViewStateService.clickTableNode(node.id, uniqueName);
-        this._router.navigate(['/user/object-setup/new-object-setup']);
+        this._router.navigate(['/user/object-setup/table-configurations']);
 
       })
     }

@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MaterialModule } from 'src/app/material.module';
 import { TableConfiguration } from './column-detail.model';
-import { MockAPIClass } from '../../table-instance-setup/user-query-table/user-query-table.component';
+import { MockAPIClass } from '../user-query-table/user-query-table.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, EMPTY, first } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';

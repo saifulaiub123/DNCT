@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { MaterialModule } from 'src/app/material.module';
 import { RunTimeInstance, LoadStrategy, RunTimeParameter } from './load-strategy.model';
 import { MatTableDataSource } from '@angular/material/table';
-import { MockAPIClass } from '../../table-instance-setup/user-query-table/user-query-table.component';
+import { MockAPIClass } from '../user-query-table/user-query-table.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';

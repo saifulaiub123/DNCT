@@ -1,85 +1,109 @@
-<div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
-      <!-- Select Checkbox -->
-      <ng-container matColumnDef="Select">
-        <th mat-header-cell *matHeaderCellDef>
-           Select
-        </th>
-        <td mat-cell *matCellDef="let row">
-          <mat-checkbox [(ngModel)]="row.isSelected" (change)="onRowSelect(row)"></mat-checkbox>
-        </td>
-      </ng-container>
 
-      <!-- Query ID -->
-      <ng-container matColumnDef="Query Id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Query Id</th>
-        <td mat-cell *matCellDef="let row">{{ row.userQueryId}}</td>
-      </ng-container>
+<mat-card class="cardWithShadow theme-card">
+  <mat-card-header>
+    <mat-card-title class="m-b-0">Default Form</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="b-t-1">
+    <form>
+      <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
+        <!-- Select Checkbox -->
+        <ng-container matColumnDef="Select">
+          <th mat-header-cell *matHeaderCellDef>
+             Select
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox [(ngModel)]="row.isSelected" (change)="onRowSelect(row)"></mat-checkbox>
+          </td>
+        </ng-container>
 
-      <!-- Full Query -->
-      <ng-container matColumnDef="Full Query">
-        <th mat-header-cell *matHeaderCellDef>Full Query</th>
-        <td mat-cell *matCellDef="let row">
-          {{ row.userQuery}}
-        </td>
-      </ng-container>
+        <!-- Query ID -->
+        <ng-container matColumnDef="Query Id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Query Id</th>
+          <td mat-cell *matCellDef="let row">{{ row.userQueryId}}</td>
+        </ng-container>
 
-      <!-- Seed Query -->
-      <ng-container matColumnDef="Seed Query">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Seed Query</th>
-        <td mat-cell *matCellDef="let row">{{ row.baseQueryIndicator}}</td>
-      </ng-container>
+        <!-- Full Query -->
+        <ng-container matColumnDef="Full Query">
+          <th mat-header-cell *matHeaderCellDef>Full Query</th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.userQuery}}
+          </td>
+        </ng-container>
 
-      <!-- Qty Order -->
-      <ng-container matColumnDef="Qty Order">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Qty Order</th>
-        <td mat-cell *matCellDef="let row">{{ row.queryOrderIndicator }}</td>
-      </ng-container>
+        <!-- Seed Query -->
+        <ng-container matColumnDef="Seed Query">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Seed Query</th>
+          <td mat-cell *matCellDef="let row">{{ row.baseQueryIndicator}}</td>
+        </ng-container>
 
-      <!-- Save Button -->
-      <ng-container matColumnDef="Save">
-        <th mat-header-cell *matHeaderCellDef>Save</th>
-        <td mat-cell *matCellDef="let row">
-            <button mat-flat-button color="primary" class="d-block w-100" (click)="saveRow(row)">
-                Save
-              </button>
-        </td>
-      </ng-container>
+        <!-- Qty Order -->
+        <ng-container matColumnDef="Qty Order">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Qty Order</th>
+          <td mat-cell *matCellDef="let row">{{ row.queryOrderIndicator }}</td>
+        </ng-container>
 
-      <!-- Remove Button -->
-      <ng-container matColumnDef="Remove">
-        <th mat-header-cell *matHeaderCellDef>Remove</th>
-        <td mat-cell *matCellDef="let row">
-            <button mat-flat-button class="d-block w-100 bg-error text-white"(click)="removeRow(row)">
-                Remove
-              </button>
-        </td>
-      </ng-container>
+        <!-- Save Button -->
+        <ng-container matColumnDef="Save">
+          <th mat-header-cell *matHeaderCellDef>Save</th>
+          <td mat-cell *matCellDef="let row">
+              <button mat-flat-button color="primary" class="d-block w-100" (click)="saveRow(row)">
+                  Save
+                </button>
+          </td>
+        </ng-container>
 
-      <!-- Validation Result -->
-      <ng-container matColumnDef="Validation Result">
-        <th mat-header-cell *matHeaderCellDef>Validation Result</th>
-        <td mat-cell *matCellDef="let row">{{ row.rowInsertTimestamp   }}</td>
-      </ng-container>
+        <!-- Remove Button -->
+        <ng-container matColumnDef="Remove">
+          <th mat-header-cell *matHeaderCellDef>Remove</th>
+          <td mat-cell *matCellDef="let row">
+              <button mat-flat-button class="d-block w-100 bg-error text-white"(click)="removeRow(row)">
+                  Remove
+                </button>
+          </td>
+        </ng-container>
 
-      <!-- Table Header -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <!-- Table Rows -->
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-</div>
+        <!-- Validation Result -->
+        <ng-container matColumnDef="Validation Result">
+          <th mat-header-cell *matHeaderCellDef>Validation Result</th>
+          <td mat-cell *matCellDef="let row">{{ row.rowInsertTimestamp   }}</td>
+        </ng-container>
 
-  <div class="action-bar m-t-30 d-flex gap-8">
-    <button mat-raised-button color="primary" (click)="addNewQuery()">Add New Query</button>
-    <button mat-raised-button color="primary" (click)="refreshData()">Refresh</button>
-    <button mat-raised-button color="primary" (click)="autoPopulate()">Auto Populate Columns</button>
-    <button mat-raised-button color="primary" (click)="validateQuery()">Validate Queries Syntax</button>
-  </div>
+        <!-- Table Header -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <!-- Table Rows -->
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
 
-  <div class="m-t-30">
-    <mat-label>Displaying User Query Id: {{queryId}}</mat-label>
-    <mat-form-field appearance="outline" class="w-100 m-t-10">
-        <mat-label>Query String</mat-label>
-      <textarea matInput [(ngModel)]="selectedQuery" rows="10"></textarea>
+
+      <div class="action-bar m-t-30 d-flex gap-8">
+        <button mat-raised-button color="primary" (click)="addNewQuery()">Add New Query</button>
+        <button mat-raised-button color="primary" (click)="refreshData()">Refresh</button>
+        <button mat-raised-button color="primary" (click)="autoPopulate()">Auto Populate Columns</button>
+        <button mat-raised-button color="primary" (click)="validateQuery()">Validate Queries Syntax</button>
+      </div>
+
+      <mat-label>Displaying User Query Id: {{queryId}}</mat-label>
+    <mat-form-field appearance="outline" class="w-100" color="primary">
+      <textarea matInput rows="10" [(ngModel)]="selectedQuery"></textarea>
     </mat-form-field>
-  </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+
+<!-- <div class="mat-elevation-z8">
+
+</div> -->
+
+
+<!--
+   <div class="m-t-30">
+    <mat-label>Displaying User Query Id: {{queryId}}</mat-label>
+    <mat-form-field appearance="outline" class="w-100" color="primary">
+      <textarea matInput rows="5"></textarea>
+    </mat-form-field>
+     <mat-form-field appearance="outline" class="w-100 m-t-10">
+        <mat-label>Query String</mat-label>
+      <textarea matInput [(ngModel)]="selectedQuery" rows="10" cols="100"></textarea>
+    </mat-form-field>
+  </div>  -->

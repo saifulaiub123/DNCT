@@ -9,7 +9,7 @@ import { MatTableModule } from '@angular/material/table';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { TreeViewStateService } from 'src/app/core/shared/state-service/tree-view-state.service';
 import { MaterialModule } from 'src/app/material.module';
-import { ObjectSetupFormComponent } from '../Component/object-setup-form/object-setup-form.component';
+import { ObjectSetupFormComponent } from './object-setup-form/object-setup-form.component';
 
 @Component({
   selector: 'app-table-configuration',
