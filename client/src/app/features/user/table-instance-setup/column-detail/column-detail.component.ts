@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MaterialModule } from 'src/app/material.module';
 import { TableConfiguration } from './column-detail.model';
@@ -23,6 +23,9 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './column-details.component.scss',
 })
 export class ColumnDetailComponent extends MockAPIClass {
+
+  @Input() tableConfigId : number = 0;
+
   displayedColumns: string[] = [
     'columnId',
     'columnName',
@@ -68,7 +71,7 @@ export class ColumnDetailComponent extends MockAPIClass {
   }
   fetchAllTableConfigs(): void {
     this._ngxService.start();
-    this.tableConfigService.fetchAll().pipe(first(), catchError((err) => {
+    this.tableConfigService.fetchAll(this.tableConfigId).pipe(first(), catchError((err) => {
       this._toaster.error('Error Occured' + err, 'Error')
       return EMPTY;
     })).subscribe((res: ServerResponse<TableConfiguration>) => {
@@ -111,7 +114,7 @@ export class ColumnDetailComponent extends MockAPIClass {
     // create new row with default values
     const newRow = this.fb.group({
       tblColConfgrtnId: new FormControl(-1),
-      tblConfgrtnId: new FormControl(11),
+      tblConfgrtnId: new FormControl(this.tableConfigId),
       colmnName: new FormControl(null, [Validators.maxLength(100)]),
       dataType: new FormControl(null),
       colmnTrnsfrmtnStep1: new FormControl(null),

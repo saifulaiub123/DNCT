@@ -9,7 +9,7 @@ namespace Dnct.Application.Features.TableColConfiguration.Query.GetAllTableColCo
 {
     public class GetAllTableColConfigQuery : IRequest<OperationResult<List<GetAllTableColConfigResponse>>>
     {
-
+        public int TableConfigId { get; set; }
     };
 
 
@@ -32,9 +32,7 @@ namespace Dnct.Application.Features.TableColConfiguration.Query.GetAllTableColCo
 
         public async ValueTask<OperationResult<List<GetAllTableColConfigResponse>>> Handle(GetAllTableColConfigQuery request, CancellationToken cancellationGetServerInfo)
         {
-            var result = new List<GetAllTableColConfigResponse>();
-
-            var data = (await _tableColConfigurationRepository.GetAll()).ToList();
+            var data = (await _tableColConfigurationRepository.GetAll(request.TableConfigId)).ToList();
 
             var mappedResult = _mapper.Map<List<GetAllTableColConfigResponse>>(data);
 

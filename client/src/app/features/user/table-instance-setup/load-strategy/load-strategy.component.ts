@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { MaterialModule } from 'src/app/material.module';
 import { RunTimeInstance, LoadStrategy, RunTimeParameter } from './load-strategy.model';
 import { MatTableDataSource } from '@angular/material/table';
@@ -24,6 +24,10 @@ const runtimeInstanceController = 'table-instance-run-time'
   styleUrl: './load-strategy.component.scss',
 })
 export class LoadStrategyComponent extends MockAPIClass {
+
+    @Input() tableConfigId : number = 0;
+
+
   loadStrategyDisplayedColumns: string[] = [
     'select', 'loadStrategy'
   ];

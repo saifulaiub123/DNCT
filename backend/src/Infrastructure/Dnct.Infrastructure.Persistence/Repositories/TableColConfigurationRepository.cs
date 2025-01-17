@@ -22,7 +22,7 @@ public class TableColConfigurationRepository : ITableColConfigurationRepository
         _connectionString = _configuration.GetConnectionString(DbConst.DbConnectionName);
     }
 
-    public async Task<List<TableColConfigurationModel>> GetAll()
+    public async Task<List<TableColConfigurationModel>> GetAll(int tableConfigId)
     {
         var data = new List<TableColConfigurationModel>();
 
@@ -46,14 +46,16 @@ public class TableColConfigurationRepository : ITableColConfigurationRepository
                     confgrtn_eff_start_ts AS ConfgrtnEffStartTs,
                     confgrtn_eff_end_ts AS ConfgrtnEffEndTs
                 FROM codebotmstr.tbl_col_confgrtn
-                WHERE tbl_confgrtn_id = 11
+                WHERE tbl_confgrtn_id = @tableConfigId
                 and confgrtn_eff_end_ts > current_timestamp(0)
                 ORDER BY tbl_col_confgrtn_id 
                 ";
+        var parameters = new { tableConfigId = tableConfigId};
+
         using (var conn = new NpgsqlConnection(_connectionString))
         {
             await conn.OpenAsync();
-            data = (await conn.QueryAsync<TableColConfigurationModel>(sql)).ToList();
+            data = (await conn.QueryAsync<TableColConfigurationModel>(sql, parameters)).ToList();
         }
         return data;
     }
@@ -150,7 +152,7 @@ public class TableColConfigurationRepository : ITableColConfigurationRepository
                     pattern3 = @Pattern3,
                     lad_ind = @LadInd,
                     join_dups_ind = @JoinDupsInd
-                WHERE tbl_col_confgrtn_id = @TblColConfgrtnId AND tbl_confgrtn_id = 11";
+                WHERE tbl_col_confgrtn_id = @TblColConfgrtnId";
         using (var conn = new NpgsqlConnection(_connectionString))
         {
             await conn.OpenAsync();

@@ -32,7 +32,7 @@
                       Column Details
                     </ng-template>
                     <mat-card-content class="p-y-24 b-t-1">
-                      <app-column-detail></app-column-detail>
+                      <app-column-detail [tableConfigId]="tab.tableConfigId"></app-column-detail>
                     </mat-card-content>
                   </mat-tab>
                   <mat-tab>
@@ -43,14 +43,10 @@
                       Load Strategy
                     </ng-template>
                     <mat-card-content class="p-y-24 b-t-1">
-                      <app-load-strategy></app-load-strategy>
+                      <app-load-strategy [tableConfigId]= "tab.tableConfigId"></app-load-strategy>
                     </mat-card-content>
                   </mat-tab>
                 </mat-tab-group>
-                <div class="text-right p-24 p-t-0">
-                  <button mat-flat-button color="primary" class="m-r-8">Save</button>
-                  <button mat-stroked-button color="warn">Cancel</button>
-                </div>
               </mat-card-content>
             </mat-card>
           </div>

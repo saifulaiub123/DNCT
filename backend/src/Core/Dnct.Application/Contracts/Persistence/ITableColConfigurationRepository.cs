@@ -6,7 +6,7 @@ namespace Dnct.Application.Contracts.Persistence;
 
 public interface ITableColConfigurationRepository
 {
-    Task<List<TableColConfigurationModel>> GetAll();
+    Task<List<TableColConfigurationModel>> GetAll(int tableConfigId);
     Task<TableColConfigurationModel> GetById(int tblColConfigId, int tblConfigId);
     Task Create(TableColConfiguration tblColConfig);
     Task Update(TableColConfiguration tblColConfig);

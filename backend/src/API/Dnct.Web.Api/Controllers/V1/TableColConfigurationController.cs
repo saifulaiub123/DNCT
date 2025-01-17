@@ -22,12 +22,11 @@ namespace Dnct.Web.Api.Controllers.V1
     public class TableColConfigurationController(Mediator.ISender sender) : BaseController
     {
         [HttpGet("getAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] GetAllTableColConfigQuery query)
         {
-            var query = new GetAllTableColConfigQuery();
-            var command = await sender.Send(query);
+            var result = await sender.Send(query);
 
-            return base.OperationResult(command);
+            return base.OperationResult(result);
         }
         [HttpPost("createMulti")]
         public async Task<IActionResult> CreateMulti([FromBody] CreateMultipleTblColConfigCommand command)

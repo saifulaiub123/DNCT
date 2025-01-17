@@ -7,8 +7,8 @@ import {  TableConfiguration } from "./column-detail.model";
 const controller = 'table-col-config';
 @Injectable()
 export class TableConfigurationService extends BaseApiService{
-    fetchAll(): Observable<ServerResponse<TableConfiguration>>{
-        const action =`${controller}/${ApiEndpoints.tableConfiguration.getAll}`;
+    fetchAll(tableConfigId: number): Observable<ServerResponse<TableConfiguration>>{
+        const action =`${controller}/${ApiEndpoints.tableConfiguration.getAll}?tableConfigId=${tableConfigId}`;
        return  this.get(action);
     }
     createMulti(_model: {data: TableConfiguration[]}): Observable<ServerResponse<TableConfiguration>>{
