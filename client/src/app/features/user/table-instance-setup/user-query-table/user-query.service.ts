@@ -12,8 +12,8 @@ export class UserQueryService extends BaseApiService{
         const action =`${controller}/${ApiEndpoints.userQuery.getAll}?tableConfigId=${tableConfiid}`;
        return  this.get(action);
     }
-    autoPopulate():Observable<ServerResponse<AutoPopulate>>{
-        const action =`${controller}/${ApiEndpoints.userQuery.autoPopulate}?tableConfigId=100&queryId=50`;
+    autoPopulate(tableConfigId: number, queryId: number):Observable<ServerResponse<AutoPopulate>>{
+        const action =`${controller}/${ApiEndpoints.userQuery.autoPopulate}?tableConfigId=${tableConfigId}&queryId=${queryId}`;
        return  this.get(action);
     }
     validateSyntax():Observable<ServerResponse<ValidateSyntax>>{

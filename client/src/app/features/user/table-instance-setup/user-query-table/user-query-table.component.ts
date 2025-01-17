@@ -182,7 +182,7 @@ export class UserQueryTableComponent extends MockAPIClass {
       return;
     }
     this._ngxService.start();
-    this.userQueryService.autoPopulate().pipe(first()).subscribe((res: ServerResponse<AutoPopulate>) => {
+    this.userQueryService.autoPopulate(this.tableConfigId, this.queryId).pipe(first()).subscribe((res: ServerResponse<AutoPopulate>) => {
       if (res) {
         console.log('auto populate api calll======>>>>', res.data);
         this._ngxService.stop();
