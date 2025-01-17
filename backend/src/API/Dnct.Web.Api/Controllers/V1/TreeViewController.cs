@@ -11,7 +11,7 @@ using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dnct.Web.Api.Controllers.V1.Order;
+namespace Dnct.Web.Api.Controllers.V1;
 
 [ApiVersion("1")]
 [ApiController]
@@ -24,28 +24,28 @@ public class TreeViewController(ISender sender) : BaseController
     {
         var query = await sender.Send(new GetAllServersQuery());
 
-        return base.OperationResult(query);
+        return OperationResult(query);
     }
     [HttpGet("GetDatabaseSourceById")]
     public async Task<IActionResult> GetDatabaseSourceById([FromQuery] GetDatabaseSourcesByIdQuery request)
     {
         var query = await sender.Send(request);
 
-        return base.OperationResult(query);
+        return OperationResult(query);
     }
     [HttpGet("GetDatabasesByServerId")]
     public async Task<IActionResult> GetDatabasesByServerId([FromQuery] GetDatabasesByServerIdQuery request)
     {
         var query = await sender.Send(request);
 
-        return base.OperationResult(query);
+        return OperationResult(query);
     }
     [HttpGet("GetTablesByDatabaseSourceId")]
     public async Task<IActionResult> GetTablesByDatabaseSourceId([FromQuery] GetTablesByDatabaseSourceIdQuery request)
     {
         var query = await sender.Send(request);
 
-        return base.OperationResult(query);
+        return OperationResult(query);
     }
 
     [HttpGet("GetTableInstanceByDatabaseSourceId")]
@@ -53,6 +53,6 @@ public class TreeViewController(ISender sender) : BaseController
     {
         var query = await sender.Send(request);
 
-        return base.OperationResult(query);
+        return OperationResult(query);
     }
 }

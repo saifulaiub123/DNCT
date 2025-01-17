@@ -8,7 +8,7 @@ namespace Dnct.Application.Features.UserQuery.Query.GetUserQuery
 {
     public class GetUserQueryQuery : IRequest<OperationResult<List<GetUserQueryResponse>>>
     {
-
+        public int TableConfigId { get; set; }
     };
 
     public class GetUserQueryQueryHandler : IRequestHandler<GetUserQueryQuery, OperationResult<List<GetUserQueryResponse>>>
@@ -32,7 +32,7 @@ namespace Dnct.Application.Features.UserQuery.Query.GetUserQuery
         {
             var result = new List<GetUserQueryResponse>();
 
-            var userQueries = (await _userQueryRepository.GetUserQuries()).ToList();
+            var userQueries = (await _userQueryRepository.GetUserQuries(request.TableConfigId)).ToList();
 
             var mappedResult = _mapper.Map<List<GetUserQueryResponse>>(userQueries);
 

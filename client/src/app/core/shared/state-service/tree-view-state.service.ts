@@ -27,7 +27,7 @@ export class TreeViewStateService {
   public $isTableInstanceClicked = this.isTableInstanceClicked.asObservable();
 
   public clickTableInstance(id: number, name: string) {
-    this.isTableInstanceClicked.next({id : id, name: name});
+    this.isTableInstanceClicked.next({tableConfigId : id, name: name});
   }
   public clickTableInstanceReset() {
     this.isTableInstanceClicked.next(null);

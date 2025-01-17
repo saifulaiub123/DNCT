@@ -2,9 +2,9 @@
   <mat-card class="b-1 shadow-none">
     <mat-card-content class="b-t-1">
       <mat-tab-group [selectedIndex]="selectedIndex" animationDuration="0ms">
-        <mat-tab *ngFor="let label of tabs; let i = index">
+        <mat-tab *ngFor="let tab of tabs; let i = index">
           <ng-template mat-tab-label>
-            {{ label }}
+            {{ tab.title }}
             <button (click)="removeTab(i)" mat-icon-button>
               <mat-icon>close</mat-icon>
             </button>
@@ -21,7 +21,7 @@
                       User Query
                     </ng-template>
                     <mat-card-content class="p-y-24 b-t-1">
-                      <app-user-query-table></app-user-query-table>
+                      <app-user-query-table [tableConfigId]="tab.tableConfigId"></app-user-query-table>
                     </mat-card-content>
                   </mat-tab>
                   <mat-tab>

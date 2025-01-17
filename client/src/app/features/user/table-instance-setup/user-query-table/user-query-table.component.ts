@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MaterialModule } from 'src/app/material.module';
 import { AutoPopulate, CreateUpdateQuery, UserQuery, ValidateSyntax } from './user-query-table.model';
@@ -57,6 +57,9 @@ export class MockAPIClass {
   templateUrl: './user-query-table.component.html',
 })
 export class UserQueryTableComponent extends MockAPIClass {
+
+  @Input() tableConfigId : number = 0;
+
   displayedColumns: string[] = [
     'Select',
     'Query Id',
@@ -82,7 +85,7 @@ export class UserQueryTableComponent extends MockAPIClass {
   }
   fetchAllUserQueries(): void {
     this._ngxService.start();
-    this.userQueryService.fetchAllUserQueries().pipe(first()).subscribe((res: ServerResponse<UserQuery>) => {
+    this.userQueryService.fetchAllUserQueries(this.tableConfigId).pipe(first()).subscribe((res: ServerResponse<UserQuery>) => {
       if (res.isSuccess) {
         this.dataSource.data = res.data.map((userQuery: UserQuery) => {
           return {
@@ -101,7 +104,7 @@ export class UserQueryTableComponent extends MockAPIClass {
     }
     const payload: CreateUpdateQuery = {
       userQueryId: _row.userQueryId,
-      tableConfigId: _row.tableConfigId == 0 ? 100 : _row.tableConfigId,
+      tableConfigId: this.tableConfigId,
       userQuery: this.selectedQuery,
       baseQueryIndicator: _row.baseQueryIndicator,
       queryOrderIndicator: _row.queryOrderIndicator,

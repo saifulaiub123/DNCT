@@ -8,8 +8,8 @@ import { _defaultParams } from "@angular/material/dialog";
 const controller = 'user-query';
 @Injectable()
 export class UserQueryService extends BaseApiService{
-    fetchAllUserQueries(): Observable<ServerResponse<UserQuery>>{
-        const action =`${controller}/${ApiEndpoints.userQuery.getAll}`;
+    fetchAllUserQueries(tableConfiid : number): Observable<ServerResponse<UserQuery>>{
+        const action =`${controller}/${ApiEndpoints.userQuery.getAll}?tableConfigId=${tableConfiid}`;
        return  this.get(action);
     }
     autoPopulate():Observable<ServerResponse<AutoPopulate>>{

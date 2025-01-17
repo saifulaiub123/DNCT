@@ -18,9 +18,8 @@ namespace Dnct.Web.Api.Controllers.V1
     public class UserQueryController(ISender sender) : BaseController
     {
         [HttpGet("getAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] GetUserQueryQuery query)
         {
-            var query = new GetUserQueryQuery();
             var command = await sender.Send(query);
 
             return base.OperationResult(command);

@@ -14,6 +14,11 @@ import { UserQueryTableComponent } from "./user-query-table/user-query-table.com
 import { ColumnDetailComponent } from "./column-detail/column-detail.component";
 import { LoadStrategyComponent } from "./load-strategy/load-strategy.component";
 
+interface TabData {
+  title: string;
+  tableConfigId: number;
+}
+
 @Component({
   selector: 'app-table-instance-setup',
   standalone: true,
@@ -25,7 +30,8 @@ export class TableInstanceSetupComponent {
 
   selectedIndex = 0;
 
-    tabs: string[] = [];
+    // tabs: string[] = [];
+    tabs: TabData[] = [];
     ids: number[] = [];
 
     constructor(
@@ -43,8 +49,8 @@ export class TableInstanceSetupComponent {
         {
           if(!this.tabs.includes(res.name))
           {
-            this.tabs.push(res.name);
-            this.ids.push(res.id);
+            this.tabs.push({title : res.name, tableConfigId: res.tableConfigId});
+            this.ids.push(res.tableConfigId);
             this.selectedIndex = this.tabs.length - 1
           }
           else

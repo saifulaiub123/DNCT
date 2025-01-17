@@ -4,6 +4,7 @@ using Dnct.Domain.Constant;
 using Dnct.Domain.Model;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Dnct.Infrastructure.Persistence.Repositories
 {
@@ -17,7 +18,7 @@ namespace Dnct.Infrastructure.Persistence.Repositories
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString(DbConst.DbConnectionName);
         }
-        public async Task<List<UserQueryModel>> GetUserQuries()
+        public async Task<List<UserQueryModel>> GetUserQuries(int tableConfigId)
         {
             var userQueries = new List<UserQueryModel>();
 
@@ -30,12 +31,14 @@ namespace Dnct.Infrastructure.Persistence.Repositories
 	                        qry_order_ind AS QueryOrderIndicator, 
 	                        row_instr_ts AS RowInsertTimestamp
                         FROM codebotmstr.usr_queries
-                        WHERE table_config_id = 100
+                        WHERE table_config_id = @tableConfigId
                     ";
+            var parameters = new { tableConfigId = tableConfigId };
+
             using (var conn = new NpgsqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
-                userQueries = (await conn.QueryAsync<UserQueryModel>(sql)).ToList();
+                userQueries = (await conn.QueryAsync<UserQueryModel>(sql, parameters)).ToList();
             }
             return userQueries;
         }
