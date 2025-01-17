@@ -3,60 +3,27 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MaterialModule } from 'src/app/material.module';
 import { AutoPopulate, CreateUpdateQuery, UserQuery, ValidateSyntax } from './user-query-table.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { catchError, delay, EMPTY, EmptyError, first, Observable, of } from 'rxjs';
+import { catchError,EMPTY, first, } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ServerResponse } from 'src/app/core/model/contract/server-response';
 import { UserQueryService } from './user-query.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ToastrService } from 'ngx-toastr';
-export class MockAPIClass {
-  simulateApiValidation(rows: { tbl_col_confrtn_id: number; transformSql: string }[]) {
-    return new Promise<{ tbl_col_confrtn_id: number; validationResult: number }[]>(resolve => {
-      const response = rows.map(row => ({
-        tbl_col_confrtn_id: row.tbl_col_confrtn_id,
-        validationResult: Math.random() < 0.5 ? 0 : 1 // Randomly return 0 or 1
-      }));
-      setTimeout(() => resolve(response), 1000); // Simulate network delay
-    });
-  }
-  deleteRowFromAPI(
-    tableConfigId: number,
-    queryId: number
-  ): Observable<{ success: boolean; message: string }> {
-    return of({
-      success: true,
-      message: `Row with TableConfigId=${tableConfigId} and QueryId=${queryId} deleted successfully.`,
-    }).pipe(delay(1000));
-  }
-
-  autoPopulateColumnsAPI(tableConfigId: number, queryId: number): Observable<any> {
-    const payload = { tableConfigId: tableConfigId, queryId: queryId };
-    console.log(payload);
-    return of({
-      success: true,
-      data: {
-        fullQuery: 'SELECT * FROM new_table',
-        seedQuery: 100,
-        qtyOrder: 50,
-      },
-    }).pipe(delay(1000));
-  }
-  SaveQueryTableRow(_row: any): Observable<any> {
-    console.log(_row);
-    return of({
-      success: true,
-      message: 'Data save successfully'
-    }).pipe(delay(1000));
-  }
-}
+import { AppDialogOverviewComponent } from 'src/app/pages/ui-components/dialog/dialog.component';
 @Component({
   selector: 'app-user-query-table',
   standalone: true,
   imports: [MaterialModule],
   providers: [UserQueryService],
   templateUrl: './user-query-table.component.html',
+  styles: `::ng-deep{
+    .mat-mdc-form-field .mat-mdc-text-field-wrapper{
+      width:100% !important;
+      height:200px!important;
+    }
+  }`
 })
-export class UserQueryTableComponent extends MockAPIClass {
+export class UserQueryTableComponent {
 
   @Input() tableConfigId : number = 0;
 
@@ -82,6 +49,7 @@ export class UserQueryTableComponent extends MockAPIClass {
   private _toastr = inject(ToastrService);
   ngOnInit(): void {
     this.fetchAllUserQueries();
+    console.log('table config id ===>>', this.tableConfigId)
   }
   fetchAllUserQueries(): void {
     this._ngxService.start();
@@ -99,7 +67,7 @@ export class UserQueryTableComponent extends MockAPIClass {
   saveRow(_row: UserQuery): void {
     const selectedRows = this.dataSource.data.filter((row) => row.isSelected);
     if (selectedRows.length === 0) {
-      this._toastr.error('Row Should be checked.', 'Error');
+      this._toastr.error('Row Should be selected.', 'Error');
       return;
     }
     const payload: CreateUpdateQuery = {
@@ -125,19 +93,28 @@ export class UserQueryTableComponent extends MockAPIClass {
   }
 
   removeRow(row: UserQuery) {
+    const existingRow = this.dataSource.data.find(row => row.userQueryId === -1);
+    if (existingRow) {
+      this.dataSource.data = this.dataSource.data.filter(row => row.userQueryId !== -1);
+      this._toastr.error('Row removed successfully', 'Removed');
+      return;
+    } 
     const parameters:{userQueryId:number, tableConfigId: number} = {
       tableConfigId:row.tableConfigId, userQueryId:row.userQueryId
     }
-    this.userQueryService.removeQuery(parameters).pipe(first(), catchError(() => {
-      this._ngxService.stop();
-      this._toastr.error('Failed to delete the row. Please try again.', 'Error');
-      return EMPTY
-    })).subscribe((res: ServerResponse<any>) => {
-      this._ngxService.stop();
-      if (res) {
-        this._toastr.success('Removed successfully', 'Success');
-        console.log('delete query ===>>>', res)
-        this.fetchAllUserQueries();
+    this.dialog.open(AppDialogOverviewComponent).afterClosed().pipe(first()).subscribe(res => {
+      if(res){
+        this.userQueryService.removeQuery(parameters).pipe(first(), catchError(() => {
+          this._ngxService.stop();
+          this._toastr.error('Failed to delete the row. Please try again.', 'Error');
+          return EMPTY
+        })).subscribe((res: ServerResponse<any>) => {
+          this._ngxService.stop();
+          if (res) {
+            this._toastr.success('Removed successfully', 'Success');
+            this.fetchAllUserQueries();
+          }
+        })
       }
     })
   }
@@ -178,13 +155,12 @@ export class UserQueryTableComponent extends MockAPIClass {
   autoPopulate() {
     const selectedRows = this.dataSource.data.filter((row) => row.isSelected);
     if (selectedRows.length === 0) {
-      this._toastr.error('Please select one row.', 'Error');
+      this._toastr.error('Select atleast one row', 'Error');
       return;
     }
     this._ngxService.start();
     this.userQueryService.autoPopulate(this.tableConfigId, this.queryId).pipe(first()).subscribe((res: ServerResponse<AutoPopulate>) => {
-      if (res) {
-        console.log('auto populate api calll======>>>>', res.data);
+      if (res) {this._toastr.success('Auto populated successfully', 'Success');
         this._ngxService.stop();
       }
     });
@@ -192,13 +168,12 @@ export class UserQueryTableComponent extends MockAPIClass {
   validateQuery() {
     const selectedRows = this.dataSource.data.filter((row) => row.isSelected);
     if (selectedRows.length === 0) {
-      this._toastr.error('Please select one row.', 'Error');
+      this._toastr.error('Select atleast one row.', 'Error');
       return;
     };
     this._ngxService.start();
-    this.userQueryService.validateSyntax().pipe(first()).subscribe((res: ServerResponse<ValidateSyntax>) => {
-      if (res) {
-        console.log('validate syntac api called ======>>>>', res.data);
+    this.userQueryService.validateSyntax(this.tableConfigId, this.queryId).pipe(first()).subscribe((res: ServerResponse<ValidateSyntax>) => {
+      if (res) {this._toastr.success('Validate syntax successfully', 'Success');
         this._ngxService.stop();
       }
     });

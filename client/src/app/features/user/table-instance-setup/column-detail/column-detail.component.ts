@@ -2,7 +2,6 @@ import { Component, inject, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MaterialModule } from 'src/app/material.module';
 import { TableConfiguration } from './column-detail.model';
-import { MockAPIClass } from '../user-query-table/user-query-table.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, EMPTY, first } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -22,7 +21,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './column-detail.component.html',
   styleUrl: './column-details.component.scss',
 })
-export class ColumnDetailComponent extends MockAPIClass {
+export class ColumnDetailComponent {
 
   @Input() tableConfigId : number = 0;
 

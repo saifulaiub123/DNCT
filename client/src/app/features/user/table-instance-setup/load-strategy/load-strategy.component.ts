@@ -2,7 +2,6 @@ import { Component, inject, Input } from '@angular/core';
 import { MaterialModule } from 'src/app/material.module';
 import { RunTimeInstance, LoadStrategy, RunTimeParameter } from './load-strategy.model';
 import { MatTableDataSource } from '@angular/material/table';
-import { MockAPIClass } from '../user-query-table/user-query-table.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -23,7 +22,7 @@ const runtimeInstanceController = 'table-instance-run-time'
   templateUrl: './load-strategy.component.html',
   styleUrl: './load-strategy.component.scss',
 })
-export class LoadStrategyComponent extends MockAPIClass {
+export class LoadStrategyComponent  {
 
     @Input() tableConfigId : number = 0;
 

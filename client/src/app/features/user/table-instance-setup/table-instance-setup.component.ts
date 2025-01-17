@@ -24,7 +24,6 @@ interface TabData {
   standalone: true,
   imports: [CommonModule, MatCardModule, MatIconModule, TablerIconsModule, MatTabsModule, MatFormFieldModule, MatSlideToggleModule, MatSelectModule, MatInputModule, MatButtonModule, UserQueryTableComponent, ColumnDetailComponent, LoadStrategyComponent],
   templateUrl: './table-instance-setup.component.html',
-  styleUrl: './table-instance-setup.component.scss'
 })
 export class TableInstanceSetupComponent {
 
