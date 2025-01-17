@@ -10,7 +10,7 @@ namespace Dnct.Application.Profiles
         public TableConfigurationMapper()
         {
             CreateMap<TableConfigurationModel, GetTableInstanceByDatabaseSourceIdResponse>()
-                .ForMember(src => src.Id, dest => dest.MapFrom(x => x.DatabaseSourceId))
+                .ForMember(src => src.Id, dest => dest.MapFrom(x => x.TableConfigId))
                 .ForMember(src => src.Name, dest => dest.MapFrom(x => x.InstanceName));
         }
     }

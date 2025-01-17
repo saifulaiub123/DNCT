@@ -29,6 +29,7 @@ namespace Dnct.Infrastructure.Persistence.Repositories
 
             var sql = @"
                         SELECT 
+                            tbl.tbl_confgrtn_id AS TableConfigId,
                             tbl.datbs_src_id AS DatabaseSourceId,
                             tbl.instnc_name AS InstanceName
                         FROM 
