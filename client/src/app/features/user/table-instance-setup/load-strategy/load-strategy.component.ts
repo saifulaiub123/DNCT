@@ -24,7 +24,7 @@ const runtimeInstanceController = 'table-instance-run-time'
 })
 export class LoadStrategyComponent  {
 
-    @Input() tableConfigId : number = 0;
+    @Input({required: true}) tableConfigId : number = 0;
 
 
   loadStrategyDisplayedColumns: string[] = [
@@ -64,10 +64,15 @@ export class LoadStrategyComponent  {
   // flags
   isParameterFormAlreadyEditing: boolean = false;
   isInstanceFormAlreadyEditing: boolean = false;
-  ngOnInit(): void {
+  ngOnInit(): void {if(this.tableConfigId){
     this.loadStrategyFormInit();
-    this.runtimeParameterFormInit(Parameter);
-    this.InstanceNameFormInit(InstanceName);
+    this.fetchParameterMasterAll();
+    this.fetchInstanceNameAll();
+  }else{
+    this.toastrService.error('Table config Id required to fetch all tables', 'Error')
+  }
+  this.InstanceNameFormInit(InstanceName);
+  this.runtimeParameterFormInit(Parameter);
   }
   loadStrategyFormInit(): void {
     this.ngxLoaderService.start();
@@ -77,34 +82,43 @@ export class LoadStrategyComponent  {
       return EMPTY;
     })).subscribe(res => {
       this.ngxLoaderService.stop();
-      if (res.isSuccess) {this.loadStrategyDatasource.data = res.data.map((res:LoadStrategy) => {
-        return {
-          ...res, tblConfigId: 1, // dummy config id replace with actual
-        }
-      });
-    }
+      if (res.isSuccess) {this.loadStrategyDatasource.data = res.data;}
     })
   }
-
+  fetchInstanceNameAll():void{
+    this.ngxLoaderService.start();
+    this.loadStrategyService.fetchAll(runtimeInstanceController, `?TableConfigId=${this.tableConfigId}`).pipe(first(), catchError((err) => {
+      this.ngxLoaderService.stop();
+      this.toastrService.error(`error Occurred ${err}`, 'Error');
+      return EMPTY;
+    })).subscribe(res => {
+      this.ngxLoaderService.stop();
+      if(res.isSuccess){
+        // replace intance with response data
+        this.InstanceNameFormInit(InstanceName);
+      }
+    })
+  }
+  fetchParameterMasterAll():void{
+      this.ngxLoaderService.start();
+      this.loadStrategyService.fetchAll(runtimeParameterController, `?TableConfigId=${this.tableConfigId}`).pipe(first(), catchError((err) => {
+        this.ngxLoaderService.stop();
+        this.toastrService.error(`error Occurred ${err}`, 'Error');
+        return EMPTY;
+      })).subscribe(res => {
+        this.ngxLoaderService.stop();
+        if(res.isSuccess){
+          // replace parameter with response data
+          this.runtimeParameterFormInit(Parameter);
+        }
+      })
+  }
   runtimeParameterFormInit(_parameters: RunTimeParameter[]): void {
     this.parameterForm = this.fb.group({
       parameters: this.fb.array(_parameters.map(row => this.createParameterForm(row)))
     })
     this.RunTimeParameterInitialFormState = (this.parameterForm.get('parameters') as FormArray)?.value; // to save initial form state
     this.parameterDatasource = new MatTableDataSource((this.parameterForm.get('parameters') as FormArray)?.controls);
-  }
-  loadRunTimeParameter():void{
-    // this.ngxLoaderService.start();
-    const tableConfigId = this.selectedLoadStragtegyRow?.tblConfigId;
-    const parameter = tableConfigId ? `?TableConfigId=${tableConfigId}` : '';
-    // this.loadStrategyService.fetchAll(runtimeParameterController, parameter).pipe(first(), catchError(err => {
-    //   this.ngxLoaderService.stop();
-    //   this.toastrService.error(`error Occurred ${err.message}`, err.statusText);
-    //   return EMPTY;
-    // })).subscribe(res => {
-    //   this.ngxLoaderService.stop();
-    //   if (res.isSuccess) {this.parameterDatasource = res.data; this.runtimeParameterFormInit(res.data);}
-    // })
   }
   createParameterForm(parameter: RunTimeParameter): FormGroup {
     return this.fb.group({
@@ -152,8 +166,8 @@ export class LoadStrategyComponent  {
     })
   }
   onShowCurrentScript(): void { }
-  // what I understood there has a one button if it pressed all the three table values values should be save
-  onSaveRuntime(): void {
+
+  onSaveLoadStraigtegyRuntime():void{
     if (!this.selectedLoadStragtegyRow) {
       this.snackBar.open('Row from load strategy table should be selected!', 'Close', {
         duration: 3000,
@@ -162,24 +176,66 @@ export class LoadStrategyComponent  {
       return
     }
     const loadStrategyPayload = {
-      tblConfigId: this.selectedLoadStragtegyRow.tblConfigId,
+      tblConfigId: this.tableConfigId,
       loadStrategyId: this.selectedLoadStragtegyRow.loadStrategyId,
     };
-
-    //
-    if (!this.saveParameterGridData()) return
-
-    // saving load strategy selected row
     this.loadStrategyService.create(loadStrategycontroller, loadStrategyPayload).pipe(first(), catchError(err => {
       this.ngxLoaderService.stop();
       this.toastrService.error(`error Occurred ${err}`, 'Error');
       return EMPTY;
     })).subscribe(res => {
       this.ngxLoaderService.stop();
-      if (res.isSuccess) { this.toastrService.success('Selected Row from load Strategy save successfully', res.message)};
+      if (res.isSuccess) { this.toastrService.success('Selected Row save successfully', res.message)};
     })
   }
-  saveParameterGridData(): RunTimeParameter[] | undefined {
+  saveInstanceTableRows():void{
+    const selectedRows = this.selectedInstanceNameRows;
+    if(selectedRows.length > 0){
+      const mappedRows = selectedRows.map((row:RunTimeInstance) => {
+        return {
+          tableConfigId: this.tableConfigId,
+          relatedTableConfigId: 1,
+          overrideInd: 0,
+          instanceName: row.instanceName,
+          instanceOrder: 0
+        }
+      })
+      this.loadStrategyService.create(runtimeInstanceController, mappedRows).pipe(first(), catchError(err => {
+        this.ngxLoaderService.stop();
+        this.toastrService.error(`${err.message}`, 'Error');
+        return EMPTY;
+      })).subscribe(res => {
+        this.ngxLoaderService.stop();
+        if (res.isSuccess) { this.toastrService.success('Save successfully', res.message)};
+      })
+    }else{
+      this.toastrService.error('Select atleast one row', 'Error')
+    }
+
+  }
+  onSaveRuntimeParameterMaster():void{
+    if (!this.isAllParameterTableRowsFilled()) return;
+    const parametersArray = this.parameterForm.get('parameters') as FormArray;
+    const parameterGridData = parametersArray.controls.map((control) => {
+      return {
+        parameterValue: control['value'].value,
+        tableConfigId: this.tableConfigId,
+        runtimeParametersMasterId: 1,
+      }
+    })
+    const mappedParameters = {
+      data: parameterGridData
+    }
+    this.loadStrategyService.create(runtimeParameterController, mappedParameters).pipe(first(), catchError(err => {
+      this.ngxLoaderService.stop();
+      this.toastrService.error(`${err.message}`, 'Error');
+      return EMPTY;
+    })).subscribe(res => {
+      this.ngxLoaderService.stop();
+      if (res.isSuccess) { this.toastrService.success('Save successfully', res.message)};
+    })
+  }
+  isAllParameterTableRowsFilled(): boolean{
     const parametersArray = this.parameterForm.get('parameters') as FormArray;
     const hasEmptyValues = parametersArray.controls.some((row) => {
       const value = row.get('value')?.value;
@@ -189,21 +245,16 @@ export class LoadStrategyComponent  {
       this.snackBar.open('Please fill in all values in the Value column.', 'Close', {
         duration: 3000,
       });
-      return;
+      return false;
     }
-    const parameterGridData: RunTimeParameter[] = parametersArray.controls.map(control => {
-      return {
-        value: control.value['value'],
-        parameter: control.value['parameter'],
-        table_config_id: control.value['table_config_id'],
-        rtm_parmtrs_mstr_id: control.value['rtm_parmtrs_mstr_id'],
-      }
-    })
-    return parameterGridData
+    return true;
+   
   }
   onRefreshRuntime(): void {
     this.selectedInstanceNameRows = [];
     this.loadStrategyFormInit();
+    this.fetchInstanceNameAll();
+    this.fetchParameterMasterAll();
     this.InstanceNameFormInit(this.runtimeInstanceInitialFormState);
     this.runtimeParameterFormInit(this.RunTimeParameterInitialFormState);
   }
@@ -218,8 +269,6 @@ export class LoadStrategyComponent  {
           item.isSelected = false;
         }
       });
-      this.loadRunTimeParameter();
-      this.loadRunTimeParameter();
     }
   }
 
@@ -291,7 +340,7 @@ export class LoadStrategyComponent  {
 }
 export const Parameter: RunTimeParameter[] = [
   {
-    value: 0,
+    value: 'value 1',
     parameter: 'processing',
     action: 'existingRecord',
     table_config_id: 1003,
@@ -300,7 +349,7 @@ export const Parameter: RunTimeParameter[] = [
     isEditing: false
   },
   {
-    value: 0,
+    value: 'value 2',
     parameter: 'processing',
     action: 'existingRecord',
     table_config_id: 1003,
@@ -312,7 +361,7 @@ export const Parameter: RunTimeParameter[] = [
 export const InstanceName: RunTimeInstance[] = [
   {
     isSelected: false,
-    instanceName: 'string',
+    instanceName: 'instance one',
     order: 'order',
     overlap: 'overlap',
     tbl_confgrtn_id: 1000,
@@ -322,7 +371,7 @@ export const InstanceName: RunTimeInstance[] = [
   },
   {
     isSelected: false,
-    instanceName: 'string',
+    instanceName: 'instance two',
     order: 'order',
     overlap: 'overlap',
     tbl_confgrtn_id: 1000,

@@ -11,7 +11,7 @@ export class LoadStrategyService extends BaseApiService{
         const action =`${_controller}/${ApiEndpoints.loadStrategy.getAll}`;
        return  this.get(action,_parameters);
     }
-    create(_controller:string,_model: Create): Observable<ServerResponse<Create>>{
+    create(_controller:string,_model: any): Observable<ServerResponse<Create>>{
         const action =`${_controller}/${ApiEndpoints.loadStrategy.create}`;
        return  this.post(action,_model);
     }

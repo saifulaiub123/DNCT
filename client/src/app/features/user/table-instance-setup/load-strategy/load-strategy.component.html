@@ -21,17 +21,83 @@
         <tr mat-row *matRowDef="let row; columns: loadStrategyDisplayedColumns;"></tr>
       </table>
       <mat-card-actions class="b-t-1">
-        <button mat-flat-button color="primary" class="m-l-8" (click)="onSaveRuntime()">Save</button>
+        <button mat-flat-button color="primary" class="m-l-8" (click)="onSaveLoadStraigtegyRuntime()">Save</button>
       </mat-card-actions>
     </div>
 
   </mat-card-content>
 </mat-card>
+<mat-card class="cardWithShadow">
+  <mat-card-content class="p-y-24 b-t-1">
+    <div class="parameter-form">
+      <form [formGroup]="parameterForm">
+        <ng-container formArrayName="parameters">
+          <table mat-table [dataSource]="parameterDatasource" matSort>
+            <!-- parameter -->
+            <ng-container matColumnDef="parameter">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Parameter</th>
+              <td mat-cell *matCellDef="let element;let i= index" [formGroup]="element">
+                {{parameterForm.get('parameters')?.value[i]?.parameter}}
+              </td>
+            </ng-container>
 
+            <!-- value -->
+            <ng-container matColumnDef="value">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Value</th>
+              <td mat-cell *matCellDef="let element;let i = index" [formGroup]="element">
+                @if(parameterForm.get('parameters')?.value[i]?.isEditable){
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                  <input matInput type="text" formControlName="value" />
+                </mat-form-field>
+                }@else{
+                <span>{{parameterForm.get('parameters')?.value[i]?.value}}</span>
+                }
+              </td>
+            </ng-container>
+
+            <!-- action -->
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef>Action</th>
+              <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+
+                @if(parameterForm.get('parameters')?.value[i]?.isEditable){
+                <div class="d-flex gap-10">
+                  <button mat-icon-button class="material-icons app-toolbar-menu cancel-button"
+                    matTooltip="Cancel Changes" color="warn" (click)="cancelParameter(parameterForm,i)">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                  <button mat-icon-button class="material-icons app-toolbar-menu save-button" matTooltip="Save Changes"
+                    (click)="saveParamter(parameterForm,i)" color="primary">
+                    <mat-icon>check_circle</mat-icon>
+                  </button>
+                </div>
+                }
+                @if(!parameterForm.get('parameters')?.value[i]?.isEditable){
+                <button mat-icon-button class="material-icons app-toolbar-menu save-button" matTooltip="Edit"
+                  color="primary" (click)="editParameter(parameterForm,i)">
+                  <i-tabler name="edit" class="icon-18"></i-tabler>
+                </button>
+                }
+              </td>
+            </ng-container>
+
+            <!--  -->
+            <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumns;"></tr>
+          </table>
+          <mat-card-actions class="b-t-1">
+            <button mat-flat-button color="primary" class="m-l-8" (click)="onSaveRuntimeParameterMaster()">Save</button>
+          </mat-card-actions>
+        </ng-container>
+      </form>
+    </div>
+
+  </mat-card-content>
+</mat-card>
 
 <mat-card class="cardWithShadow">
   <mat-card-content class="p-y-24 b-t-1">
-    <div class="">
+    <div class="instance-name-form">
       <form [formGroup]="instanceNameForm">
         <ng-container formArrayName="instanceName">
           <table mat-table [dataSource]="instanceNameDatasource" matSort >
@@ -106,7 +172,7 @@
           </table>
         </ng-container>
         <mat-card-actions class="b-t-1">
-          <button mat-flat-button color="primary" class="m-l-8" (click)="onSaveRuntime()">Save</button>
+          <button mat-flat-button color="primary" class="m-l-8" (click)="saveInstanceTableRows()">Save</button>
         </mat-card-actions>
       </form>
     </div>
@@ -114,73 +180,7 @@
 </mat-card>
 
 
-<mat-card class="cardWithShadow">
-  <mat-card-content class="p-y-24 b-t-1">
-    <div class="">
-      <form [formGroup]="parameterForm">
-        <ng-container formArrayName="parameters">
-          <table mat-table [dataSource]="parameterDatasource" matSort>
-            <!-- parameter -->
-            <ng-container matColumnDef="parameter">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Parameter</th>
-              <td mat-cell *matCellDef="let element;let i= index" [formGroup]="element">
-                {{parameterForm.get('parameters')?.value[i]?.parameter}}
-              </td>
-            </ng-container>
 
-            <!-- value -->
-            <ng-container matColumnDef="value">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Value</th>
-              <td mat-cell *matCellDef="let element;let i = index" [formGroup]="element">
-                @if(parameterForm.get('parameters')?.value[i]?.isEditable){
-                <mat-form-field appearance="outline" class="w-100" color="primary">
-                  <input matInput type="text" formControlName="value" />
-                </mat-form-field>
-                }@else{
-                <span>{{parameterForm.get('parameters')?.value[i]?.value}}</span>
-                }
-              </td>
-            </ng-container>
-
-            <!-- action -->
-            <ng-container matColumnDef="action">
-              <th mat-header-cell *matHeaderCellDef>Action</th>
-              <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-
-                @if(parameterForm.get('parameters')?.value[i]?.isEditable){
-                <div class="d-flex gap-10">
-                  <button mat-icon-button class="material-icons app-toolbar-menu cancel-button"
-                    matTooltip="Cancel Changes" color="warn" (click)="cancelParameter(parameterForm,i)">
-                    <mat-icon>cancel</mat-icon>
-                  </button>
-                  <button mat-icon-button class="material-icons app-toolbar-menu save-button" matTooltip="Save Changes"
-                    (click)="saveParamter(parameterForm,i)" color="primary">
-                    <mat-icon>check_circle</mat-icon>
-                  </button>
-                </div>
-                }
-                @if(!parameterForm.get('parameters')?.value[i]?.isEditable){
-                <button mat-icon-button class="material-icons app-toolbar-menu save-button" matTooltip="Edit"
-                  color="primary" (click)="editParameter(parameterForm,i)">
-                  <i-tabler name="edit" class="icon-18"></i-tabler>
-                </button>
-                }
-              </td>
-            </ng-container>
-
-            <!--  -->
-            <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumns;"></tr>
-          </table>
-          <mat-card-actions class="b-t-1">
-            <button mat-flat-button color="primary" class="m-l-8" (click)="onSaveRuntime()">Save</button>
-          </mat-card-actions>
-        </ng-container>
-      </form>
-    </div>
-
-  </mat-card-content>
-</mat-card>
 
 <div class="row">
 
@@ -191,7 +191,7 @@
       <div class="col-6 d-flex flex-column">
         <button mat-raised-button color="primary" (click)="onShowCurrentScript()">Show Current Script</button>
         <button mat-raised-button color="primary" class="m-t-15" (click)="onRefreshRuntime()">Refresh Runtime</button>
-        <button mat-raised-button color="primary" (click)="onAnalyzeSpecsAndGenerateCode()">Analyze Specs and GenerateCode</button>
+        <button mat-raised-button color="primary" class=" m-t-15" (click)="onAnalyzeSpecsAndGenerateCode()">Analyze Specs and GenerateCode</button>
       </div>
       <div class="col-6 d-flex flex-column">
         <button mat-raised-button color="primary" class="m-t-15" (click)="onAnalyzeSpecs()">Analyze Specs</button>
