@@ -49,7 +49,6 @@ export class UserQueryTableComponent {
   private _toastr = inject(ToastrService);
   ngOnInit(): void {
     this.fetchAllUserQueries();
-    console.log('table config id ===>>', this.tableConfigId)
   }
   fetchAllUserQueries(): void {
     this._ngxService.start();

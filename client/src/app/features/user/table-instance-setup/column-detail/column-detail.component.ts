@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MaterialModule } from 'src/app/material.module';
 import { TableConfiguration } from './column-detail.model';
@@ -23,7 +23,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ColumnDetailComponent {
 
-  @Input() tableConfigId : number = 0;
+  @Input() tableConfigId: number = 0;
 
   displayedColumns: string[] = [
     'columnId',
@@ -46,12 +46,13 @@ export class ColumnDetailComponent {
   selectedRows: FormGroup | null = null;
   tableConfigFormGroup: FormGroup;
   isValidatedSyntax: boolean = false;
-  validatedData: any[] = [];
+  validatedData: { key: number, value: number }[];
   //injectors
   private snackBar = inject(MatSnackBar);
   private _toaster = inject(ToastrService);
   private dialog = inject(MatDialog);
   private fb = inject(FormBuilder);
+  private cdr = inject(ChangeDetectorRef);
   private _ngxService = inject(NgxUiLoaderService);
   private tableConfigService = inject(TableConfigurationService);
 
@@ -107,6 +108,7 @@ export class ColumnDetailComponent {
       status: new FormControl('unchanged'),
       action: new FormControl('existingRecord'),
       isEditable: new FormControl(false),
+      colorValue: new FormControl(row.colorValue === 0 || row.colorValue ===   1 ? row.colorValue : undefined)
     });
   }
   addRow(): void {
@@ -201,27 +203,41 @@ export class ColumnDetailComponent {
     // save when changes happened into the table.
     const isChange = rows.find((row: TableConfiguration) => row.status === 'new' || row.status === 'changed');
     if (isChange) {
-      this.tableConfigService.createMulti(payload).pipe(first()).subscribe(res => {
+      this.tableConfigService.createMulti(payload).pipe(first(), catchError((err) => {
+        if (err.status === 404)
+          this._toaster.error(`${err.message}`, `Error ${err.status}`);
+        else this._toaster.error(`Error Occurred`, `Error`);
+        return EMPTY;
+      })).subscribe(res => {
         if (res.isSuccess) {
           if (res.data.errorMessage) {
             this._toaster.error(res.data.errorMessage, 'Error');
           } else {
             this._toaster.success(res.message, 'Success');
+            this.fetchAllTableConfigs();
           }
         }
       })
     } else {
-      this._toaster.error('Can save when any change happened in table', 'Error');
+      this._toaster.error('Changes were not applied to the table', 'Error');
     }
-    this.fetchAllTableConfigs();
+
   }
   removeSelectedRow(): void {
     if (!this.selectedRow) {
-      this.snackBar.open('Please select a row first! Just click on row', 'Close', {
+      this.snackBar.open('Select atleast one row! Just click on row', 'Close', {
         duration: 2000,
         verticalPosition: 'top'
       });
-      return
+      return;
+    }
+    if (this.selectedRow.controls['tblColConfgrtnId'].value === -1) {
+      let index = (this.tableConfigFormGroup.get('tableConfig') as FormArray).controls.
+        indexOf(this.selectedRow);
+      (this.tableConfigFormGroup.get('tableConfig') as FormArray).controls.splice(index, 1);
+      this.dataSource = new MatTableDataSource((this.tableConfigFormGroup.get('tableConfig') as FormArray).controls);
+      this._toaster.error('Row Removed', 'Delete');
+      return;
     }
     const params = {
       tableConfigId: this.selectedRow.controls['tblConfgrtnId'].value,
@@ -236,7 +252,7 @@ export class ColumnDetailComponent {
             if (index !== -1)
               (this.tableConfigFormGroup.get('tableConfig') as FormArray).controls.splice(index, 1);
             this.dataSource = new MatTableDataSource((this.tableConfigFormGroup.get('tableConfig') as FormArray).controls);
-            this._toaster.success('Column Configuration delete successfully', 'Delete');
+            this._toaster.error('Row Removed', 'Delete');
           }
         })
       }
@@ -267,75 +283,57 @@ export class ColumnDetailComponent {
   }
 
   validateSyntax(): void {
-    // if (this.selectedRows.length === 0) {
-    //   this.snackBar.open('Select at least one row!','Close',{
-    //     duration: 2000
-    //  verticalPosition: 'top'
-    //   })
-    //   return;
-    // }
-
-    // const rowsForValidation = this.selectedRows.map(row => ({
-    //   tbl_col_confrtn_id: row.tbl_confrtn_id,
-    //   transformSql: row.transformSql
-    // }));
-    // this.simulateApiValidation(rowsForValidation).then(response => {
-    //   this.dataSource.data = this.dataSource.data.map(row => {
-    //     const validationResult = response.find(
-    //       res => res.tbl_col_confrtn_id === row.tbl_confrtn_id
-    //     );
-    //     if (validationResult) {
-    //       row.validationResult = validationResult.validationResult;
-    //     }
-    //     return row;
-    //   });
-    //   this.dataSource._updateChangeSubscription();
-    // });
-
-
-    const rows = (this.tableConfigFormGroup.get('tableConfig') as FormArray).value;
-    const mappedRows: TableConfiguration[] = rows.map((row: TableConfiguration) => {
-      return {
-        tblColConfgrtnId: row.tblColConfgrtnId,
-        tblConfgrtnId: row.tblConfgrtnId,
-        colmnName: row.colmnName,
-        dataType: row.dataType,
-        colmnTrnsfrmtnStep1: row.colmnTrnsfrmtnStep1,
-        genrtIdInd: row.genrtIdInd,
-        idGenrtnStratgyId: row.idGenrtnStratgyId,
-        type2StartInd: row.type2StartInd,
-        type2EndInd: row.type2EndInd,
-        currRowInd: row.currRowInd,
-        pattern1: row.pattern1,
-        pattern2: row.pattern2,
-        pattern3: row.pattern3,
-        ladInd: row.ladInd,
-        joinDupsInd: row.joinDupsInd,
-        confgrtnEffStartTs: row.confgrtnEffStartTs,
-        confgrtnEffEndTs: row.confgrtnEffEndTs
-      }
-    });
-    const payload: { data: TableConfiguration[] } = {
-      data: mappedRows,
-    }
-
-    this.tableConfigService.validateSystax(payload).pipe(first()).subscribe(res => {
-      if (res.isSuccess) {
-        if (res.data.errorMessage) {
-          this._toaster.error(res.data.errorMessage, 'Error');
-        } else {
-          this.isValidatedSyntax = true;
-          this._toaster.success(res.message, 'Success');
+    const rows = (this.tableConfigFormGroup.get('tableConfig') as FormArray).value.filter((row: TableConfiguration) => row.tblColConfgrtnId !== -1);
+    if (rows.length > 0) {
+      const mappedRows: TableConfiguration[] = rows.map((row: TableConfiguration) => {
+        return {
+          tblColConfgrtnId: row.tblColConfgrtnId,
+          tblConfgrtnId: row.tblConfgrtnId,
+          colmnName: row.colmnName,
+          dataType: row.dataType,
+          colmnTrnsfrmtnStep1: row.colmnTrnsfrmtnStep1,
+          genrtIdInd: row.genrtIdInd,
+          idGenrtnStratgyId: row.idGenrtnStratgyId,
+          type2StartInd: row.type2StartInd,
+          type2EndInd: row.type2EndInd,
+          currRowInd: row.currRowInd,
+          pattern1: row.pattern1,
+          pattern2: row.pattern2,
+          pattern3: row.pattern3,
+          ladInd: row.ladInd,
+          joinDupsInd: row.joinDupsInd,
+          confgrtnEffStartTs: row.confgrtnEffStartTs,
+          confgrtnEffEndTs: row.confgrtnEffEndTs
         }
+      });
+      const payload: { data: TableConfiguration[] } = {
+        data: mappedRows,
+      }
+      this.tableConfigService.validateSystax(payload).pipe(first()).subscribe(res => {
+        if (res.isSuccess) {
+          this.validatedData = res.data;
+          const mappedData = (this.tableConfigFormGroup.get('tableConfig') as FormArray).value.map((control: TableConfiguration, index:number) =>{
+            if(index < rows.length){
+              return {
+                ...control, colorValue: this.validatedData[index].value
+              }
+            }else return{...control}
+          })
+          this.tableConfigFormGroup = this.fb.group({
+            tableConfig: this.fb.array(mappedData.map((row:any) => this.createRowForm(row)))
+          })
+          this.initialFormState = (this.tableConfigFormGroup.get('tableConfig') as FormArray).value;
+          this.dataSource = new MatTableDataSource((this.tableConfigFormGroup.get('tableConfig') as FormArray).controls);
       }
     })
-  }
-  getRowColor(tblColConfgrtnId: number): string {
-    const validation = this.validatedData.find((v: any) => v.key === tblColConfgrtnId);
-    if (validation) {
-      return validation.value === 1 ? 'green' : 'red';
     }
-    return 'transparent'; // Default background color
+  }
+  getRowClass(row: any): { [key: string]: boolean } {
+    return {
+      'bg-light-primary': row === this.selectedRow,
+      'bg-light-success': row.value?.colorValue === 1,
+      'bg-light-error': row.value?.colorValue === 0,
+    };
   }
   clearAllTransformations(): void {
     this.dataSource.data.forEach((element: FormGroup) => {

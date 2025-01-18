@@ -1,6 +1,6 @@
 <form [formGroup]="tableConfigFormGroup">
   <ng-container formArrayName="tableConfig">
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 column-details-table" matSort>
 
       <!-- Column ID -->
       <ng-container matColumnDef="columnId">
@@ -217,7 +217,8 @@
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"
-        [class.bg-light-primary]="row === selectedRow" (click)="selectRow(row)"></tr>
+      [ngClass]="getRowClass(row)"
+         (click)="selectRow(row)"></tr>
     </table>
 
   </ng-container>

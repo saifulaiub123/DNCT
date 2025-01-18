@@ -20,4 +20,5 @@ export interface TableConfiguration {
   validationResult?: number | null;
   action?: string | null,
   isEditable: boolean,
+  colorValue?:number
 }

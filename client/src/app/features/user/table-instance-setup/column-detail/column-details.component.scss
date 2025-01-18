@@ -1,8 +1,9 @@
 ::ng-deep {
     .mat-mdc-table {
-        .mat-mdc-row{
+        .mat-mdc-row {
             height: 60px;
         }
+
         .mat-sort-header-container {
             display: flex;
             align-items: center;
@@ -12,8 +13,9 @@
                 width: 70px;
             }
         }
-        .mat-mdc-cell{
-            .mdc-icon-button{
+
+        .mat-mdc-cell {
+            .mdc-icon-button {
                 height: 25px;
                 width: 27px;
                 padding: 0px;
@@ -22,18 +24,21 @@
         }
     }
 
-    .mat-mdc-form-field {
-        .mat-mdc-text-field-wrapper {
-            height: 36px;
-            width: 120px;
+    .column-details-table {
+        .mat-mdc-form-field {
+            .mat-mdc-text-field-wrapper {
+                height: 36px !important;
+                width: 120px !important;
+            }
+
+            .mat-mdc-form-field-infix {
+                padding-top: 6px !important;
+            }
+
+            .mat-mdc-form-field-subscript-wrapper {
+                display: none !important;
+            }
         }
 
-        .mat-mdc-form-field-infix {
-            padding-top: 6px !important;
-        }
-
-        .mat-mdc-form-field-subscript-wrapper {
-            display: none !important;
-        }
     }
 }
