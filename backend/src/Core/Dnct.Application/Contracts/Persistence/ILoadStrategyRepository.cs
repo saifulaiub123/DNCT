@@ -10,7 +10,7 @@ namespace Dnct.Application.Contracts.Persistence
 {
     public interface ILoadStrategyRepository
     {
-        Task<List<LoadStrategyModel>> GetAll();
+        Task<List<LoadStrategyModel>> GetAll(int tableConfigId);
         Task<LoadStrategyModel> Get(int tableConfigId, int loadStrategyId);
         Task Create(TblLoadStrategyModel model);
     }

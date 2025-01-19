@@ -17,12 +17,11 @@ namespace Dnct.Web.Api.Controllers.V1
     public class LoadStrategyController(ISender sender) : BaseController
     {
         [HttpGet("getAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] GetAllLoadStrategyQuery query)
         {
-            var query = new GetAllLoadStrategyQuery();
-            var command = await sender.Send(query);
+            var result = await sender.Send(query);
 
-            return base.OperationResult(command);
+            return base.OperationResult(result);
         }
 
         [HttpPost("create")]

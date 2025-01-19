@@ -20,7 +20,7 @@ namespace Dnct.Infrastructure.Persistence.Repositories
             _connectionString = _configuration.GetConnectionString(DbConst.DbConnectionName);
         }
 
-        public async Task<List<LoadStrategyModel>> GetAll()
+        public async Task<List<LoadStrategyModel>> GetAll(int tableConfigId)
         {
             var loadStrategies = new List<LoadStrategyModel>();
 
@@ -39,14 +39,17 @@ namespace Dnct.Infrastructure.Persistence.Repositories
                         ON 
                             tls.load_stratgy_id = ls.load_stratgy_id 
                             AND tls.confgrtn_eff_end_ts > CURRENT_TIMESTAMP(0)
-                            AND tls.table_config_id = 118
+                            AND tls.table_config_id = @tableConfigId
                             ORDER BY ls.load_stratgy_id 
                             ;
                     ";
+
+            var parameters = new { tableConfigId = tableConfigId};
+
             using (var conn = new NpgsqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
-                loadStrategies = (await conn.QueryAsync<LoadStrategyModel>(sql)).ToList();
+                loadStrategies = (await conn.QueryAsync<LoadStrategyModel>(sql, parameters)).ToList();
             }
 
             return loadStrategies;
@@ -78,7 +81,7 @@ namespace Dnct.Infrastructure.Persistence.Repositories
                 BEGIN;
                     update  codebotmstr.tbl_load_strategy
                     set confgrtn_eff_end_ts = current_timestamp(0)
-                    where table_config_id = 200
+                    where table_config_id = @TableConfigId
                     and confgrtn_eff_end_ts >  current_timestamp(0);
 
                    INSERT INTO codebotmstr.tbl_load_strategy (

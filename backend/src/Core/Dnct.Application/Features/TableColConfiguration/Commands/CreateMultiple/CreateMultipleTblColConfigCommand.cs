@@ -38,7 +38,7 @@ namespace Dnct.Application.Features.TableColConfiguration.Commands.CreateMultipl
                 if (item.TblColConfgrtnId == -1)
                 {
                     item.ConfgrtnEffStartTs = DateTime.Now;
-                    item.ConfgrtnEffEndTs = DateTime.Now.AddDays(365);
+                    item.ConfgrtnEffEndTs = new DateTime(9999, 1, 1, 1, 1, 1, DateTimeKind.Utc);
                     await _tableColConfigurationRepository.Create(
                         _mapper.Map<Domain.Entities.TableColConfiguration>(item));
                 }

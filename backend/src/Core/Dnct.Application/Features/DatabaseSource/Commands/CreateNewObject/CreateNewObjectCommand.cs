@@ -100,7 +100,7 @@ namespace Dnct.Application.Features.DatabaseSource.Commands.CreateNewObject
                 PkColmns = string.Empty,
                 YearsOfHistory = command.MonthsOfHistory,
                 ConfgrtnEffStartTs = DateTime.UtcNow,
-                ConfgrtnEffEndTs = DateTime.Now.AddDays(1000)
+                ConfgrtnEffEndTs = new DateTime(9999, 1, 1, 1, 1, 1, DateTimeKind.Utc),
             });
 
             return OperationResult<bool>.SuccessResult(true);

@@ -52,21 +52,49 @@ namespace Dnct.Infrastructure.Persistence.Repositories
 
                 foreach (var param in models)
                 {
-                    // Check if the combination of TableConfigId and RuntimeParametersMasterId already exists
-                    var existingCount = await conn.QuerySingleAsync<int>(@"
-                            SELECT COUNT(1) FROM codebotmstr.run_time_parmtrs
-                            WHERE table_config_id = @TableConfigId AND rtm_parmtrs_mstr_id = @RuntimeParametersMasterId", param);
+                    param.ConfigurationEffectiveStartTimestamp = DateTime.UtcNow;
+                    param.ConfigurationEffectiveEndTimestamp = new DateTime(9999, 1, 1, 1, 1, 1, DateTimeKind.Utc);
 
-                    if (existingCount > 0)
+                    // Check if the combination of TableConfigId and RuntimeParametersMasterId already exists
+                    var existingData = await conn.QuerySingleAsync<RunTimeParametersModel>(@"
+                            SELECT 
+                                table_config_id AS TableConfigId, 
+                                rtm_parmtrs_mstr_id AS RuntimeParametersMasterId, 
+                                parmtr_val AS ParameterValue, 
+                                confgrtn_eff_start_ts AS ConfigurationEffectiveStartTimestamp, 
+                                confgrtn_eff_end_ts AS ConfigurationEffectiveEndTimestamp  
+                            FROM codebotmstr.run_time_parmtrs
+                            WHERE table_config_id = @TableConfigId AND rtm_parmtrs_mstr_id = @RuntimeParametersMasterId LIMIT 1", param);
+
+                    if (existingData is not null)
                     {
-                        // If exists, update the row
-                        await conn.ExecuteAsync(@"
+                        if (existingData.ParameterValue != param.ParameterValue)
+                        {
+                            // If exists, update the row
+                            await conn.ExecuteAsync(@"
                             UPDATE codebotmstr.run_time_parmtrs
                             SET
                                 parmtr_val = @ParameterValue,
                                 confgrtn_eff_start_ts = @ConfigurationEffectiveStartTimestamp,
                                 confgrtn_eff_end_ts = @ConfigurationEffectiveEndTimestamp
                             WHERE table_config_id = @TableConfigId AND rtm_parmtrs_mstr_id = @RuntimeParametersMasterId", param);
+
+                            await conn.ExecuteAsync(@"
+                            INSERT INTO codebotmstr.run_time_parmtrs (
+                                table_config_id, 
+                                rtm_parmtrs_mstr_id, 
+                                parmtr_val, 
+                                confgrtn_eff_start_ts, 
+                                confgrtn_eff_end_ts
+                            )
+                            VALUES (
+                                @TableConfigId, 
+                                @RuntimeParametersMasterId, 
+                                @ParameterValue, 
+                                @ConfigurationEffectiveStartTimestamp, 
+                                @ConfigurationEffectiveEndTimestamp
+                            )", param);
+                        }
                     }
                     else
                     {

@@ -13,7 +13,7 @@ namespace Dnct.Application.Features.LoadStragegy.Query.GetAllLoadStrategy
 {
     public class GetAllLoadStrategyQuery : IRequest<OperationResult<List<GetAllLoadStrategyResponse>>>
     {
-
+        public int TableConfigId { get; set; }
     };
 
 
@@ -37,7 +37,7 @@ namespace Dnct.Application.Features.LoadStragegy.Query.GetAllLoadStrategy
 
         public async ValueTask<OperationResult<List<GetAllLoadStrategyResponse>>> Handle(GetAllLoadStrategyQuery request, CancellationToken cancellationGetServerInfo)
         {
-            var data = (await _loadStrategyRepository.GetAll()).ToList();
+            var data = (await _loadStrategyRepository.GetAll(request.TableConfigId)).ToList();
 
             var mappedResult = _mapper.Map<List<GetAllLoadStrategyResponse>>(data);
 

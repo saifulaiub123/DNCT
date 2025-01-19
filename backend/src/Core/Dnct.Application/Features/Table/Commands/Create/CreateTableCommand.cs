@@ -69,7 +69,7 @@ namespace Dnct.Application.Features.Table.Commands.Create
                  ConctnName = "PGRepo",
                  TblDbsName = "sbc_db",
                  TblName = request.TableName,
-                 ConfgrtnEffEndTs = DateTime.Now.AddDays(365)
+                 ConfgrtnEffEndTs = new DateTime(9999, 1, 1, 1, 1, 1, DateTimeKind.Utc),
             });
 
             return OperationResult<bool>.SuccessResult(true);
