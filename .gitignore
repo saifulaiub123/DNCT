@@ -340,3 +340,4 @@ ASALocalRun/
 healthchecksdb
 /nuget.exe
 /src/API/CleanArc.Web.Api/logs/log.json
+/client/.angular/cache/18.0.4
